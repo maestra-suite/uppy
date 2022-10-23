@@ -67,7 +67,6 @@
     "tus-js-client": "2.1.1",
     "uuid": "8.1.0",
     "validator": "^12.1.0",
-    "vimeo-downloader": "^1.0.4",
     "ws": "6.2.2",
     "ytdl-core": "^4.9.2"
   },
