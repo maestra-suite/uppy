@@ -7,6 +7,14 @@ const { startDownUpload } = require('../helpers/upload')
 const { getURLMeta, getRedirectEvaluator, getProtectedHttpAgent } = require('../helpers/request')
 const logger = require('../logger')
 const ytdl = require('ytdl-core')
+const vidl = require('vimeo-downloader');
+
+function matchVimeoUrl(url) {
+  if (/https:\/\/vimeo.com\/\d{16}(?=\b|\/)/.test(url)) { 
+    return true
+  }
+  return false
+}
 
 function matchYoutubeUrl(url) {
   var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
@@ -109,6 +117,10 @@ const downloadURL = async (url, blockLocalIPs, traceId) => {
       let format = ytdl.chooseFormat(info.formats, { filter: 'audioandvideo' });
       url = format.url
     }
+    else if (matchVimeoUrl(url)) {
+      const format = vidl(url, { quality: "360p" });
+      url = format.url
+    }
 
     const urlMeta = await getURLMeta(url, !allowLocalUrls)
     if (videoID) {
@@ -143,6 +155,10 @@ const get = async (req, res) => {
     const videoID = ytdl.getURLVideoID(url)
     let info = await ytdl.getInfo(videoID);
     let format = ytdl.chooseFormat(info.formats, { filter: 'audioandvideo' });
+    url = format.url
+  }
+  else if (matchVimeoUrl(url)) {
+    const format = vidl(url, { quality: "360p" });
     url = format.url
   }
 
