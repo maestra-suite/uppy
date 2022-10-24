@@ -102,7 +102,7 @@ module.exports.getProtectedHttpAgent = (protocol, blockPrivateIPs) => {
  *
  * @param {string} url
  * @param {boolean} blockLocalIPs
- * @returns {Promise<{type: string, size: number}>}
+ * @returns {Promise<{type: string, size: number, videoId: string}>}
  */
 exports.getURLMeta = async (url, blockLocalIPs = false) => {
   const requestWithMethod = async (method) => new Promise((resolve, reject) => {
@@ -150,6 +150,6 @@ exports.getURLMeta = async (url, blockLocalIPs = false) => {
     throw new Error(`URL server responded with status: ${urlMeta.statusCode}`)
   }
 
-  const { size, type } = urlMeta
-  return { size, type }
+  const { size, type, videoId } = urlMeta
+  return { size, type, videoId }
 }
