@@ -10,12 +10,11 @@ const ytdl = require('ytdl-core')
 const vidl = require('vimeo-downloader');
 
 function matchVimeoUrl(url) {
-  if (/https:\/\/vimeo.com\/\d{16}(?=\b|\/)/.test(url)) { 
-    return true
+  if (url.includes('vimeo')) {
+    return true;
   }
-  return false
+  return false;
 }
-
 
 function matchYoutubeUrl(url) {
   var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
