@@ -93,7 +93,6 @@ function PanelTopBar (props) {
         <UploadStatus {...props} />
       </div>
       <div className="uppy-topBarRightContainer">
-        <div className="uppy-SpeakerCount">Speaker Count</div>
         {allowNewUpload ? (
           <button
             class="uppy-DashboardContent-addMore"
