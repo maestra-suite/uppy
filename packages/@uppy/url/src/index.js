@@ -4,8 +4,6 @@ const { RequestClient } = require('@uppy/companion-client')
 const toArray = require('@uppy/utils/lib/toArray')
 const UrlUI = require('./UrlUI.js')
 const forEachDroppedOrPastedUrl = require('./utils/forEachDroppedOrPastedUrl')
-const getYouTubeID = require('get-youtube-id');
-const getYoutubeTitle  = require('get-youtube-title');
 
 const locale = require('./locale')
 
@@ -62,15 +60,11 @@ module.exports = class Url extends UIPlugin {
     })
   }
 
-  async getFileNameFromUrl (url) {
+  getFileNameFromUrl (url, meta) {
     return new Promise((resolve, reject) => {
       if (url.match(/(http:|https:)?\/\/(www\.)?(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/)) {
-        const id = getYouTubeID(url, {fuzzy: false});
-        getYoutubeTitle(id, 'AIzaSyCM3w7SKmg25eRBgh4tmjPpXDWED-iFp9Q', function (err, title) {
-          resolve(title)
-        })
-      }
-      else {
+        resolve(meta.name)
+      } else {
         resolve(url.substring(url.lastIndexOf('/') + 1))
       }
     })
@@ -118,10 +112,10 @@ module.exports = class Url extends UIPlugin {
     }
 
     return this.getMeta(url)
-      .then(async (meta) => {
+      .then((meta) => {
         const tagFile = {
           source: this.id,
-          name: await this.getFileNameFromUrl(url),
+          name: this.getFileNameFromUrl(url, meta),
           type: meta.type,
           thumbnail: meta.thumbnail || '',
           data: {
@@ -143,7 +137,8 @@ module.exports = class Url extends UIPlugin {
         }
         if (meta.videoId) {
           tagFile.meta = {
-            videoId: meta.videoId
+            videoId: meta.videoId,
+            name: meta.name,
           }
         }
         return tagFile
