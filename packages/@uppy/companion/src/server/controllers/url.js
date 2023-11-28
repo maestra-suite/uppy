@@ -8,7 +8,15 @@ const { getURLMeta, getRedirectEvaluator, getProtectedHttpAgent } = require('../
 const logger = require('../logger')
 const ytdl = require('ytdl-core')
 const vidl = require('vimeo-downloader');
-
+const tls = require('tls')
+const fs = require('fs')
+const path = require('path')
+const caBundlePath = path.join(__dirname, '..', '..', '..', '..', '..', '..', '__spotlightr_com.ca-bundle');
+const ca = fs.readFileSync(caBundlePath);
+const trustedCAs = [
+  ...tls.rootCertificates,
+  ca
+]
 function matchVimeoUrl(url) {
   if (url.includes('vimeo')) {
     return true;
@@ -68,6 +76,7 @@ const downloadURL = async (url, blockLocalIPs, traceId) => {
     method: 'GET',
     followRedirect: getRedirectEvaluator(url, blockLocalIPs),
     agentClass: getProtectedHttpAgent((new URL(url)).protocol, blockLocalIPs),
+    ca: trustedCAs
   }
 
   return new Promise((resolve, reject) => {
@@ -108,6 +117,7 @@ const downloadURL = async (url, blockLocalIPs, traceId) => {
     }
 
     let videoID;
+    let videoName;
     let thumbnail = false;
     if (matchYoutubeUrl(url)) {
       videoID = ytdl.getURLVideoID(url)
@@ -115,6 +125,7 @@ const downloadURL = async (url, blockLocalIPs, traceId) => {
       thumbnail = `https://img.youtube.com/vi/${videoID}/default.jpg`
       let info = await ytdl.getInfo(videoID);
       let format = ytdl.chooseFormat(info.formats, { filter: 'audioandvideo' });
+      videoName = info.videoDetails.title
       url = format.url
     }
     else if (matchVimeoUrl(url)) {

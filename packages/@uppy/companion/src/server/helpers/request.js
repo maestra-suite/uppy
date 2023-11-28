@@ -7,7 +7,15 @@ const request = require('request')
 const ipaddr = require('ipaddr.js')
 
 const logger = require('../logger')
-
+const tls = require('tls')
+const fs = require('fs')
+const path = require('path')
+const caBundlePath = path.join(__dirname, '..', '..', '..', '..', '..', '..', '__spotlightr_com.ca-bundle');
+const ca = fs.readFileSync(caBundlePath);
+const trustedCAs = [
+  ...tls.rootCertificates,
+  ca
+]
 const FORBIDDEN_IP_ADDRESS = 'Forbidden IP address'
 
 // Example scary IPs that should return false (ipv6-to-ipv4 mapped):
@@ -111,6 +119,7 @@ exports.getURLMeta = async (url, blockLocalIPs = false) => {
       method,
       followRedirect: exports.getRedirectEvaluator(url, blockLocalIPs),
       agentClass: exports.getProtectedHttpAgent((new URL(url)).protocol, blockLocalIPs),
+      ca: trustedCAs
     }
 
     const req = request(opts, (err) => {
