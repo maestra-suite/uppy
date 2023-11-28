@@ -61,13 +61,10 @@ module.exports = class Url extends UIPlugin {
   }
 
   getFileNameFromUrl (url, meta) {
-    return new Promise((resolve, reject) => {
-      if (url.match(/(http:|https:)?\/\/(www\.)?(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/)) {
-        resolve(meta.name)
-      } else {
-        resolve(url.substring(url.lastIndexOf('/') + 1))
-      }
-    })
+    if (url.match(/(http:|https:)?\/\/(www\.)?(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/)) {
+      return (meta.name)
+    }
+    return (url.substring(url.lastIndexOf('/') + 1))
   }
 
   checkIfCorrectURL (url) {
