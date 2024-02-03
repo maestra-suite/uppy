@@ -18,7 +18,6 @@ tsconfig.tsbuildinfo
 tsconfig.build.tsbuildinfo
 
 dist/
-lib/
 coverage/
 examples/dev/bundle.js
 examples/aws-php/vendor/*
