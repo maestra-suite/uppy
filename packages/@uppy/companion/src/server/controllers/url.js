@@ -80,6 +80,7 @@ const downloadURL = async (url, blockLocalIPs, traceId) => {
   }
 
   return new Promise((resolve, reject) => {
+    //@ts-ignore
     const req = request(opts)
       .on('response', (resp) => {
         if (resp.statusCode >= 300) {
@@ -157,16 +158,18 @@ const get = async (req, res) => {
   logger.debug('URL file import handler running', null, req.id)
   const { allowLocalUrls } = req.companion.options
   let url = req.body.url
+  let isYoutubeUrl = false
   if (!validateURL(url, allowLocalUrls)) {
     logger.debug('Invalid request body detected. Exiting url import handler.', null, req.id)
     res.status(400).json({ error: 'Invalid request body' })
     return
   }
   if (matchYoutubeUrl(url)) {
-    const videoID = ytdl.getURLVideoID(url)
-    let info = await ytdl.getInfo(videoID);
-    let format = ytdl.chooseFormat(info.formats, { filter: 'audioandvideo' });
-    url = format.url
+    // const videoID = ytdl.getURLVideoID(url)
+    // let info = await ytdl.getInfo(videoID);
+    // let format = ytdl.chooseFormat(info.formats, { filter: 'audioandvideo' });
+    // url = format.url
+    isYoutubeUrl = true
   }
   else if (matchVimeoUrl(url)) {
     const format = vidl(url, { quality: "360p" });
@@ -178,17 +181,21 @@ const get = async (req, res) => {
     return size
   }
 
-  async function download () {
-    return downloadURL(url, !allowLocalUrls, req.id)
-  }
-
   function onUnhandledError (err) {
     logger.error(err, 'controller.url.error', req.id)
     // @todo send more meaningful error message and status code to client if possible
     return res.status(err.status || 500).json({ message: 'failed to fetch URL metadata' })
   }
 
-  startDownUpload({ req, res, getSize, download, onUnhandledError })
+  if (isYoutubeUrl) {
+    startDownUpload({ req, res, getSize, download: false, onUnhandledError, youtubeUrl: url })
+  }
+  else {
+    async function download() {
+      return downloadURL(url, !allowLocalUrls, req.id)
+    }
+    startDownUpload({ req, res, getSize, download, onUnhandledError, youtubeUrl: false })
+  }
 }
 
 

@@ -20,7 +20,7 @@ async function get (req, res) {
     res.status(400).json({ message: 'Failed to download file' })
   }
 
-  startDownUpload({ req, res, getSize, download, onUnhandledError })
+  startDownUpload({ req, res, getSize, download, onUnhandledError, youtubeUrl: false })
 }
 
 module.exports = get

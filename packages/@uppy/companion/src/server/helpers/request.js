@@ -121,7 +121,7 @@ exports.getURLMeta = async (url, blockLocalIPs = false) => {
       agentClass: exports.getProtectedHttpAgent((new URL(url)).protocol, blockLocalIPs),
       ca: trustedCAs
     }
-
+    //@ts-ignore
     const req = request(opts, (err) => {
       if (err) reject(err)
     })
