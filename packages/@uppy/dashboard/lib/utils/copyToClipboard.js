@@ -8,10 +8,8 @@
  * @param {string} fallbackString
  * @returns {Promise}
  */
-export default function copyToClipboard(textToCopy, fallbackString) {
-  if (fallbackString === void 0) {
-    fallbackString = 'Copy the URL below';
-  }
+module.exports = function copyToClipboard(textToCopy, fallbackString) {
+  fallbackString = fallbackString || 'Copy the URL below';
   return new Promise(resolve => {
     const textArea = document.createElement('textarea');
     textArea.setAttribute('style', {
@@ -29,17 +27,21 @@ export default function copyToClipboard(textToCopy, fallbackString) {
     textArea.value = textToCopy;
     document.body.appendChild(textArea);
     textArea.select();
+
     const magicCopyFailed = () => {
-      document.body.removeChild(textArea);
-      // eslint-disable-next-line no-alert
+      document.body.removeChild(textArea); // eslint-disable-next-line no-alert
+
       window.prompt(fallbackString, textToCopy);
       resolve();
     };
+
     try {
       const successful = document.execCommand('copy');
+
       if (!successful) {
         return magicCopyFailed('copy command unavailable');
       }
+
       document.body.removeChild(textArea);
       return resolve();
     } catch (err) {
@@ -47,4 +49,4 @@ export default function copyToClipboard(textToCopy, fallbackString) {
       return magicCopyFailed(err);
     }
   });
-}
+};

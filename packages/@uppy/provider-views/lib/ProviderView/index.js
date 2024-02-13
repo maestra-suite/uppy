@@ -1,1 +1,3 @@
-export { default, defaultPickerIcon } from "./ProviderView.js";
+"use strict";
+
+module.exports = require("./ProviderView.js");

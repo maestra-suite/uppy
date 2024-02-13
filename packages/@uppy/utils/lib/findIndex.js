@@ -1,6 +1,8 @@
+"use strict";
+
 /**
  * @param {Array} array
  * @param {Function} predicate
  * @returns {number}
  */
-export default Function.prototype.call.bind(Array.prototype.findIndex);
+module.exports = Function.prototype.call.bind(Array.prototype.findIndex);

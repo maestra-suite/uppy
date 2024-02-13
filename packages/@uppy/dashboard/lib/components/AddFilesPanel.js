@@ -1,11 +1,16 @@
-import { h } from 'preact';
-import classNames from 'classnames';
-import AddFiles from "./AddFiles.js";
+const {
+  h
+} = require('preact');
+
+const classNames = require('classnames');
+
+const AddFiles = require('./AddFiles');
+
 const AddFilesPanel = props => {
   return h("div", {
     className: classNames('uppy-Dashboard-AddFilesPanel', props.className),
     "data-uppy-panelType": "AddFiles",
-    "aria-hidden": !props.showAddFilesPanel
+    "aria-hidden": props.showAddFilesPanel
   }, h("div", {
     className: "uppy-DashboardContent-bar"
   }, h("div", {
@@ -18,4 +23,5 @@ const AddFilesPanel = props => {
     onClick: () => props.toggleAddFilesPanel(false)
   }, props.i18n('back'))), h(AddFiles, props));
 };
-export default AddFilesPanel;
+
+module.exports = AddFilesPanel;

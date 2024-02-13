@@ -1,60 +1,115 @@
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
+
 var id = 0;
+
 function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
-import { AbortController } from '@uppy/utils/lib/AbortController';
+
+const {
+  AbortController,
+  createAbortError
+} = require('@uppy/utils/lib/AbortController');
+
+const delay = require('@uppy/utils/lib/delay');
+
 const MB = 1024 * 1024;
 const defaultOptions = {
+  limit: 1,
+  retryDelays: [0, 1000, 3000, 5000],
+
   getChunkSize(file) {
     return Math.ceil(file.size / 10000);
   },
+
+  onStart() {},
+
   onProgress() {},
+
   onPartComplete() {},
+
   onSuccess() {},
+
   onError(err) {
     throw err;
   }
+
 };
+
 function ensureInt(value) {
   if (typeof value === 'string') {
     return parseInt(value, 10);
   }
+
   if (typeof value === 'number') {
     return value;
   }
+
   throw new TypeError('Expected a number');
 }
-export const pausingUploadReason = Symbol('pausing upload, not an actual error');
 
-/**
- * A MultipartUploader instance is used per file upload to determine whether a
- * upload should be done as multipart or as a regular S3 upload
- * (based on the user-provided `shouldUseMultipart` option value) and to manage
- * the chunk splitting.
- */
-var _abortController = /*#__PURE__*/_classPrivateFieldLooseKey("abortController");
-var _chunks = /*#__PURE__*/_classPrivateFieldLooseKey("chunks");
-var _chunkState = /*#__PURE__*/_classPrivateFieldLooseKey("chunkState");
-var _data = /*#__PURE__*/_classPrivateFieldLooseKey("data");
-var _file = /*#__PURE__*/_classPrivateFieldLooseKey("file");
-var _uploadHasStarted = /*#__PURE__*/_classPrivateFieldLooseKey("uploadHasStarted");
-var _onError = /*#__PURE__*/_classPrivateFieldLooseKey("onError");
-var _onSuccess = /*#__PURE__*/_classPrivateFieldLooseKey("onSuccess");
-var _shouldUseMultipart = /*#__PURE__*/_classPrivateFieldLooseKey("shouldUseMultipart");
-var _isRestoring = /*#__PURE__*/_classPrivateFieldLooseKey("isRestoring");
-var _onReject = /*#__PURE__*/_classPrivateFieldLooseKey("onReject");
-var _maxMultipartParts = /*#__PURE__*/_classPrivateFieldLooseKey("maxMultipartParts");
-var _minPartSize = /*#__PURE__*/_classPrivateFieldLooseKey("minPartSize");
+var _aborted = /*#__PURE__*/_classPrivateFieldLooseKey("aborted");
+
 var _initChunks = /*#__PURE__*/_classPrivateFieldLooseKey("initChunks");
+
 var _createUpload = /*#__PURE__*/_classPrivateFieldLooseKey("createUpload");
+
 var _resumeUpload = /*#__PURE__*/_classPrivateFieldLooseKey("resumeUpload");
+
+var _uploadParts = /*#__PURE__*/_classPrivateFieldLooseKey("uploadParts");
+
+var _retryable = /*#__PURE__*/_classPrivateFieldLooseKey("retryable");
+
+var _prepareUploadParts = /*#__PURE__*/_classPrivateFieldLooseKey("prepareUploadParts");
+
+var _uploadPartRetryable = /*#__PURE__*/_classPrivateFieldLooseKey("uploadPartRetryable");
+
+var _uploadPart = /*#__PURE__*/_classPrivateFieldLooseKey("uploadPart");
+
 var _onPartProgress = /*#__PURE__*/_classPrivateFieldLooseKey("onPartProgress");
+
 var _onPartComplete = /*#__PURE__*/_classPrivateFieldLooseKey("onPartComplete");
+
+var _uploadPartBytes = /*#__PURE__*/_classPrivateFieldLooseKey("uploadPartBytes");
+
+var _completeUpload = /*#__PURE__*/_classPrivateFieldLooseKey("completeUpload");
+
 var _abortUpload = /*#__PURE__*/_classPrivateFieldLooseKey("abortUpload");
+
+var _onError = /*#__PURE__*/_classPrivateFieldLooseKey("onError");
+
 class MultipartUploader {
-  constructor(data, options) {
-    var _this$options, _this$options$getChun;
+  constructor(file, options) {
+    Object.defineProperty(this, _onError, {
+      value: _onError2
+    });
     Object.defineProperty(this, _abortUpload, {
       value: _abortUpload2
+    });
+    Object.defineProperty(this, _completeUpload, {
+      value: _completeUpload2
+    });
+    Object.defineProperty(this, _uploadPartBytes, {
+      value: _uploadPartBytes2
+    });
+    Object.defineProperty(this, _onPartComplete, {
+      value: _onPartComplete2
+    });
+    Object.defineProperty(this, _onPartProgress, {
+      value: _onPartProgress2
+    });
+    Object.defineProperty(this, _uploadPart, {
+      value: _uploadPart2
+    });
+    Object.defineProperty(this, _uploadPartRetryable, {
+      value: _uploadPartRetryable2
+    });
+    Object.defineProperty(this, _prepareUploadParts, {
+      value: _prepareUploadParts2
+    });
+    Object.defineProperty(this, _retryable, {
+      value: _retryable2
+    });
+    Object.defineProperty(this, _uploadParts, {
+      value: _uploadParts2
     });
     Object.defineProperty(this, _resumeUpload, {
       value: _resumeUpload2
@@ -62,211 +117,451 @@ class MultipartUploader {
     Object.defineProperty(this, _createUpload, {
       value: _createUpload2
     });
-    // initChunks checks the user preference for using multipart uploads (opts.shouldUseMultipart)
-    // and calculates the optimal part size. When using multipart part uploads every part except for the last has
-    // to be at least 5 MB and there can be no more than 10K parts.
-    // This means we sometimes need to change the preferred part size from the user in order to meet these requirements.
     Object.defineProperty(this, _initChunks, {
       value: _initChunks2
     });
-    Object.defineProperty(this, _abortController, {
-      writable: true,
-      value: new AbortController()
+    Object.defineProperty(this, _aborted, {
+      value: _aborted2
     });
-    /** @type {import("../types/chunk").Chunk[]} */
-    Object.defineProperty(this, _chunks, {
-      writable: true,
-      value: void 0
-    });
-    /** @type {{ uploaded: number, etag?: string, done?: boolean }[]} */
-    Object.defineProperty(this, _chunkState, {
-      writable: true,
-      value: void 0
-    });
-    /**
-     * The (un-chunked) data to upload.
-     *
-     * @type {Blob}
-     */
-    Object.defineProperty(this, _data, {
-      writable: true,
-      value: void 0
-    });
-    /** @type {import("@uppy/core").UppyFile} */
-    Object.defineProperty(this, _file, {
-      writable: true,
-      value: void 0
-    });
-    /** @type {boolean} */
-    Object.defineProperty(this, _uploadHasStarted, {
-      writable: true,
-      value: false
-    });
-    /** @type {(err?: Error | any) => void} */
-    Object.defineProperty(this, _onError, {
-      writable: true,
-      value: void 0
-    });
-    /** @type {() => void} */
-    Object.defineProperty(this, _onSuccess, {
-      writable: true,
-      value: void 0
-    });
-    /** @type {import('../types/index').AwsS3MultipartOptions["shouldUseMultipart"]} */
-    Object.defineProperty(this, _shouldUseMultipart, {
-      writable: true,
-      value: void 0
-    });
-    /** @type {boolean} */
-    Object.defineProperty(this, _isRestoring, {
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, _onReject, {
-      writable: true,
-      value: err => (err == null ? void 0 : err.cause) === pausingUploadReason ? null : _classPrivateFieldLooseBase(this, _onError)[_onError](err)
-    });
-    Object.defineProperty(this, _maxMultipartParts, {
-      writable: true,
-      value: 10000
-    });
-    Object.defineProperty(this, _minPartSize, {
-      writable: true,
-      value: 5 * MB
-    });
-    Object.defineProperty(this, _onPartProgress, {
-      writable: true,
-      value: index => ev => {
-        if (!ev.lengthComputable) return;
-        _classPrivateFieldLooseBase(this, _chunkState)[_chunkState][index].uploaded = ensureInt(ev.loaded);
-        const totalUploaded = _classPrivateFieldLooseBase(this, _chunkState)[_chunkState].reduce((n, c) => n + c.uploaded, 0);
-        this.options.onProgress(totalUploaded, _classPrivateFieldLooseBase(this, _data)[_data].size);
-      }
-    });
-    Object.defineProperty(this, _onPartComplete, {
-      writable: true,
-      value: index => etag => {
-        // This avoids the net::ERR_OUT_OF_MEMORY in Chromium Browsers.
-        _classPrivateFieldLooseBase(this, _chunks)[_chunks][index] = null;
-        _classPrivateFieldLooseBase(this, _chunkState)[_chunkState][index].etag = etag;
-        _classPrivateFieldLooseBase(this, _chunkState)[_chunkState][index].done = true;
-        const part = {
-          PartNumber: index + 1,
-          ETag: etag
-        };
-        this.options.onPartComplete(part);
-      }
-    });
-    this.options = {
-      ...defaultOptions,
+    this.options = { ...defaultOptions,
       ...options
-    };
-    // Use default `getChunkSize` if it was null or something
-    (_this$options$getChun = (_this$options = this.options).getChunkSize) != null ? _this$options$getChun : _this$options.getChunkSize = defaultOptions.getChunkSize;
-    _classPrivateFieldLooseBase(this, _data)[_data] = data;
-    _classPrivateFieldLooseBase(this, _file)[_file] = options.file;
-    _classPrivateFieldLooseBase(this, _onSuccess)[_onSuccess] = this.options.onSuccess;
-    _classPrivateFieldLooseBase(this, _onError)[_onError] = this.options.onError;
-    _classPrivateFieldLooseBase(this, _shouldUseMultipart)[_shouldUseMultipart] = this.options.shouldUseMultipart;
+    }; // Use default `getChunkSize` if it was null or something
 
-    // When we are restoring an upload, we already have an UploadId and a Key. Otherwise
-    // we need to call `createMultipartUpload` to get an `uploadId` and a `key`.
-    // Non-multipart uploads are not restorable.
-    _classPrivateFieldLooseBase(this, _isRestoring)[_isRestoring] = options.uploadId && options.key;
+    if (!this.options.getChunkSize) {
+      this.options.getChunkSize = defaultOptions.getChunkSize;
+    }
+
+    this.file = file;
+    this.abortController = new AbortController();
+    this.key = this.options.key || null;
+    this.uploadId = this.options.uploadId || null;
+    this.parts = []; // Do `this.createdPromise.then(OP)` to execute an operation `OP` _only_ if the
+    // upload was created already. That also ensures that the sequencing is right
+    // (so the `OP` definitely happens if the upload is created).
+    //
+    // This mostly exists to make `#abortUpload` work well: only sending the abort request if
+    // the upload was already created, and if the createMultipartUpload request is still in flight,
+    // aborting it immediately after it finishes.
+
+    this.createdPromise = Promise.reject(); // eslint-disable-line prefer-promise-reject-errors
+
+    this.isPaused = false;
+    this.partsInProgress = 0;
+    this.chunks = null;
+    this.chunkState = null;
+
     _classPrivateFieldLooseBase(this, _initChunks)[_initChunks]();
+
+    this.createdPromise.catch(() => {}); // silence uncaught rejection warning
   }
+  /**
+   * Was this upload aborted?
+   *
+   * If yes, we may need to throw an AbortError.
+   *
+   * @returns {boolean}
+   */
+
+
   start() {
-    if (_classPrivateFieldLooseBase(this, _uploadHasStarted)[_uploadHasStarted]) {
-      if (!_classPrivateFieldLooseBase(this, _abortController)[_abortController].signal.aborted) _classPrivateFieldLooseBase(this, _abortController)[_abortController].abort(pausingUploadReason);
-      _classPrivateFieldLooseBase(this, _abortController)[_abortController] = new AbortController();
-      _classPrivateFieldLooseBase(this, _resumeUpload)[_resumeUpload]();
-    } else if (_classPrivateFieldLooseBase(this, _isRestoring)[_isRestoring]) {
-      this.options.companionComm.restoreUploadFile(_classPrivateFieldLooseBase(this, _file)[_file], {
-        uploadId: this.options.uploadId,
-        key: this.options.key
-      });
+    this.isPaused = false;
+
+    if (this.uploadId) {
       _classPrivateFieldLooseBase(this, _resumeUpload)[_resumeUpload]();
     } else {
       _classPrivateFieldLooseBase(this, _createUpload)[_createUpload]();
     }
   }
+
   pause() {
-    _classPrivateFieldLooseBase(this, _abortController)[_abortController].abort(pausingUploadReason);
-    // Swap it out for a new controller, because this instance may be resumed later.
-    _classPrivateFieldLooseBase(this, _abortController)[_abortController] = new AbortController();
+    this.abortController.abort(); // Swap it out for a new controller, because this instance may be resumed later.
+
+    this.abortController = new AbortController();
+    this.isPaused = true;
   }
+
   abort(opts) {
     var _opts;
+
     if (opts === void 0) {
       opts = undefined;
     }
+
     if ((_opts = opts) != null && _opts.really) _classPrivateFieldLooseBase(this, _abortUpload)[_abortUpload]();else this.pause();
   }
 
-  // TODO: remove this in the next major
-  get chunkState() {
-    return _classPrivateFieldLooseBase(this, _chunkState)[_chunkState];
-  }
 }
+
+function _aborted2() {
+  return this.abortController.signal.aborted;
+}
+
 function _initChunks2() {
-  const fileSize = _classPrivateFieldLooseBase(this, _data)[_data].size;
-  const shouldUseMultipart = typeof _classPrivateFieldLooseBase(this, _shouldUseMultipart)[_shouldUseMultipart] === 'function' ? _classPrivateFieldLooseBase(this, _shouldUseMultipart)[_shouldUseMultipart](_classPrivateFieldLooseBase(this, _file)[_file]) : Boolean(_classPrivateFieldLooseBase(this, _shouldUseMultipart)[_shouldUseMultipart]);
-  if (shouldUseMultipart && fileSize > _classPrivateFieldLooseBase(this, _minPartSize)[_minPartSize]) {
-    // At least 5MB per request:
-    let chunkSize = Math.max(this.options.getChunkSize(_classPrivateFieldLooseBase(this, _data)[_data]), _classPrivateFieldLooseBase(this, _minPartSize)[_minPartSize]);
-    let arraySize = Math.floor(fileSize / chunkSize);
+  const chunks = [];
+  const desiredChunkSize = this.options.getChunkSize(this.file); // at least 5MB per request, at most 10k requests
 
-    // At most 10k requests per file:
-    if (arraySize > _classPrivateFieldLooseBase(this, _maxMultipartParts)[_maxMultipartParts]) {
-      arraySize = _classPrivateFieldLooseBase(this, _maxMultipartParts)[_maxMultipartParts];
-      chunkSize = fileSize / _classPrivateFieldLooseBase(this, _maxMultipartParts)[_maxMultipartParts];
-    }
-    _classPrivateFieldLooseBase(this, _chunks)[_chunks] = Array(arraySize);
-    for (let offset = 0, j = 0; offset < fileSize; offset += chunkSize, j++) {
-      const end = Math.min(fileSize, offset + chunkSize);
+  const minChunkSize = Math.max(5 * MB, Math.ceil(this.file.size / 10000));
+  const chunkSize = Math.max(desiredChunkSize, minChunkSize); // Upload zero-sized files in one zero-sized chunk
 
-      // Defer data fetching/slicing until we actually need the data, because it's slow if we have a lot of files
-      const getData = () => {
-        const i2 = offset;
-        return _classPrivateFieldLooseBase(this, _data)[_data].slice(i2, end);
-      };
-      _classPrivateFieldLooseBase(this, _chunks)[_chunks][j] = {
-        getData,
-        onProgress: _classPrivateFieldLooseBase(this, _onPartProgress)[_onPartProgress](j),
-        onComplete: _classPrivateFieldLooseBase(this, _onPartComplete)[_onPartComplete](j),
-        shouldUseMultipart
-      };
-      if (_classPrivateFieldLooseBase(this, _isRestoring)[_isRestoring]) {
-        const size = offset + chunkSize > fileSize ? fileSize - offset : chunkSize;
-        // setAsUploaded is called by listPart, to keep up-to-date the
-        // quantity of data that is left to actually upload.
-        _classPrivateFieldLooseBase(this, _chunks)[_chunks][j].setAsUploaded = () => {
-          _classPrivateFieldLooseBase(this, _chunks)[_chunks][j] = null;
-          _classPrivateFieldLooseBase(this, _chunkState)[_chunkState][j].uploaded = size;
-        };
-      }
-    }
+  if (this.file.size === 0) {
+    chunks.push(this.file);
   } else {
-    _classPrivateFieldLooseBase(this, _chunks)[_chunks] = [{
-      getData: () => _classPrivateFieldLooseBase(this, _data)[_data],
-      onProgress: _classPrivateFieldLooseBase(this, _onPartProgress)[_onPartProgress](0),
-      onComplete: _classPrivateFieldLooseBase(this, _onPartComplete)[_onPartComplete](0),
-      shouldUseMultipart
-    }];
+    for (let i = 0; i < this.file.size; i += chunkSize) {
+      const end = Math.min(this.file.size, i + chunkSize);
+      chunks.push(this.file.slice(i, end));
+    }
   }
-  _classPrivateFieldLooseBase(this, _chunkState)[_chunkState] = _classPrivateFieldLooseBase(this, _chunks)[_chunks].map(() => ({
-    uploaded: 0
+
+  this.chunks = chunks;
+  this.chunkState = chunks.map(() => ({
+    uploaded: 0,
+    busy: false,
+    done: false
   }));
 }
+
 function _createUpload2() {
-  this.options.companionComm.uploadFile(_classPrivateFieldLooseBase(this, _file)[_file], _classPrivateFieldLooseBase(this, _chunks)[_chunks], _classPrivateFieldLooseBase(this, _abortController)[_abortController].signal).then(_classPrivateFieldLooseBase(this, _onSuccess)[_onSuccess], _classPrivateFieldLooseBase(this, _onReject)[_onReject]);
-  _classPrivateFieldLooseBase(this, _uploadHasStarted)[_uploadHasStarted] = true;
+  this.createdPromise = Promise.resolve().then(() => this.options.createMultipartUpload());
+  return this.createdPromise.then(result => {
+    if (_classPrivateFieldLooseBase(this, _aborted)[_aborted]()) throw createAbortError();
+    const valid = typeof result === 'object' && result && typeof result.uploadId === 'string' && typeof result.key === 'string';
+
+    if (!valid) {
+      throw new TypeError('AwsS3/Multipart: Got incorrect result from `createMultipartUpload()`, expected an object `{ uploadId, key }`.');
+    }
+
+    this.key = result.key;
+    this.uploadId = result.uploadId;
+    this.options.onStart(result);
+
+    _classPrivateFieldLooseBase(this, _uploadParts)[_uploadParts]();
+  }).catch(err => {
+    _classPrivateFieldLooseBase(this, _onError)[_onError](err);
+  });
 }
-function _resumeUpload2() {
-  this.options.companionComm.resumeUploadFile(_classPrivateFieldLooseBase(this, _file)[_file], _classPrivateFieldLooseBase(this, _chunks)[_chunks], _classPrivateFieldLooseBase(this, _abortController)[_abortController].signal).then(_classPrivateFieldLooseBase(this, _onSuccess)[_onSuccess], _classPrivateFieldLooseBase(this, _onReject)[_onReject]);
+
+async function _resumeUpload2() {
+  try {
+    const parts = await this.options.listParts({
+      uploadId: this.uploadId,
+      key: this.key
+    });
+    if (_classPrivateFieldLooseBase(this, _aborted)[_aborted]()) throw createAbortError();
+    parts.forEach(part => {
+      const i = part.PartNumber - 1;
+      this.chunkState[i] = {
+        uploaded: ensureInt(part.Size),
+        etag: part.ETag,
+        done: true
+      }; // Only add if we did not yet know about this part.
+
+      if (!this.parts.some(p => p.PartNumber === part.PartNumber)) {
+        this.parts.push({
+          PartNumber: part.PartNumber,
+          ETag: part.ETag
+        });
+      }
+    });
+
+    _classPrivateFieldLooseBase(this, _uploadParts)[_uploadParts]();
+  } catch (err) {
+    _classPrivateFieldLooseBase(this, _onError)[_onError](err);
+  }
 }
+
+function _uploadParts2() {
+  if (this.isPaused) return; // All parts are uploaded.
+
+  if (this.chunkState.every(state => state.done)) {
+    _classPrivateFieldLooseBase(this, _completeUpload)[_completeUpload]();
+
+    return;
+  } // For a 100MB file, with the default min chunk size of 5MB and a limit of 10:
+  //
+  // Total 20 parts
+  // ---------
+  // Need 1 is 10
+  // Need 2 is 5
+  // Need 3 is 5
+
+
+  const need = this.options.limit - this.partsInProgress;
+  const completeChunks = this.chunkState.filter(state => state.done).length;
+  const remainingChunks = this.chunks.length - completeChunks;
+  let minNeeded = Math.ceil(this.options.limit / 2);
+
+  if (minNeeded > remainingChunks) {
+    minNeeded = remainingChunks;
+  }
+
+  if (need < minNeeded) return;
+  const candidates = [];
+
+  for (let i = 0; i < this.chunkState.length; i++) {
+    const state = this.chunkState[i]; // eslint-disable-next-line no-continue
+
+    if (state.done || state.busy) continue;
+    candidates.push(i);
+
+    if (candidates.length >= need) {
+      break;
+    }
+  }
+
+  if (candidates.length === 0) return;
+
+  _classPrivateFieldLooseBase(this, _prepareUploadParts)[_prepareUploadParts](candidates).then(result => {
+    candidates.forEach(index => {
+      const partNumber = index + 1;
+      const prePreparedPart = {
+        url: result.presignedUrls[partNumber],
+        headers: result.headers
+      };
+
+      _classPrivateFieldLooseBase(this, _uploadPartRetryable)[_uploadPartRetryable](index, prePreparedPart).then(() => {
+        _classPrivateFieldLooseBase(this, _uploadParts)[_uploadParts]();
+      }, err => {
+        _classPrivateFieldLooseBase(this, _onError)[_onError](err);
+      });
+    });
+  });
+}
+
+function _retryable2(_ref) {
+  let {
+    before,
+    attempt,
+    after
+  } = _ref;
+  const {
+    retryDelays
+  } = this.options;
+  const {
+    signal
+  } = this.abortController;
+  if (before) before();
+
+  function shouldRetry(err) {
+    if (err.source && typeof err.source.status === 'number') {
+      const {
+        status
+      } = err.source; // 0 probably indicates network failure
+
+      return status === 0 || status === 409 || status === 423 || status >= 500 && status < 600;
+    }
+
+    return false;
+  }
+
+  const doAttempt = retryAttempt => attempt().catch(err => {
+    if (_classPrivateFieldLooseBase(this, _aborted)[_aborted]()) throw createAbortError();
+
+    if (shouldRetry(err) && retryAttempt < retryDelays.length) {
+      return delay(retryDelays[retryAttempt], {
+        signal
+      }).then(() => doAttempt(retryAttempt + 1));
+    }
+
+    throw err;
+  });
+
+  return doAttempt(0).then(result => {
+    if (after) after();
+    return result;
+  }, err => {
+    if (after) after();
+    throw err;
+  });
+}
+
+async function _prepareUploadParts2(candidates) {
+  candidates.forEach(i => {
+    this.chunkState[i].busy = true;
+  });
+  const result = await _classPrivateFieldLooseBase(this, _retryable)[_retryable]({
+    attempt: () => this.options.prepareUploadParts({
+      key: this.key,
+      uploadId: this.uploadId,
+      partNumbers: candidates.map(index => index + 1),
+      chunks: candidates.reduce((chunks, candidate) => ({ ...chunks,
+        // Use the part number as the index
+        [candidate + 1]: this.chunks[candidate]
+      }), {})
+    })
+  });
+
+  if (typeof (result == null ? void 0 : result.presignedUrls) !== 'object') {
+    throw new TypeError('AwsS3/Multipart: Got incorrect result from `prepareUploadParts()`, expected an object `{ presignedUrls }`.');
+  }
+
+  return result;
+}
+
+function _uploadPartRetryable2(index, prePreparedPart) {
+  return _classPrivateFieldLooseBase(this, _retryable)[_retryable]({
+    before: () => {
+      this.partsInProgress += 1;
+    },
+    attempt: () => _classPrivateFieldLooseBase(this, _uploadPart)[_uploadPart](index, prePreparedPart),
+    after: () => {
+      this.partsInProgress -= 1;
+    }
+  });
+}
+
+function _uploadPart2(index, prePreparedPart) {
+  this.chunkState[index].busy = true;
+  const valid = typeof (prePreparedPart == null ? void 0 : prePreparedPart.url) === 'string';
+
+  if (!valid) {
+    throw new TypeError('AwsS3/Multipart: Got incorrect result for `prePreparedPart`, expected an object `{ url }`.');
+  }
+
+  const {
+    url,
+    headers
+  } = prePreparedPart;
+
+  if (_classPrivateFieldLooseBase(this, _aborted)[_aborted]()) {
+    this.chunkState[index].busy = false;
+    throw createAbortError();
+  }
+
+  return _classPrivateFieldLooseBase(this, _uploadPartBytes)[_uploadPartBytes](index, url, headers);
+}
+
+function _onPartProgress2(index, sent) {
+  this.chunkState[index].uploaded = ensureInt(sent);
+  const totalUploaded = this.chunkState.reduce((n, c) => n + c.uploaded, 0);
+  this.options.onProgress(totalUploaded, this.file.size);
+}
+
+function _onPartComplete2(index, etag) {
+  this.chunkState[index].etag = etag;
+  this.chunkState[index].done = true;
+  const part = {
+    PartNumber: index + 1,
+    ETag: etag
+  };
+  this.parts.push(part);
+  this.options.onPartComplete(part);
+}
+
+function _uploadPartBytes2(index, url, headers) {
+  const body = this.chunks[index];
+  const {
+    signal
+  } = this.abortController;
+  let defer;
+  const promise = new Promise((resolve, reject) => {
+    defer = {
+      resolve,
+      reject
+    };
+  });
+  const xhr = new XMLHttpRequest();
+  xhr.open('PUT', url, true);
+
+  if (headers) {
+    Object.keys(headers).forEach(key => {
+      xhr.setRequestHeader(key, headers[key]);
+    });
+  }
+
+  xhr.responseType = 'text';
+
+  function cleanup() {
+    // eslint-disable-next-line no-use-before-define
+    signal.removeEventListener('abort', onabort);
+  }
+
+  function onabort() {
+    xhr.abort();
+  }
+
+  signal.addEventListener('abort', onabort);
+  xhr.upload.addEventListener('progress', ev => {
+    if (!ev.lengthComputable) return;
+
+    _classPrivateFieldLooseBase(this, _onPartProgress)[_onPartProgress](index, ev.loaded, ev.total);
+  });
+  xhr.addEventListener('abort', () => {
+    cleanup();
+    this.chunkState[index].busy = false;
+    defer.reject(createAbortError());
+  });
+  xhr.addEventListener('load', ev => {
+    cleanup();
+    this.chunkState[index].busy = false;
+
+    if (ev.target.status < 200 || ev.target.status >= 300) {
+      const error = new Error('Non 2xx');
+      error.source = ev.target;
+      defer.reject(error);
+      return;
+    } // This avoids the net::ERR_OUT_OF_MEMORY in Chromium Browsers.
+
+
+    this.chunks[index] = null;
+
+    _classPrivateFieldLooseBase(this, _onPartProgress)[_onPartProgress](index, body.size, body.size); // NOTE This must be allowed by CORS.
+
+
+    const etag = ev.target.getResponseHeader('ETag');
+
+    if (etag === null) {
+      defer.reject(new Error('AwsS3/Multipart: Could not read the ETag header. This likely means CORS is not configured correctly on the S3 Bucket. See https://uppy.io/docs/aws-s3-multipart#S3-Bucket-Configuration for instructions.'));
+      return;
+    }
+
+    _classPrivateFieldLooseBase(this, _onPartComplete)[_onPartComplete](index, etag);
+
+    defer.resolve();
+  });
+  xhr.addEventListener('error', ev => {
+    cleanup();
+    this.chunkState[index].busy = false;
+    const error = new Error('Unknown error');
+    error.source = ev.target;
+    defer.reject(error);
+  });
+  xhr.send(body);
+  return promise;
+}
+
+async function _completeUpload2() {
+  // Parts may not have completed uploading in sorted order, if limit > 1.
+  this.parts.sort((a, b) => a.PartNumber - b.PartNumber);
+
+  try {
+    const result = await this.options.completeMultipartUpload({
+      key: this.key,
+      uploadId: this.uploadId,
+      parts: this.parts
+    });
+    this.options.onSuccess(result);
+  } catch (err) {
+    _classPrivateFieldLooseBase(this, _onError)[_onError](err);
+  }
+}
+
 function _abortUpload2() {
-  _classPrivateFieldLooseBase(this, _abortController)[_abortController].abort();
-  this.options.companionComm.abortFileUpload(_classPrivateFieldLooseBase(this, _file)[_file]).catch(err => this.options.log(err));
+  this.abortController.abort();
+  this.createdPromise.then(() => {
+    this.options.abortMultipartUpload({
+      key: this.key,
+      uploadId: this.uploadId
+    });
+  }, () => {// if the creation failed we do not need to abort
+  });
 }
-export default MultipartUploader;
+
+function _onError2(err) {
+  if (err && err.name === 'AbortError') {
+    return;
+  }
+
+  this.options.onError(err);
+}
+
+module.exports = MultipartUploader;

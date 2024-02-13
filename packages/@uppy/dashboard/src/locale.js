@@ -8,9 +8,9 @@ export default {
     // Used as the header for import panels, e.g., “Import from Google Drive”.
     importFrom: 'Import from %{name}',
     // When `inline: false`, used as the screen reader label for the dashboard modal.
-    dashboardWindowTitle: 'File Uploader Window Window (Press escape to close)',
+    dashboardWindowTitle: 'Uppy Dashboard Window (Press escape to close)',
     // When `inline: true`, used as the screen reader label for the dashboard area.
-    dashboardTitle: 'File Uploader',
+    dashboardTitle: 'Uppy Dashboard',
     // Shown in the Informer when a link to a file was copied to the clipboard.
     copyLinkToClipboardSuccess: 'Link copied to clipboard.',
     // Used when a link cannot be copied automatically — the user has to select the text from the
@@ -25,8 +25,6 @@ export default {
     editFile: 'Edit file',
     // Shown in the panel header for the metadata editor. Rendered as “Editing image.png”.
     editing: 'Editing %{file}',
-    // Shown on the main upload screen when an upload error occurs
-    error: 'Error',
     // Used as the screen reader label for the button that saves metadata edits and returns to the
     // file list view.
     finishEditingFile: 'Finish editing file',
@@ -86,8 +84,5 @@ export default {
       0: 'Missing required meta field: %{fields}.',
       1: 'Missing required meta fields: %{fields}.',
     },
-    // Used for native device camera buttons on mobile
-    takePictureBtn: 'Take Picture',
-    recordVideoBtn: 'Record Video',
   },
 }

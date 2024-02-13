@@ -1,1 +1,3 @@
-export { default } from "./Dropbox.js";
+"use strict";
+
+module.exports = require("./Dropbox.js");

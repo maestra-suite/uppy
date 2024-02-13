@@ -1,32 +1,42 @@
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-import { h } from 'preact';
-import classNames from 'classnames';
-import isDragDropSupported from '@uppy/utils/lib/isDragDropSupported';
-import FileList from "./FileList.js";
-import AddFiles from "./AddFiles.js";
-import AddFilesPanel from "./AddFilesPanel.js";
-import PickerPanelContent from "./PickerPanelContent.js";
-import EditorPanel from "./EditorPanel.js";
-import PanelTopBar from "./PickerPanelTopBar.js";
-import FileCard from "./FileCard/index.js";
-import Slide from "./Slide.js";
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-// http://dev.edenspiekermann.com/2016/02/11/introducing-accessible-modal-dialog
+const {
+  h
+} = require('preact');
+
+const classNames = require('classnames');
+
+const isDragDropSupported = require('@uppy/utils/lib/isDragDropSupported');
+
+const FileList = require('./FileList');
+
+const AddFiles = require('./AddFiles');
+
+const AddFilesPanel = require('./AddFilesPanel');
+
+const PickerPanelContent = require('./PickerPanelContent');
+
+const EditorPanel = require('./EditorPanel');
+
+const PanelTopBar = require('./PickerPanelTopBar');
+
+const FileCard = require('./FileCard');
+
+const Slide = require('./Slide'); // http://dev.edenspiekermann.com/2016/02/11/introducing-accessible-modal-dialog
 // https://github.com/ghosh/micromodal
+
 
 const WIDTH_XL = 900;
 const WIDTH_LG = 700;
 const WIDTH_MD = 576;
-const HEIGHT_MD = 330;
-// We might want to enable this in the future
-// const HEIGHT_LG = 400
-// const HEIGHT_XL = 460
+const HEIGHT_MD = 400;
 
-export default function Dashboard(props) {
-  const isNoFiles = props.totalFileCount === 0;
-  const isSingleFile = props.totalFileCount === 1;
+module.exports = function Dashboard(props) {
+  const noFiles = props.totalFileCount === 0;
   const isSizeMD = props.containerWidth > WIDTH_MD;
-  const isSizeHeightMD = props.containerHeight > HEIGHT_MD;
+  const wrapperClassName = classNames({
+    'uppy-Root': props.isTargetDOMEl
+  });
   const dashboardClassName = classNames({
     'uppy-Dashboard': true,
     'uppy-Dashboard--isDisabled': props.disabled,
@@ -38,17 +48,12 @@ export default function Dashboard(props) {
     'uppy-size--lg': props.containerWidth > WIDTH_LG,
     'uppy-size--xl': props.containerWidth > WIDTH_XL,
     'uppy-size--height-md': props.containerHeight > HEIGHT_MD,
-    // We might want to enable this in the future
-    // 'uppy-size--height-lg': props.containerHeight > HEIGHT_LG,
-    // 'uppy-size--height-xl': props.containerHeight > HEIGHT_XL,
     'uppy-Dashboard--isAddFilesPanelVisible': props.showAddFilesPanel,
-    'uppy-Dashboard--isInnerWrapVisible': props.areInsidesReadyToBeVisible,
-    // Only enable “centered single file” mode when Dashboard is tall enough
-    'uppy-Dashboard--singleFile': props.singleFileFullScreen && isSingleFile && isSizeHeightMD
-  });
+    'uppy-Dashboard--isInnerWrapVisible': props.areInsidesReadyToBeVisible
+  }); // Important: keep these in sync with the percent width values in `src/components/FileItem/index.scss`.
 
-  // Important: keep these in sync with the percent width values in `src/components/FileItem/index.scss`.
   let itemsPerRow = 1; // mobile
+
   if (props.containerWidth > WIDTH_XL) {
     itemsPerRow = 5;
   } else if (props.containerWidth > WIDTH_LG) {
@@ -56,17 +61,21 @@ export default function Dashboard(props) {
   } else if (props.containerWidth > WIDTH_MD) {
     itemsPerRow = 3;
   }
-  const showFileList = props.showSelectedFiles && !isNoFiles;
+
+  const showFileList = props.showSelectedFiles && !noFiles;
   const numberOfFilesForRecovery = props.recoveredState ? Object.keys(props.recoveredState.files).length : null;
   const numberOfGhosts = props.files ? Object.keys(props.files).filter(fileID => props.files[fileID].isGhost).length : null;
+
   const renderRestoredText = () => {
     if (numberOfGhosts > 0) {
       return props.i18n('recoveredXFiles', {
         smart_count: numberOfGhosts
       });
     }
+
     return props.i18n('recoveredAllFiles');
   };
+
   const dashboard = h("div", {
     className: dashboardClassName,
     "data-uppy-theme": props.theme,
@@ -132,34 +141,9 @@ export default function Dashboard(props) {
     className: "uppy-Dashboard-serviceMsg-title"
   }, props.i18n('sessionRestored')), h("div", {
     className: "uppy-Dashboard-serviceMsg-text"
-  }, renderRestoredText())), showFileList ? h(FileList, {
-    id: props.id,
-    error: props.error,
-    i18n: props.i18n,
-    uppy: props.uppy,
-    files: props.files,
-    acquirers: props.acquirers,
-    resumableUploads: props.resumableUploads,
-    hideRetryButton: props.hideRetryButton,
-    hidePauseResumeButton: props.hidePauseResumeButton,
-    hideCancelButton: props.hideCancelButton,
-    showLinkToFileUploadResult: props.showLinkToFileUploadResult,
-    showRemoveButtonAfterComplete: props.showRemoveButtonAfterComplete,
-    isWide: props.isWide,
-    metaFields: props.metaFields,
-    toggleFileCard: props.toggleFileCard,
-    handleRequestThumbnail: props.handleRequestThumbnail,
-    handleCancelThumbnail: props.handleCancelThumbnail,
-    recoveredState: props.recoveredState,
-    individualCancellation: props.individualCancellation,
-    openFileEditor: props.openFileEditor,
-    canEditFile: props.canEditFile,
-    toggleAddFilesPanel: props.toggleAddFilesPanel,
-    isSingleFile: isSingleFile,
+  }, renderRestoredText())), showFileList ? h(FileList, _extends({}, props, {
     itemsPerRow: itemsPerRow
-  }) :
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  h(AddFiles, _extends({}, props, {
+  })) : h(AddFiles, _extends({}, props, {
     isSizeMD: isSizeMD
   })), h(Slide, null, props.showAddFilesPanel ? h(AddFilesPanel, _extends({
     key: "AddFiles"
@@ -176,5 +160,10 @@ export default function Dashboard(props) {
   }, props.progressindicators.map(target => {
     return props.uppy.getPlugin(target.id).render(props.state);
   })))));
-  return dashboard;
-}
+  return (// Wrap it for RTL language support
+    h("div", {
+      className: wrapperClassName,
+      dir: props.direction
+    }, dashboard)
+  );
+};

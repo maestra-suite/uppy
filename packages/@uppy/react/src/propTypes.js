@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types'
-import { Uppy as UppyCore } from '@uppy/core'
+const PropTypes = require('prop-types')
+const UppyCore = require('@uppy/core').Uppy
 
 // The `uppy` prop receives the Uppy core instance.
-const uppy = PropTypes.instanceOf(UppyCore)
+const uppy = PropTypes.instanceOf(UppyCore).isRequired
 
 // A list of plugins to mount inside this component.
 const plugins = PropTypes.arrayOf(PropTypes.string)
@@ -51,11 +51,8 @@ const dashboard = {
   locale,
 }
 
-export {
+module.exports = {
   uppy,
   locale,
   dashboard,
-  plugins,
-  metaFields,
-  cssSize,
 }

@@ -29,7 +29,7 @@ import Dashboard from '..'
       {
         id: 'public',
         name: 'Public',
-        render({ value, onChange }, h) {
+        render ({ value, onChange }, h) {
           expectType<string>(value)
           expectType<(val: string) => void>(onChange)
           // `h` should be the Preact `h`
@@ -52,13 +52,9 @@ import Dashboard from '..'
     onDragLeave: (event) => event.clientX,
   })
 
-  uppy.on('dashboard:file-edit-start', (file) => {
+  uppy.on('dashboard:file-edit-state', (file) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const fileName = file?.name
-  })
-  uppy.on('dashboard:show-panel', (id) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const pluginId = id
+    const fileName = file.name
   })
 }
 
@@ -74,25 +70,21 @@ import Dashboard from '..'
       },
     },
   })
-  expectError(
-    uppy.use(Dashboard, {
-      locale: {
-        strings: {
-          somethingThatDoesNotExist: 'wrong',
-        },
+  expectError(uppy.use(Dashboard, {
+    locale: {
+      strings: {
+        somethingThatDoesNotExist: 'wrong',
       },
-    }),
-  )
+    },
+  }))
   const wrongType = 1234
-  expectError(
-    uppy.use(Dashboard, {
-      locale: {
-        strings: {
-          addMoreFiles: wrongType,
-        },
+  expectError(uppy.use(Dashboard, {
+    locale: {
+      strings: {
+        addMoreFiles: wrongType,
       },
-    }),
-  )
+    },
+  }))
 }
 {
   const uppy = new Uppy()

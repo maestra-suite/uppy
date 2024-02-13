@@ -1,1 +1,1 @@
-{"version":3,"names":["default","defaultPickerIcon"],"sources":["index.js"],"sourcesContent":["export { default, defaultPickerIcon } from './ProviderView.jsx'\n"],"mappings":"AAAA,SAASA,OAAO,EAAEC,iBAAiB,QAAQ,mBAAoB"}
+{"version":3,"sources":["index.js"],"names":[],"mappings":";;yBAAwB,mB","sourcesContent":["export { default } from './ProviderView.jsx'\n"]}

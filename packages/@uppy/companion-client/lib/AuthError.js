@@ -6,5 +6,7 @@ class AuthError extends Error {
     this.name = 'AuthError';
     this.isAuthError = true;
   }
+
 }
-export default AuthError;
+
+module.exports = AuthError;

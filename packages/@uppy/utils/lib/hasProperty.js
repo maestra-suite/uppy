@@ -1,3 +1,7 @@
-export default function has(object, key) {
+"use strict";
+
+function has(object, key) {
   return Object.prototype.hasOwnProperty.call(object, key);
 }
+
+module.exports = has;

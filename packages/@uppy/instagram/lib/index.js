@@ -1,1 +1,3 @@
-export { default } from "./Instagram.js";
+"use strict";
+
+module.exports = require("./Instagram.js");

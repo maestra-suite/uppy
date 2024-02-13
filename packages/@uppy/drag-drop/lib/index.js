@@ -1,1 +1,3 @@
-export { default } from "./DragDrop.js";
+"use strict";
+
+module.exports = require("./DragDrop.js");

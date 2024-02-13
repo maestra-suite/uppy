@@ -1,4 +1,6 @@
-import { h } from 'preact';
+"use strict";
+
+var _preact = require("preact");
 
 // if folder:
 //   + checkbox (selects all files from folder)
@@ -6,12 +8,11 @@ import { h } from 'preact';
 // if file:
 //   + checkbox (selects file)
 //   + file name (selects file)
-
 function ListItem(props) {
   const {
     className,
     isDisabled,
-    restrictionError,
+    restrictionReason,
     isCheckboxDisabled,
     isChecked,
     toggleCheckbox,
@@ -24,16 +25,14 @@ function ListItem(props) {
     showTitles,
     i18n
   } = props;
-  return h("li", {
+  return (0, _preact.h)("li", {
     className: className,
-    title: isDisabled ? restrictionError == null ? void 0 : restrictionError.message : null
-  }, !isCheckboxDisabled ? h("input", {
+    title: isDisabled ? restrictionReason : null
+  }, !isCheckboxDisabled ? (0, _preact.h)("input", {
     type: "checkbox",
     className: `uppy-u-reset uppy-ProviderBrowserItem-checkbox ${isChecked ? 'uppy-ProviderBrowserItem-checkbox--is-checked' : ''}`,
     onChange: toggleCheckbox,
-    onKeyDown: recordShiftKeyPress,
-    onMouseDown: recordShiftKeyPress
-    // for the <label/>
+    onKeyDown: recordShiftKeyPress // for the <label/>
     ,
     name: "listitem",
     id: id,
@@ -43,24 +42,23 @@ function ListItem(props) {
     }),
     disabled: isDisabled,
     "data-uppy-super-focusable": true
-  }) : null, type === 'file' ?
-  // label for a checkbox
-  h("label", {
+  }) : null, type === 'file' ? // label for a checkbox
+  (0, _preact.h)("label", {
     htmlFor: id,
     className: "uppy-u-reset uppy-ProviderBrowserItem-inner"
-  }, h("div", {
+  }, (0, _preact.h)("div", {
     className: "uppy-ProviderBrowserItem-iconWrap"
-  }, itemIconEl), showTitles && title) :
-  // button to open a folder
-  h("button", {
+  }, itemIconEl), showTitles && title) : // button to open a folder
+  (0, _preact.h)("button", {
     type: "button",
-    className: "uppy-u-reset uppy-c-btn uppy-ProviderBrowserItem-inner",
+    className: "uppy-u-reset uppy-ProviderBrowserItem-inner",
     onClick: handleFolderClick,
     "aria-label": i18n('openFolderNamed', {
       name: title
     })
-  }, h("div", {
+  }, (0, _preact.h)("div", {
     className: "uppy-ProviderBrowserItem-iconWrap"
-  }, itemIconEl), showTitles && h("span", null, title)));
+  }, itemIconEl), showTitles && (0, _preact.h)("span", null, title)));
 }
-export default ListItem;
+
+module.exports = ListItem;

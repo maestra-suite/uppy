@@ -22,7 +22,7 @@ export default class DragDrop extends UIPlugin {
 
     this.defaultLocale = locale
 
-    // Default options, must be kept in sync with @uppy/react/src/DragDrop.js.
+    // Default options
     const defaultOpts = {
       target: null,
       inputName: 'files[]',

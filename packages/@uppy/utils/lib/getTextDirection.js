@@ -1,9 +1,14 @@
+"use strict";
+
 /**
  * Get the declared text direction for an element.
+ *
+ * @param {Node} element
+ * @returns {string|undefined}
  */
-
 function getTextDirection(element) {
   var _element;
+
   // There is another way to determine text direction using getComputedStyle(), as done here:
   // https://github.com/pencil-js/text-direction/blob/2a235ce95089b3185acec3b51313cbba921b3811/text-direction.js
   //
@@ -14,6 +19,8 @@ function getTextDirection(element) {
     // eslint-disable-next-line no-param-reassign
     element = element.parentNode;
   }
+
   return (_element = element) == null ? void 0 : _element.dir;
 }
-export default getTextDirection;
+
+module.exports = getTextDirection;

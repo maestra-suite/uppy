@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   strings: {
     // When `inline: false`, used as the screen reader label for the button that closes the modal.
     closeModal: 'Close Modal',
@@ -25,8 +25,6 @@ export default {
     editFile: 'Edit file',
     // Shown in the panel header for the metadata editor. Rendered as “Editing image.png”.
     editing: 'Editing %{file}',
-    // Shown on the main upload screen when an upload error occurs
-    error: 'Error',
     // Used as the screen reader label for the button that saves metadata edits and returns to the
     // file list view.
     finishEditingFile: 'Finish editing file',
@@ -84,9 +82,6 @@ export default {
     missingRequiredMetaFields: {
       0: 'Missing required meta field: %{fields}.',
       1: 'Missing required meta fields: %{fields}.'
-    },
-    // Used for native device camera buttons on mobile
-    takePictureBtn: 'Take Picture',
-    recordVideoBtn: 'Record Video'
+    }
   }
 };

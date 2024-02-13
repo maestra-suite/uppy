@@ -1,18 +1,27 @@
 'use strict';
-
 /**
  * This module serves as an Async wrapper for LocalStorage
  */
-export function setItem(key, value) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getItem = getItem;
+exports.removeItem = removeItem;
+exports.setItem = setItem;
+
+function setItem(key, value) {
   return new Promise(resolve => {
     localStorage.setItem(key, value);
     resolve();
   });
 }
-export function getItem(key) {
+
+function getItem(key) {
   return Promise.resolve(localStorage.getItem(key));
 }
-export function removeItem(key) {
+
+function removeItem(key) {
   return new Promise(resolve => {
     localStorage.removeItem(key);
     resolve();

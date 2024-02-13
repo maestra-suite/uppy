@@ -1,11 +1,11 @@
-import { h } from 'preact';
-import classNames from 'classnames';
+const {
+  h
+} = require('preact');
+
+const classNames = require('classnames');
+
 function EditorPanel(props) {
   const file = props.files[props.fileCardFor];
-  const handleCancel = () => {
-    props.uppy.emit('file-editor:cancel', file);
-    props.hideAllPanels();
-  };
   return h("div", {
     className: classNames('uppy-DashboardContent-panel', props.className),
     role: "tabpanel",
@@ -24,7 +24,7 @@ function EditorPanel(props) {
   })), h("button", {
     className: "uppy-DashboardContent-back",
     type: "button",
-    onClick: handleCancel
+    onClick: props.hideAllPanels
   }, props.i18n('cancel')), h("button", {
     className: "uppy-DashboardContent-save",
     type: "button",
@@ -35,4 +35,5 @@ function EditorPanel(props) {
     return props.uppy.getPlugin(target.id).render(props.state);
   })));
 }
-export default EditorPanel;
+
+module.exports = EditorPanel;

@@ -1,8 +1,7 @@
 import { h } from 'preact'
 
 const metaFieldIdToName = (metaFieldId, metaFields) => {
-  const fields = typeof metaFields === 'function' ? metaFields() : metaFields
-  const field = fields.filter(f => f.id === metaFieldId)
+  const field = metaFields.filter(f => f.id === metaFieldId)
   return field[0].name
 }
 

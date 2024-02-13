@@ -1,10 +1,10 @@
+"use strict";
+
 // ___Why not add the mime-types package?
 //    It's 19.7kB gzipped, and we only need mime types for well-known extensions (for file previews).
 // ___Where to take new extensions from?
 //    https://github.com/jshttp/mime-db/blob/master/db.json
-
-export default {
-  __proto__: null,
+module.exports = {
   md: 'text/markdown',
   markdown: 'text/markdown',
   mp4: 'video/mp4',
@@ -12,7 +12,6 @@ export default {
   svg: 'image/svg+xml',
   jpg: 'image/jpeg',
   png: 'image/png',
-  webp: 'image/webp',
   gif: 'image/gif',
   heic: 'image/heic',
   heif: 'image/heif',

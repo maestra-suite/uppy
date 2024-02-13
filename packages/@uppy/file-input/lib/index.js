@@ -1,1 +1,3 @@
-export { default } from "./FileInput.js";
+"use strict";
+
+module.exports = require("./FileInput.js");

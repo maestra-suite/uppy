@@ -10,7 +10,7 @@ const uploadStates = {
   STATE_PAUSED: 'paused',
 }
 
-function getUploadingState(isAllErrored, isAllComplete, isAllPaused, files = {}) {
+function getUploadingState (isAllErrored, isAllComplete, isAllPaused, files = {}) {
   if (isAllErrored) {
     return uploadStates.STATE_ERROR
   }
@@ -68,8 +68,6 @@ function UploadStatus ({
       return i18n('xFilesSelected', { smart_count: newFiles.length })
     case 'complete':
       return i18n('uploadComplete')
-    case 'error':
-      return i18n('error')
     default:
   }
 }
@@ -94,14 +92,14 @@ function PanelTopBar (props) {
           {i18n('cancel')}
         </button>
       ) : (
-          <div />
-        )}
+        <div />
+      )}
 
       <div className="uppy-DashboardContent-title" role="heading" aria-level="1">
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <UploadStatus {...props} />
       </div>
-      <div className="uppy-SpeakerCount">Speaker Count</div>
+
       {allowNewUpload ? (
         <button
           className="uppy-DashboardContent-addMore"

@@ -159,7 +159,7 @@ class TransitionGroup extends Component {
 
     const component = this.refs[key]
 
-    if (component?.componentWillAppear) {
+    if (component.componentWillAppear) {
       component.componentWillAppear(this._handleDoneAppearing.bind(this, key))
     } else {
       this._handleDoneAppearing(key)
@@ -168,7 +168,7 @@ class TransitionGroup extends Component {
 
   _handleDoneAppearing (key) {
     const component = this.refs[key]
-    if (component?.componentDidAppear) {
+    if (component.componentDidAppear) {
       component.componentDidAppear()
     }
 
@@ -188,7 +188,7 @@ class TransitionGroup extends Component {
 
     const component = this.refs[key]
 
-    if (component?.componentWillEnter) {
+    if (component.componentWillEnter) {
       component.componentWillEnter(this._handleDoneEntering.bind(this, key))
     } else {
       this._handleDoneEntering(key)
@@ -197,7 +197,7 @@ class TransitionGroup extends Component {
 
   _handleDoneEntering (key) {
     const component = this.refs[key]
-    if (component?.componentDidEnter) {
+    if (component.componentDidEnter) {
       component.componentDidEnter()
     }
 
@@ -223,7 +223,7 @@ class TransitionGroup extends Component {
     this.currentlyTransitioningKeys[key] = true
 
     const component = this.refs[key]
-    if (component?.componentWillLeave) {
+    if (component.componentWillLeave) {
       component.componentWillLeave(this._handleDoneLeaving.bind(this, key))
     } else {
       // Note that this is somewhat dangerous b/c it calls setState()
@@ -243,7 +243,7 @@ class TransitionGroup extends Component {
 
     const component = this.refs[key]
 
-    if (component?.componentDidLeave) {
+    if (component.componentDidLeave) {
       component.componentDidLeave()
     }
 
@@ -264,12 +264,17 @@ class TransitionGroup extends Component {
   render ({ childFactory, transitionLeave, transitionName, transitionAppear, transitionEnter, transitionLeaveTimeout, transitionEnterTimeout, transitionAppearTimeout, component, ...props }, { children }) {
     // TODO: we could get rid of the need for the wrapper node
     // by cloning a single child
-    const childrenToRender = Object.entries(children).map(([key, child]) => {
-      if (!child) return undefined
-
-      const ref = linkRef(this, key);
-      return cloneElement(childFactory(child), { ref, key })
-    }).filter(Boolean)
+    const childrenToRender = []
+    for (const key in children) {
+      if (children.hasOwnProperty(key)) {
+        const child = children[key]
+        if (child) {
+          const ref = linkRef(this, key),
+            el = cloneElement(childFactory(child), { ref, key })
+          childrenToRender.push(el)
+        }
+      }
+    }
 
     return h(component, props, childrenToRender)
   }

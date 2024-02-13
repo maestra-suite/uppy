@@ -1,267 +1,229 @@
-function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
-var id = 0;
-function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
-import { UIPlugin } from '@uppy/core';
-import emaFilter from '@uppy/utils/lib/emaFilter';
-import getTextDirection from '@uppy/utils/lib/getTextDirection';
-import statusBarStates from './StatusBarStates.js';
-import StatusBarUI from "./StatusBarUI.js";
-const packageJson = {
-  "version": "3.2.5"
-};
-import locale from './locale.js';
-const speedFilterHalfLife = 2000;
-const ETAFilterHalfLife = 2000;
-function getUploadingState(error, isAllComplete, recoveredState, files) {
-  if (error) {
-    return statusBarStates.STATE_ERROR;
-  }
-  if (isAllComplete) {
-    return statusBarStates.STATE_COMPLETE;
-  }
-  if (recoveredState) {
-    return statusBarStates.STATE_WAITING;
-  }
-  let state = statusBarStates.STATE_WAITING;
-  const fileIDs = Object.keys(files);
-  for (let i = 0; i < fileIDs.length; i++) {
-    const {
-      progress
-    } = files[fileIDs[i]];
-    // If ANY files are being uploaded right now, show the uploading state.
-    if (progress.uploadStarted && !progress.uploadComplete) {
-      return statusBarStates.STATE_UPLOADING;
-    }
-    // If files are being preprocessed AND postprocessed at this time, we show the
-    // preprocess state. If any files are being uploaded we show uploading.
-    if (progress.preprocess && state !== statusBarStates.STATE_UPLOADING) {
-      state = statusBarStates.STATE_PREPROCESSING;
-    }
-    // If NO files are being preprocessed or uploaded right now, but some files are
-    // being postprocessed, show the postprocess state.
-    if (progress.postprocess && state !== statusBarStates.STATE_UPLOADING && state !== statusBarStates.STATE_PREPROCESSING) {
-      state = statusBarStates.STATE_POSTPROCESSING;
-    }
-  }
-  return state;
-}
+"use strict";
 
-/**
- * StatusBar: renders a status bar with upload/pause/resume/cancel/retry buttons,
- * progress percentage and time remaining.
- */
-var _lastUpdateTime = /*#__PURE__*/_classPrivateFieldLooseKey("lastUpdateTime");
-var _previousUploadedBytes = /*#__PURE__*/_classPrivateFieldLooseKey("previousUploadedBytes");
-var _previousSpeed = /*#__PURE__*/_classPrivateFieldLooseKey("previousSpeed");
-var _previousETA = /*#__PURE__*/_classPrivateFieldLooseKey("previousETA");
-var _computeSmoothETA = /*#__PURE__*/_classPrivateFieldLooseKey("computeSmoothETA");
-var _onUploadStart = /*#__PURE__*/_classPrivateFieldLooseKey("onUploadStart");
-export default class StatusBar extends UIPlugin {
-  constructor(uppy, opts) {
-    super(uppy, opts);
-    Object.defineProperty(this, _computeSmoothETA, {
-      value: _computeSmoothETA2
-    });
-    Object.defineProperty(this, _lastUpdateTime, {
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, _previousUploadedBytes, {
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, _previousSpeed, {
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, _previousETA, {
-      writable: true,
-      value: void 0
-    });
-    this.startUpload = () => {
-      return this.uppy.upload().catch(() => {
-        // Error logged in Core
-      });
-    };
-    Object.defineProperty(this, _onUploadStart, {
-      writable: true,
-      value: () => {
-        const {
-          recoveredState
-        } = this.uppy.getState();
-        _classPrivateFieldLooseBase(this, _previousSpeed)[_previousSpeed] = null;
-        _classPrivateFieldLooseBase(this, _previousETA)[_previousETA] = null;
-        if (recoveredState) {
-          _classPrivateFieldLooseBase(this, _previousUploadedBytes)[_previousUploadedBytes] = Object.values(recoveredState.files).reduce((pv, _ref) => {
-            let {
-              progress
-            } = _ref;
-            return pv + progress.bytesUploaded;
-          }, 0);
+var _preact = require("preact");
 
-          // We don't set `#lastUpdateTime` at this point because the upload won't
-          // actually resume until the user asks for it.
+var _Components = require("./Components.js");
 
-          this.uppy.emit('restore-confirmed');
-          return;
+// TODO: rename this file to StatusBarUI>jsx on the next major.
+const classNames = require("classnames");
+
+const statusBarStates = require("./StatusBarStates.js");
+
+const calculateProcessingProgress = require("./calculateProcessingProgress.js");
+
+const {
+  STATE_ERROR,
+  STATE_WAITING,
+  STATE_PREPROCESSING,
+  STATE_UPLOADING,
+  STATE_POSTPROCESSING,
+  STATE_COMPLETE
+} = statusBarStates; // TODO: rename the function to StatusBarUI on the next major.
+
+function StatusBar(props) {
+  const {
+    newFiles,
+    allowNewUpload,
+    isUploadInProgress,
+    isAllPaused,
+    resumableUploads,
+    error,
+    hideUploadButton,
+    hidePauseResumeButton,
+    hideCancelButton,
+    hideRetryButton,
+    recoveredState,
+    uploadState,
+    totalProgress,
+    files,
+    supportsUploadProgress,
+    hideAfterFinish,
+    isSomeGhost,
+    doneButtonHandler,
+    isUploadStarted,
+    i18n,
+    startUpload,
+    uppy,
+    isAllComplete,
+    showProgressDetails,
+    numUploads,
+    complete,
+    totalSize,
+    totalETA,
+    totalUploadedSize
+  } = props;
+
+  function getProgressValue() {
+    switch (uploadState) {
+      case STATE_POSTPROCESSING:
+      case STATE_PREPROCESSING:
+        {
+          const progress = calculateProcessingProgress(files);
+
+          if (progress.mode === 'determinate') {
+            return progress.value * 100;
+          }
+
+          return totalProgress;
         }
-        _classPrivateFieldLooseBase(this, _lastUpdateTime)[_lastUpdateTime] = performance.now();
-        _classPrivateFieldLooseBase(this, _previousUploadedBytes)[_previousUploadedBytes] = 0;
-      }
-    });
-    this.id = this.opts.id || 'StatusBar';
-    this.title = 'StatusBar';
-    this.type = 'progressindicator';
-    this.defaultLocale = locale;
 
-    // set default options, must be kept in sync with @uppy/react/src/StatusBar.js
-    const defaultOptions = {
-      target: 'body',
-      hideUploadButton: false,
-      hideRetryButton: false,
-      hidePauseResumeButton: false,
-      hideCancelButton: false,
-      showProgressDetails: false,
-      hideAfterFinish: true,
-      doneButtonHandler: null
-    };
-    this.opts = {
-      ...defaultOptions,
-      ...opts
-    };
-    this.i18nInit();
-    this.render = this.render.bind(this);
-    this.install = this.install.bind(this);
-  }
-  render(state) {
-    const {
-      capabilities,
-      files,
-      allowNewUpload,
-      totalProgress,
-      error,
-      recoveredState
-    } = state;
-    const {
-      newFiles,
-      startedFiles,
-      completeFiles,
-      isUploadStarted,
-      isAllComplete,
-      isAllErrored,
-      isAllPaused,
-      isUploadInProgress,
-      isSomeGhost
-    } = this.uppy.getObjectOfFilesPerState();
+      case STATE_ERROR:
+        {
+          return null;
+        }
 
-    // If some state was recovered, we want to show Upload button/counter
-    // for all the files, because in this case it’s not an Upload button,
-    // but “Confirm Restore Button”
-    const newFilesOrRecovered = recoveredState ? Object.values(files) : newFiles;
-    const resumableUploads = !!capabilities.resumableUploads;
-    const supportsUploadProgress = capabilities.uploadProgress !== false;
-    let totalSize = 0;
-    let totalUploadedSize = 0;
-    startedFiles.forEach(file => {
-      totalSize += file.progress.bytesTotal || 0;
-      totalUploadedSize += file.progress.bytesUploaded || 0;
-    });
-    const totalETA = _classPrivateFieldLooseBase(this, _computeSmoothETA)[_computeSmoothETA]({
-      uploaded: totalUploadedSize,
-      total: totalSize,
-      remaining: totalSize - totalUploadedSize
-    });
-    return StatusBarUI({
-      error,
-      uploadState: getUploadingState(error, isAllComplete, recoveredState, state.files || {}),
-      allowNewUpload,
-      totalProgress,
-      totalSize,
-      totalUploadedSize,
-      isAllComplete: false,
-      isAllPaused,
-      isAllErrored,
-      isUploadStarted,
-      isUploadInProgress,
-      isSomeGhost,
-      recoveredState,
-      complete: completeFiles.length,
-      newFiles: newFilesOrRecovered.length,
-      numUploads: startedFiles.length,
-      totalETA,
-      files,
-      i18n: this.i18n,
-      uppy: this.uppy,
-      startUpload: this.startUpload,
-      doneButtonHandler: this.opts.doneButtonHandler,
-      resumableUploads,
-      supportsUploadProgress,
-      showProgressDetails: this.opts.showProgressDetails,
-      hideUploadButton: this.opts.hideUploadButton,
-      hideRetryButton: this.opts.hideRetryButton,
-      hidePauseResumeButton: this.opts.hidePauseResumeButton,
-      hideCancelButton: this.opts.hideCancelButton,
-      hideAfterFinish: this.opts.hideAfterFinish,
-      isTargetDOMEl: this.isTargetDOMEl
-    });
-  }
-  onMount() {
-    // Set the text direction if the page has not defined one.
-    const element = this.el;
-    const direction = getTextDirection(element);
-    if (!direction) {
-      element.dir = 'ltr';
+      case STATE_UPLOADING:
+        {
+          if (!supportsUploadProgress) {
+            return null;
+          }
+
+          return totalProgress;
+        }
+
+      default:
+        return totalProgress;
     }
   }
-  install() {
-    const {
-      target
-    } = this.opts;
-    if (target) {
-      this.mount(target, this);
+
+  function getIsIndeterminate() {
+    switch (uploadState) {
+      case STATE_POSTPROCESSING:
+      case STATE_PREPROCESSING:
+        {
+          const {
+            mode
+          } = calculateProcessingProgress(files);
+          return mode === 'indeterminate';
+        }
+
+      case STATE_UPLOADING:
+        {
+          if (!supportsUploadProgress) {
+            return true;
+          }
+
+          return false;
+        }
+
+      default:
+        return false;
     }
-    this.uppy.on('upload', _classPrivateFieldLooseBase(this, _onUploadStart)[_onUploadStart]);
+  }
 
-    // To cover the use case where the status bar is installed while the upload
-    // has started, we set `lastUpdateTime` right away.
-    _classPrivateFieldLooseBase(this, _lastUpdateTime)[_lastUpdateTime] = performance.now();
-    _classPrivateFieldLooseBase(this, _previousUploadedBytes)[_previousUploadedBytes] = this.uppy.getFiles().reduce((pv, file) => pv + file.progress.bytesUploaded, 0);
+  function getIsHidden() {
+    if (recoveredState) {
+      return false;
+    }
+
+    switch (uploadState) {
+      case STATE_WAITING:
+        return hideUploadButton || newFiles === 0;
+
+      case STATE_COMPLETE:
+        return hideAfterFinish;
+
+      default:
+        return false;
+    }
   }
-  uninstall() {
-    this.unmount();
-    this.uppy.off('upload', _classPrivateFieldLooseBase(this, _onUploadStart)[_onUploadStart]);
-  }
+
+  const progressValue = getProgressValue();
+  const isHidden = getIsHidden();
+  const width = progressValue != null ? progressValue : 100;
+  const showUploadBtn = !error && newFiles && !isUploadInProgress && !isAllPaused && allowNewUpload && !hideUploadButton;
+  const showCancelBtn = !hideCancelButton && uploadState !== STATE_WAITING && uploadState !== STATE_COMPLETE;
+  const showPauseResumeBtn = resumableUploads && !hidePauseResumeButton && uploadState === STATE_UPLOADING;
+  const showRetryBtn = error && !isAllComplete && !hideRetryButton;
+  const showDoneBtn = doneButtonHandler && uploadState === STATE_COMPLETE;
+  const progressClassNames = classNames('uppy-StatusBar-progress', {
+    'is-indeterminate': getIsIndeterminate()
+  });
+  const statusBarClassNames = classNames('uppy-StatusBar', `is-${uploadState}`, {
+    'has-ghosts': isSomeGhost
+  });
+  return (0, _preact.h)("div", {
+    className: statusBarClassNames,
+    "aria-hidden": isHidden
+  }, (0, _preact.h)("div", {
+    className: progressClassNames,
+    style: {
+      width: `${width}%`
+    },
+    role: "progressbar",
+    "aria-label": `${width}%`,
+    "aria-valuetext": `${width}%`,
+    "aria-valuemin": "0",
+    "aria-valuemax": "100",
+    "aria-valuenow": progressValue
+  }), (() => {
+    switch (uploadState) {
+      case STATE_PREPROCESSING:
+      case STATE_POSTPROCESSING:
+        return (0, _preact.h)(_Components.ProgressBarProcessing, {
+          progress: calculateProcessingProgress(files)
+        });
+
+      case STATE_COMPLETE:
+        return (0, _preact.h)(_Components.ProgressBarComplete, {
+          i18n: i18n
+        });
+
+      case STATE_ERROR:
+        return (0, _preact.h)(_Components.ProgressBarError, {
+          error: error,
+          i18n: i18n,
+          numUploads: numUploads,
+          complete: complete
+        });
+
+      case STATE_UPLOADING:
+        return (0, _preact.h)(_Components.ProgressBarUploading, {
+          i18n: i18n,
+          supportsUploadProgress: supportsUploadProgress,
+          totalProgress: totalProgress,
+          showProgressDetails: showProgressDetails,
+          isUploadStarted: isUploadStarted,
+          isAllComplete: isAllComplete,
+          isAllPaused: isAllPaused,
+          newFiles: newFiles,
+          numUploads: numUploads,
+          complete: complete,
+          totalUploadedSize: totalUploadedSize,
+          totalSize: totalSize,
+          totalETA: totalETA,
+          startUpload: startUpload
+        });
+
+      default:
+        return null;
+    }
+  })(), (0, _preact.h)("div", {
+    className: "uppy-StatusBar-actions"
+  }, recoveredState || showUploadBtn ? (0, _preact.h)(_Components.UploadBtn, {
+    newFiles: newFiles,
+    isUploadStarted: isUploadStarted,
+    recoveredState: recoveredState,
+    i18n: i18n,
+    isSomeGhost: isSomeGhost,
+    startUpload: startUpload,
+    uploadState: uploadState
+  }) : null, showRetryBtn ? (0, _preact.h)(_Components.RetryBtn, {
+    i18n: i18n,
+    uppy: uppy
+  }) : null, showPauseResumeBtn ? (0, _preact.h)(_Components.PauseResumeButton, {
+    isAllPaused: isAllPaused,
+    i18n: i18n,
+    isAllComplete: isAllComplete,
+    resumableUploads: resumableUploads,
+    uppy: uppy
+  }) : null, showCancelBtn ? (0, _preact.h)(_Components.CancelBtn, {
+    i18n: i18n,
+    uppy: uppy
+  }) : null, showDoneBtn ? (0, _preact.h)(_Components.DoneBtn, {
+    i18n: i18n,
+    doneButtonHandler: doneButtonHandler
+  }) : null));
 }
-function _computeSmoothETA2(totalBytes) {
-  var _classPrivateFieldLoo, _classPrivateFieldLoo2;
-  if (totalBytes.total === 0 || totalBytes.remaining === 0) {
-    return 0;
-  }
 
-  // When state is restored, lastUpdateTime is still nullish at this point.
-  (_classPrivateFieldLoo2 = (_classPrivateFieldLoo = _classPrivateFieldLooseBase(this, _lastUpdateTime))[_lastUpdateTime]) != null ? _classPrivateFieldLoo2 : _classPrivateFieldLoo[_lastUpdateTime] = performance.now();
-  const dt = performance.now() - _classPrivateFieldLooseBase(this, _lastUpdateTime)[_lastUpdateTime];
-  if (dt === 0) {
-    var _classPrivateFieldLoo3;
-    return Math.round(((_classPrivateFieldLoo3 = _classPrivateFieldLooseBase(this, _previousETA)[_previousETA]) != null ? _classPrivateFieldLoo3 : 0) / 100) / 10;
-  }
-  const uploadedBytesSinceLastTick = totalBytes.uploaded - _classPrivateFieldLooseBase(this, _previousUploadedBytes)[_previousUploadedBytes];
-  _classPrivateFieldLooseBase(this, _previousUploadedBytes)[_previousUploadedBytes] = totalBytes.uploaded;
-
-  // uploadedBytesSinceLastTick can be negative in some cases (packet loss?)
-  // in which case, we wait for next tick to update ETA.
-  if (uploadedBytesSinceLastTick <= 0) {
-    var _classPrivateFieldLoo4;
-    return Math.round(((_classPrivateFieldLoo4 = _classPrivateFieldLooseBase(this, _previousETA)[_previousETA]) != null ? _classPrivateFieldLoo4 : 0) / 100) / 10;
-  }
-  const currentSpeed = uploadedBytesSinceLastTick / dt;
-  const filteredSpeed = _classPrivateFieldLooseBase(this, _previousSpeed)[_previousSpeed] == null ? currentSpeed : emaFilter(currentSpeed, _classPrivateFieldLooseBase(this, _previousSpeed)[_previousSpeed], speedFilterHalfLife, dt);
-  _classPrivateFieldLooseBase(this, _previousSpeed)[_previousSpeed] = filteredSpeed;
-  const instantETA = totalBytes.remaining / filteredSpeed;
-  const updatedPreviousETA = Math.max(_classPrivateFieldLooseBase(this, _previousETA)[_previousETA] - dt, 0);
-  const filteredETA = _classPrivateFieldLooseBase(this, _previousETA)[_previousETA] == null ? instantETA : emaFilter(instantETA, updatedPreviousETA, ETAFilterHalfLife, dt);
-  _classPrivateFieldLooseBase(this, _previousETA)[_previousETA] = filteredETA;
-  _classPrivateFieldLooseBase(this, _lastUpdateTime)[_lastUpdateTime] = performance.now();
-  return Math.round(filteredETA / 100) / 10;
-}
-StatusBar.VERSION = packageJson.version;
+module.exports = StatusBar;

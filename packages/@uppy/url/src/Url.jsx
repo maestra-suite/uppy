@@ -7,13 +7,14 @@ import forEachDroppedOrPastedUrl from './utils/forEachDroppedOrPastedUrl.js'
 
 import packageJson from '../package.json'
 import locale from './locale.js'
-const getYouTubeID = require('get-youtube-id');
-const getYoutubeTitle  = require('get-youtube-title');
 
 function UrlIcon () {
   return (
     <svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 32 32">
-      <path d="M23.637 15.312l-2.474 2.464a3.582 3.582 0 01-.577.491c-.907.657-1.897.986-2.968.986a4.925 4.925 0 01-3.959-1.971c-.248-.329-.164-.902.165-1.149.33-.247.907-.164 1.155.164 1.072 1.478 3.133 1.724 4.618.656a.642.642 0 00.33-.328l2.473-2.463c1.238-1.313 1.238-3.366-.082-4.597a3.348 3.348 0 00-4.618 0l-1.402 1.395a.799.799 0 01-1.154 0 .79.79 0 010-1.15l1.402-1.394a4.843 4.843 0 016.843 0c2.062 1.805 2.144 5.007.248 6.896zm-8.081 5.664l-1.402 1.395a3.348 3.348 0 01-4.618 0c-1.319-1.23-1.319-3.365-.082-4.596l2.475-2.464.328-.328c.743-.492 1.567-.739 2.475-.657.906.165 1.648.574 2.143 1.314.248.329.825.411 1.155.165.33-.248.412-.822.165-1.15-.825-1.068-1.98-1.724-3.216-1.888-1.238-.247-2.556.082-3.628.902l-.495.493-2.474 2.464c-1.897 1.969-1.814 5.09.083 6.977.99.904 2.226 1.396 3.463 1.396s2.473-.492 3.463-1.395l1.402-1.396a.79.79 0 000-1.15c-.33-.328-.908-.41-1.237-.082z" fill="#FF753E" fill-rule="nonzero" />
+      <g fill="none" fillRule="evenodd">
+        <rect className="uppy-ProviderIconBg" fill="#FF753E" width="32" height="32" rx="16" />
+        <path d="M22.788 15.389l-2.199 2.19a3.184 3.184 0 0 1-.513.437c-.806.584-1.686.876-2.638.876a4.378 4.378 0 0 1-3.519-1.752c-.22-.292-.146-.802.147-1.021.293-.22.806-.146 1.026.146.953 1.313 2.785 1.532 4.105.583a.571.571 0 0 0 .293-.292l2.199-2.189c1.1-1.167 1.1-2.992-.073-4.086a2.976 2.976 0 0 0-4.105 0l-1.246 1.24a.71.71 0 0 1-1.026 0 .703.703 0 0 1 0-1.022l1.246-1.24a4.305 4.305 0 0 1 6.083 0c1.833 1.605 1.906 4.451.22 6.13zm-7.183 5.035l-1.246 1.24a2.976 2.976 0 0 1-4.105 0c-1.172-1.094-1.172-2.991-.073-4.086l2.2-2.19.292-.291c.66-.438 1.393-.657 2.2-.584.805.146 1.465.51 1.905 1.168.22.292.733.365 1.026.146.293-.22.367-.73.147-1.022-.733-.949-1.76-1.532-2.859-1.678-1.1-.22-2.272.073-3.225.802l-.44.438-2.199 2.19c-1.686 1.75-1.612 4.524.074 6.202.88.803 1.979 1.241 3.078 1.241 1.1 0 2.199-.438 3.079-1.24l1.246-1.241a.703.703 0 0 0 0-1.022c-.294-.292-.807-.365-1.1-.073z" fill="#FFF" fillRule="nonzero" />
+      </g>
     </svg>
   )
 }
@@ -46,29 +47,16 @@ function checkIfCorrectURL (url) {
   return true
 }
 
-async function getFileNameFromUrl (url) {
-  return new Promise((resolve, reject) => {
-    if (url.match(/(http:|https:)?\/\/(www\.)?(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/)) {
-      const id = getYouTubeID(url, {fuzzy: false});
-      getYoutubeTitle(id, 'AIzaSyCM3w7SKmg25eRBgh4tmjPpXDWED-iFp9Q', function (err, title) {
-        resolve(title)
-      })
-    }
-    else {
-      const { pathname } = new URL(url)
-      resolve(pathname.substring(pathname.lastIndexOf('/') + 1))
-    }
-  })
+function getFileNameFromUrl (url) {
+  const { pathname } = new URL(url)
+  return pathname.substring(pathname.lastIndexOf('/') + 1)
 }
-
 /**
  * Url
  *
  */
 export default class Url extends UIPlugin {
   static VERSION = packageJson.version
-
-  static requestClientId = Url.name
 
   constructor (uppy, opts) {
     super(uppy, opts)
@@ -103,8 +91,6 @@ export default class Url extends UIPlugin {
       companionHeaders: this.opts.companionHeaders,
       companionCookiesRule: this.opts.companionCookiesRule,
     })
-
-    this.uppy.registerRequestClient(Url.requestClientId, this.client)
   }
 
   getMeta (url) {
@@ -120,8 +106,8 @@ export default class Url extends UIPlugin {
   }
 
   async addFile (protocollessUrl, optionalMeta = undefined) {
-    const url = addProtocolToURL(protocollessUrl)
-    if (!checkIfCorrectURL(url)) {
+    const url = this.addProtocolToURL(protocollessUrl)
+    if (!this.checkIfCorrectURL(url)) {
       this.uppy.log(`[URL] Incorrect URL entered: ${url}`)
       this.uppy.info(this.i18n('enterCorrectUrl'), 'error', 4000)
       return undefined
@@ -133,7 +119,7 @@ export default class Url extends UIPlugin {
       const tagFile = {
         meta: optionalMeta,
         source: this.id,
-        name: meta.name || await getFileNameFromUrl(url),
+        name: this.getFileNameFromUrl(url),
         type: meta.type,
         data: {
           size: meta.size,
@@ -149,10 +135,9 @@ export default class Url extends UIPlugin {
             fileId: url,
             url,
           },
-          requestClientId: Url.requestClientId,
+          providerOptions: this.client.opts,
         },
       }
-
       this.uppy.log('[Url] Adding remote file')
       try {
         return this.uppy.addFile(tagFile)
@@ -202,6 +187,8 @@ export default class Url extends UIPlugin {
   }
 }
 
-// This is defined outside of the class body because it's not using `this`, but
-// we still want it available on the prototype so the Dashboard can access it.
+// TODO: remove from prototype in the next major.
+Url.prototype.addProtocolToURL = addProtocolToURL
 Url.prototype.canHandleRootDrop = canHandleRootDrop
+Url.prototype.checkIfCorrectURL = checkIfCorrectURL
+Url.prototype.getFileNameFromUrl = getFileNameFromUrl

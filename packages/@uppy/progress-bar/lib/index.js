@@ -1,1 +1,3 @@
-export { default } from "./ProgressBar.js";
+"use strict";
+
+module.exports = require("./ProgressBar.js");

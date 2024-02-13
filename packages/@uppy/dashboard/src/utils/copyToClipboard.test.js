@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest'
+import { describe, xit, expect } from '@jest/globals'
 import copyToClipboard from './copyToClipboard.js'
 
 describe('copyToClipboard', () => {
-  it.skip('should copy the specified text to the clipboard', () => {
+  xit('should copy the specified text to the clipboard', () => {
     expect(typeof copyToClipboard).toBe('function')
   })
 })

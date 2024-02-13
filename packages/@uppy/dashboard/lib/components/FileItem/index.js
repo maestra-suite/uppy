@@ -1,58 +1,78 @@
-import { h, Component } from 'preact';
-import classNames from 'classnames';
-import shallowEqual from 'is-shallow-equal';
-import FilePreviewAndLink from "./FilePreviewAndLink/index.js";
-import FileProgress from "./FileProgress/index.js";
-import FileInfo from "./FileInfo/index.js";
-import Buttons from "./Buttons/index.js";
-export default class FileItem extends Component {
+const {
+  h,
+  Component
+} = require('preact');
+
+const classNames = require('classnames');
+
+const shallowEqual = require('is-shallow-equal');
+
+const FilePreviewAndLink = require('./FilePreviewAndLink');
+
+const FileProgress = require('./FileProgress');
+
+const FileInfo = require('./FileInfo');
+
+const Buttons = require('./Buttons');
+
+module.exports = class FileItem extends Component {
   constructor(props) {
     super(props);
+
     this.setSpeakers = event => {
       this.setState({
         speakers: event.target.value
       });
       var file = this.props.file;
+
       if (file && file.id) {
         this.props.uppy.setFileMeta(file.id, {
           speakerCount: event.target.value
         });
       }
     };
+
     this.state = {
       speakers: 1
     };
   }
+
   componentDidMount() {
     const {
       file
     } = this.props;
+
     if (!file.preview) {
       this.props.handleRequestThumbnail(file);
     }
   }
+
   shouldComponentUpdate(nextProps) {
     return !shallowEqual(this.props, nextProps);
-  }
-
-  // VirtualList mounts FileItems again and they emit `thumbnail:request`
+  } // VirtualList mounts FileItems again and they emit `thumbnail:request`
   // Otherwise thumbnails are broken or missing after Golden Retriever restores files
+
+
   componentDidUpdate() {
     const {
       file
     } = this.props;
+
     if (!file.preview) {
       this.props.handleRequestThumbnail(file);
     }
   }
+
   componentWillUnmount() {
     const {
       file
     } = this.props;
+
     if (!file.preview) {
       this.props.handleCancelThumbnail(file);
     }
   }
+
   render() {
     const {
       file
@@ -61,17 +81,18 @@ export default class FileItem extends Component {
     const isUploaded = file.progress.uploadComplete && !isProcessing && !file.error;
     const uploadInProgressOrComplete = file.progress.uploadStarted || isProcessing;
     const uploadInProgress = file.progress.uploadStarted && !file.progress.uploadComplete || isProcessing;
-    const error = file.error || false;
-
-    // File that Golden Retriever was able to partly restore (only meta, not blob),
+    const error = file.error || false; // File that Golden Retriever was able to partly restore (only meta, not blob),
     // users still need to re-add it, so it’s a ghost
+
     const {
       isGhost
     } = file;
     let showRemoveButton = this.props.individualCancellation ? !isUploaded : !uploadInProgress && !isUploaded;
+
     if (isUploaded && this.props.showRemoveButtonAfterComplete) {
       showRemoveButton = true;
     }
+
     const dashboardItemClass = classNames({
       'uppy-Dashboard-Item': true,
       'is-inprogress': uploadInProgress && !this.props.recoveredState,
@@ -114,12 +135,10 @@ export default class FileItem extends Component {
       id: this.props.id,
       acquirers: this.props.acquirers,
       containerWidth: this.props.containerWidth,
-      containerHeight: this.props.containerHeight,
       i18n: this.props.i18n,
       toggleAddFilesPanel: this.props.toggleAddFilesPanel,
       toggleFileCard: this.props.toggleFileCard,
-      metaFields: this.props.metaFields,
-      isSingleFile: this.props.isSingleFile
+      metaFields: this.props.metaFields
     }), h(Buttons, {
       file: file,
       metaFields: this.props.metaFields,
@@ -157,4 +176,5 @@ export default class FileItem extends Component {
       value: "9"
     }, "9")))));
   }
-}
+
+};

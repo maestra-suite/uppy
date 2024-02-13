@@ -1,5 +1,4 @@
-import toArray from '@uppy/utils/lib/toArray';
-
+const toArray = require('@uppy/utils/lib/toArray');
 /*
   SITUATION
 
@@ -58,30 +57,38 @@ import toArray from '@uppy/utils/lib/toArray';
  * @param {string} isDropOrPaste - either 'drop' or 'paste'
  * @param {Function} callback - (urlString) => {}
  */
-export default function forEachDroppedOrPastedUrl(dataTransfer, isDropOrPaste, callback) {
+
+
+module.exports = function forEachDroppedOrPastedUrl(dataTransfer, isDropOrPaste, callback) {
   const items = toArray(dataTransfer.items);
   let urlItems;
+
   switch (isDropOrPaste) {
     case 'paste':
       {
         const atLeastOneFileIsDragged = items.some(item => item.kind === 'file');
+
         if (atLeastOneFileIsDragged) {
           return;
         }
+
         urlItems = items.filter(item => item.kind === 'string' && item.type === 'text/plain');
         break;
       }
+
     case 'drop':
       {
         urlItems = items.filter(item => item.kind === 'string' && item.type === 'text/uri-list');
         break;
       }
+
     default:
       {
         throw new Error(`isDropOrPaste must be either 'drop' or 'paste', but it's ${isDropOrPaste}`);
       }
   }
+
   urlItems.forEach(item => {
     item.getAsString(urlString => callback(urlString));
   });
-}
+};

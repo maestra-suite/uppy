@@ -1,64 +1,19 @@
-import { h } from 'preact';
-import classNames from 'classnames';
-import remoteFileObjToLocal from '@uppy/utils/lib/remoteFileObjToLocal';
-import { useMemo } from 'preact/hooks';
-import VirtualList from '@uppy/utils/lib/VirtualList';
-import SearchFilterInput from "./SearchFilterInput.js";
-import FooterActions from "./FooterActions.js";
-import Item from "./Item/index.js";
+"use strict";
+
+var _preact = require("preact");
+
+const classNames = require("classnames");
+
+const remoteFileObjToLocal = require("@uppy/utils/lib/remoteFileObjToLocal");
+
+const Filter = require("./Filter.js");
+
+const FooterActions = require("./FooterActions.js");
+
+const Item = require("./Item/index.js");
+
 const VIRTUAL_SHARED_DIR = 'shared-with-me';
-function ListItem(props) {
-  const {
-    currentSelection,
-    uppyFiles,
-    viewType,
-    isChecked,
-    toggleCheckbox,
-    recordShiftKeyPress,
-    showTitles,
-    i18n,
-    validateRestrictions,
-    getNextFolder,
-    columns,
-    f
-  } = props;
-  if (f.isFolder) {
-    var _isChecked;
-    return Item({
-      columns,
-      showTitles,
-      viewType,
-      i18n,
-      id: f.id,
-      title: f.name,
-      getItemIcon: () => f.icon,
-      isChecked: isChecked(f),
-      toggleCheckbox: event => toggleCheckbox(event, f),
-      recordShiftKeyPress,
-      type: 'folder',
-      isDisabled: (_isChecked = isChecked(f)) == null ? void 0 : _isChecked.loading,
-      isCheckboxDisabled: f.id === VIRTUAL_SHARED_DIR,
-      handleFolderClick: () => getNextFolder(f)
-    });
-  }
-  const restrictionError = validateRestrictions(remoteFileObjToLocal(f), [...uppyFiles, ...currentSelection]);
-  return Item({
-    id: f.id,
-    title: f.name,
-    author: f.author,
-    getItemIcon: () => f.icon,
-    isChecked: isChecked(f),
-    toggleCheckbox: event => toggleCheckbox(event, f),
-    recordShiftKeyPress,
-    columns,
-    showTitles,
-    viewType,
-    i18n,
-    type: 'file',
-    isDisabled: restrictionError && !isChecked(f),
-    restrictionError
-  });
-}
+
 function Browser(props) {
   const {
     currentSelection,
@@ -75,102 +30,84 @@ function Browser(props) {
     showTitles,
     i18n,
     validateRestrictions,
-    isLoading,
-    showSearchFilter,
-    search,
-    searchTerm,
-    clearSearch,
-    searchOnInput,
-    searchInputLabel,
-    clearSearchLabel,
+    showFilter,
+    filterQuery,
+    filterInput,
     getNextFolder,
     cancel,
     done,
-    columns,
-    noResultsLabel,
-    loadAllFiles
+    columns
   } = props;
   const selected = currentSelection.length;
-  const rows = useMemo(() => [...folders, ...files], [folders, files]);
-  return h("div", {
+  return (0, _preact.h)("div", {
     className: classNames('uppy-ProviderBrowser', `uppy-ProviderBrowser-viewType--${viewType}`)
-  }, headerComponent && h("div", {
+  }, (0, _preact.h)("div", {
     className: "uppy-ProviderBrowser-header"
-  }, h("div", {
+  }, (0, _preact.h)("div", {
     className: classNames('uppy-ProviderBrowser-headerBar', !showBreadcrumbs && 'uppy-ProviderBrowser-headerBar--simple')
-  }, headerComponent)), showSearchFilter && h("div", {
-    class: "uppy-ProviderBrowser-searchFilter"
-  }, h(SearchFilterInput, {
-    search: search,
-    searchTerm: searchTerm,
-    clearSearch: clearSearch,
-    inputLabel: searchInputLabel,
-    clearSearchLabel: clearSearchLabel,
-    inputClassName: "uppy-ProviderBrowser-searchFilterInput",
-    searchOnInput: searchOnInput
-  })), (() => {
-    if (isLoading) {
-      return h("div", {
-        className: "uppy-Provider-loading"
-      }, h("span", null, i18n('loading')));
-    }
+  }, headerComponent)), showFilter && (0, _preact.h)(Filter, {
+    i18n: i18n,
+    filterQuery: filterQuery,
+    filterInput: filterInput
+  }), (() => {
     if (!folders.length && !files.length) {
-      return h("div", {
+      return (0, _preact.h)("div", {
         className: "uppy-Provider-empty"
-      }, noResultsLabel);
+      }, i18n('noFilesFound'));
     }
-    if (loadAllFiles) {
-      return h("div", {
-        className: "uppy-ProviderBrowser-body"
-      }, h("ul", {
-        className: "uppy-ProviderBrowser-list"
-      }, h(VirtualList, {
-        data: rows,
-        renderRow: f => h(ListItem, {
-          currentSelection: currentSelection,
-          uppyFiles: uppyFiles,
-          viewType: viewType,
-          isChecked: isChecked,
-          toggleCheckbox: toggleCheckbox,
-          recordShiftKeyPress: recordShiftKeyPress,
-          showTitles: showTitles,
-          i18n: i18n,
-          validateRestrictions: validateRestrictions,
-          getNextFolder: getNextFolder,
-          columns: columns,
-          f: f
-        }),
-        rowHeight: 31
-      })));
-    }
-    return h("div", {
+
+    return (0, _preact.h)("div", {
       className: "uppy-ProviderBrowser-body"
-    }, h("ul", {
+    }, (0, _preact.h)("ul", {
       className: "uppy-ProviderBrowser-list",
       onScroll: handleScroll,
-      role: "listbox"
-      // making <ul> not focusable for firefox
+      role: "listbox" // making <ul> not focusable for firefox
       ,
       tabIndex: "-1"
-    }, rows.map(f => h(ListItem, {
-      currentSelection: currentSelection,
-      uppyFiles: uppyFiles,
-      viewType: viewType,
-      isChecked: isChecked,
-      toggleCheckbox: toggleCheckbox,
-      recordShiftKeyPress: recordShiftKeyPress,
-      showTitles: showTitles,
-      i18n: i18n,
-      validateRestrictions: validateRestrictions,
-      getNextFolder: getNextFolder,
-      columns: columns,
-      f: f
-    }))));
-  })(), selected > 0 && h(FooterActions, {
+    }, folders.map(folder => {
+      var _isChecked;
+
+      return Item({
+        columns,
+        showTitles,
+        viewType,
+        i18n,
+        id: folder.id,
+        title: folder.name,
+        getItemIcon: () => folder.icon,
+        isChecked: isChecked(folder),
+        toggleCheckbox: event => toggleCheckbox(event, folder),
+        recordShiftKeyPress,
+        type: 'folder',
+        isDisabled: (_isChecked = isChecked(folder)) == null ? void 0 : _isChecked.loading,
+        isCheckboxDisabled: folder.id === VIRTUAL_SHARED_DIR,
+        handleFolderClick: () => getNextFolder(folder)
+      });
+    }), files.map(file => {
+      const validated = validateRestrictions(remoteFileObjToLocal(file), [...uppyFiles, ...currentSelection]);
+      return Item({
+        id: file.id,
+        title: file.name,
+        author: file.author,
+        getItemIcon: () => file.icon,
+        isChecked: isChecked(file),
+        toggleCheckbox: event => toggleCheckbox(event, file),
+        recordShiftKeyPress,
+        columns,
+        showTitles,
+        viewType,
+        i18n,
+        type: 'file',
+        isDisabled: !validated.result && !isChecked(file),
+        restrictionReason: validated.reason
+      });
+    })));
+  })(), selected > 0 && (0, _preact.h)(FooterActions, {
     selected: selected,
     done: done,
     cancel: cancel,
     i18n: i18n
   }));
 }
-export default Browser;
+
+module.exports = Browser;

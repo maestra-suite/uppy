@@ -1,16 +1,12 @@
-import { h } from 'preact';
-export default (_ref => {
+"use strict";
+
+var _preact = require("preact");
+
+module.exports = _ref => {
   let {
-    i18n,
-    loading
+    i18n
   } = _ref;
-  return h("div", {
+  return (0, _preact.h)("div", {
     className: "uppy-Provider-loading"
-  }, h("span", null, i18n('loading')), typeof loading === 'string' &&
-  // todo improve this, see discussion in https://github.com/transloadit/uppy/pull/4399#discussion_r1162564445
-  h("span", {
-    style: {
-      marginTop: '.7em'
-    }
-  }, loading));
-});
+  }, (0, _preact.h)("span", null, i18n('loading')));
+};

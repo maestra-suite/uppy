@@ -1,111 +1,82 @@
-import getFilesAndDirectoriesFromDirectory from "./getFilesAndDirectoriesFromDirectory.js";
+"use strict";
+
+const getFilesAndDirectoriesFromDirectory = require("./getFilesAndDirectoriesFromDirectory.js");
 /**
- * Polyfill for the new (experimental) getAsFileSystemHandle API (using the popular webkitGetAsEntry behind the scenes)
- * so that we can switch to the getAsFileSystemHandle API once it (hopefully) becomes standard
+ * Interop between deprecated webkitGetAsEntry and standard getAsFileSystemHandle.
  */
+
+
 function getAsFileSystemHandleFromEntry(entry, logDropError) {
   if (entry == null) return entry;
   return {
     // eslint-disable-next-line no-nested-ternary
     kind: entry.isFile ? 'file' : entry.isDirectory ? 'directory' : undefined,
     name: entry.name,
+
     getFile() {
       return new Promise((resolve, reject) => entry.file(resolve, reject));
     },
+
     async *values() {
       // If the file is a directory.
       const directoryReader = entry.createReader();
       const entries = await new Promise(resolve => {
         getFilesAndDirectoriesFromDirectory(directoryReader, [], logDropError, {
-          onSuccess: dirEntries => resolve(dirEntries.map(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          file => getAsFileSystemHandleFromEntry(file, logDropError)))
+          onSuccess: dirEntries => resolve(dirEntries.map(file => getAsFileSystemHandleFromEntry(file, logDropError)))
         });
       });
       yield* entries;
-    },
-    isSameEntry: undefined
+    }
+
   };
 }
-function createPromiseToAddFileOrParseDirectory(entry, relativePath, lastResortFile) {
-  try {
-    if (lastResortFile === void 0) {
-      lastResortFile = undefined;
-    }
-    return async function* () {
-      const getNextRelativePath = () => `${relativePath}/${entry.name}`;
 
-      // For each dropped item, - make sure it's a file/directory, and start deepening in!
-      if (entry.kind === 'file') {
-        const file = await entry.getFile();
-        if (file != null) {
-          ;
-          file.relativePath = relativePath ? getNextRelativePath() : null;
-          yield file;
-        } else if (lastResortFile != null) yield lastResortFile;
-      } else if (entry.kind === 'directory') {
-        for await (const handle of entry.values()) {
-          // Recurse on the directory, appending the dir name to the relative path
-          yield* createPromiseToAddFileOrParseDirectory(handle, relativePath ? getNextRelativePath() : entry.name);
-        }
-      } else if (lastResortFile != null) yield lastResortFile;
-    }();
-  } catch (e) {
-    return Promise.reject(e);
+async function* createPromiseToAddFileOrParseDirectory(entry, relativePath) {
+  // For each dropped item, - make sure it's a file/directory, and start deepening in!
+  if (entry.kind === 'file') {
+    const file = await entry.getFile();
+
+    if (file !== null) {
+      file.relativePath = relativePath ? `${relativePath}/${entry.name}` : null;
+      yield file;
+    }
+  } else if (entry.kind === 'directory') {
+    for await (const handle of entry.values()) {
+      yield* createPromiseToAddFileOrParseDirectory(handle, `${relativePath}/${entry.name}`);
+    }
   }
 }
 
-/**
- * Load all files from data transfer, and recursively read any directories.
- * Note that IE is not supported for drag-drop, because IE doesn't support Data Transfers
- *
- * @param {DataTransfer} dataTransfer
- * @param {*} logDropError on error
- */
-export default async function* getFilesFromDataTransfer(dataTransfer, logDropError) {
-  // Retrieving the dropped items must happen synchronously
-  // otherwise only the first item gets treated and the other ones are garbage collected.
-  // https://github.com/transloadit/uppy/pull/3998
-  const fileSystemHandles = await Promise.all(Array.from(dataTransfer.items, async item => {
-    var _fileSystemHandle;
-    let fileSystemHandle;
+async function* getFilesFromDataTransfer(dataTransfer, logDropError) {
+  const entries = await Promise.all(Array.from(dataTransfer.items, async item => {
+    var _await$item$getAsFile;
 
-    // TODO enable getAsFileSystemHandle API once we can get it working with subdirectories
-    // IMPORTANT: Need to check isSecureContext *before* calling getAsFileSystemHandle
-    // or else Chrome will crash when running in HTTP: https://github.com/transloadit/uppy/issues/4133
-    // if (window.isSecureContext && item.getAsFileSystemHandle != null)
-    // fileSystemHandle = await item.getAsFileSystemHandle()
+    const lastResortFile = item.getAsFile(); // Chromium bug, see https://github.com/transloadit/uppy/issues/3505.
 
-    // `webkitGetAsEntry` exists in all popular browsers (including non-WebKit browsers),
-    // however it may be renamed to getAsEntry() in the future, so you should code defensively, looking for both.
-    // from https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem/webkitGetAsEntry
-    const getAsEntry = () => typeof item.getAsEntry === 'function' ? item.getAsEntry() : item.webkitGetAsEntry();
-    // eslint-disable-next-line prefer-const
-    (_fileSystemHandle = fileSystemHandle) != null ? _fileSystemHandle : fileSystemHandle = getAsFileSystemHandleFromEntry(getAsEntry(), logDropError);
+    const entry = (_await$item$getAsFile = await (item.getAsFileSystemHandle == null ? void 0 : item.getAsFileSystemHandle())) != null ? _await$item$getAsFile : getAsFileSystemHandleFromEntry(item.webkitGetAsEntry(), logDropError);
     return {
-      fileSystemHandle,
-      lastResortFile: item.getAsFile() // can be used as a fallback in case other methods fail
+      lastResortFile,
+      entry
     };
   }));
 
   for (const {
     lastResortFile,
-    fileSystemHandle
-  } of fileSystemHandles) {
-    // fileSystemHandle and lastResortFile can be null when we drop an url.
-    if (fileSystemHandle != null) {
+    entry
+  } of entries) {
+    // :entry can be null when we drop the url e.g.
+    if (entry != null) {
       try {
-        yield* createPromiseToAddFileOrParseDirectory(fileSystemHandle, '', lastResortFile);
+        yield* createPromiseToAddFileOrParseDirectory(entry, '');
       } catch (err) {
-        // Example: If dropping a symbolic link, Chromium will throw:
-        // "DOMException: A requested file or directory could not be found at the time an operation was processed.",
-        // So we will use lastResortFile instead. See https://github.com/transloadit/uppy/issues/3505.
-        if (lastResortFile != null) {
+        if (lastResortFile) {
           yield lastResortFile;
         } else {
           logDropError(err);
         }
       }
-    } else if (lastResortFile != null) yield lastResortFile;
+    }
   }
 }
+
+module.exports = getFilesFromDataTransfer;

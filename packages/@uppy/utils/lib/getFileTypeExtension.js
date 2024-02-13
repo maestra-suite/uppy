@@ -1,5 +1,6 @@
+"use strict";
+
 const mimeToExtensions = {
-  __proto__: null,
   'audio/mp3': 'mp3',
   'audio/mp4': 'mp4',
   'audio/ogg': 'ogg',
@@ -17,10 +18,12 @@ const mimeToExtensions = {
   'video/x-matroska': 'mkv',
   'video/x-msvideo': 'avi'
 };
-export default function getFileTypeExtension(mimeType) {
+
+function getFileTypeExtension(mimeType) {
   // Remove the ; bit in 'video/x-matroska;codecs=avc1'
   // eslint-disable-next-line no-param-reassign
-  ;
   [mimeType] = mimeType.split(';', 1);
   return mimeToExtensions[mimeType] || null;
 }
+
+module.exports = getFileTypeExtension;

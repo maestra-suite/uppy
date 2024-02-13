@@ -1,7 +1,7 @@
 {
   "name": "@uppy/store-default",
   "description": "The default simple object-based store for Uppy.",
-  "version": "3.2.0",
+  "version": "2.1.1",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
@@ -16,7 +16,7 @@
     "url": "https://github.com/transloadit/uppy/issues"
   },
   "devDependencies": {
-    "vitest": "^1.2.1"
+    "@jest/globals": "^27.4.2"
   },
   "repository": {
     "type": "git",

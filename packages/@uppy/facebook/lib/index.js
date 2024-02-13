@@ -1,1 +1,3 @@
-export { default } from "./Facebook.js";
+"use strict";
+
+module.exports = require("./Facebook.js");

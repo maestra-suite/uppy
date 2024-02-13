@@ -1,4 +1,7 @@
-import { h } from 'preact';
+const {
+  h
+} = require('preact');
+
 function iconImage() {
   return h("svg", {
     "aria-hidden": "true",
@@ -21,6 +24,7 @@ function iconImage() {
     r: "1.5"
   })));
 }
+
 function iconAudio() {
   return h("svg", {
     "aria-hidden": "true",
@@ -35,6 +39,7 @@ function iconAudio() {
     fillRule: "nonzero"
   }));
 }
+
 function iconVideo() {
   return h("svg", {
     "aria-hidden": "true",
@@ -49,6 +54,7 @@ function iconVideo() {
     fillRule: "nonzero"
   }));
 }
+
 function iconPDF() {
   return h("svg", {
     "aria-hidden": "true",
@@ -63,6 +69,7 @@ function iconPDF() {
     fillRule: "nonzero"
   }));
 }
+
 function iconArchive() {
   return h("svg", {
     "aria-hidden": "true",
@@ -76,6 +83,7 @@ function iconArchive() {
     fillRule: "nonzero"
   }));
 }
+
 function iconFile() {
   return h("svg", {
     "aria-hidden": "true",
@@ -93,6 +101,7 @@ function iconFile() {
     d: "M15 4v3a1 1 0 0 0 1 1h3V7h-3V4h-1z"
   })));
 }
+
 function iconText() {
   return h("svg", {
     "aria-hidden": "true",
@@ -107,62 +116,64 @@ function iconText() {
     fillRule: "nonzero"
   }));
 }
-export default function getIconByMime(fileType) {
+
+module.exports = function getIconByMime(fileType) {
   const defaultChoice = {
     color: '#838999',
     icon: iconFile()
   };
   if (!fileType) return defaultChoice;
   const fileTypeGeneral = fileType.split('/')[0];
-  const fileTypeSpecific = fileType.split('/')[1];
+  const fileTypeSpecific = fileType.split('/')[1]; // Text
 
-  // Text
   if (fileTypeGeneral === 'text') {
     return {
       color: '#5a5e69',
       icon: iconText()
     };
-  }
+  } // Image
 
-  // Image
+
   if (fileTypeGeneral === 'image') {
     return {
       color: '#686de0',
       icon: iconImage()
     };
-  }
+  } // Audio
 
-  // Audio
+
   if (fileTypeGeneral === 'audio') {
     return {
       color: '#068dbb',
       icon: iconAudio()
     };
-  }
+  } // Video
 
-  // Video
+
   if (fileTypeGeneral === 'video') {
     return {
       color: '#19af67',
       icon: iconVideo()
     };
-  }
+  } // PDF
 
-  // PDF
+
   if (fileTypeGeneral === 'application' && fileTypeSpecific === 'pdf') {
     return {
       color: '#e25149',
       icon: iconPDF()
     };
-  }
+  } // Archive
 
-  // Archive
+
   const archiveTypes = ['zip', 'x-7z-compressed', 'x-rar-compressed', 'x-tar', 'x-gzip', 'x-apple-diskimage'];
+
   if (fileTypeGeneral === 'application' && archiveTypes.indexOf(fileTypeSpecific) !== -1) {
     return {
       color: '#00C469',
       icon: iconArchive()
     };
   }
+
   return defaultChoice;
-}
+};

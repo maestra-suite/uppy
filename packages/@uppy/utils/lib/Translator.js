@@ -1,9 +1,12 @@
-function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
-var id = 0;
-function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
-import has from "./hasProperty.js";
+"use strict";
 
-// We're using a generic because languages have different plural rules.
+function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
+
+var id = 0;
+
+function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
+
+const has = require("./hasProperty.js");
 
 function insertReplacement(source, rx, replacement) {
   const newParts = [];
@@ -15,12 +18,13 @@ function insertReplacement(source, rx, replacement) {
     if (typeof chunk !== 'string') {
       return newParts.push(chunk);
     }
+
     return rx[Symbol.split](chunk).forEach((raw, i, list) => {
       if (raw !== '') {
         newParts.push(raw);
-      }
+      } // Interlace with the `replacement` value
 
-      // Interlace with the `replacement` value
+
       if (i < list.length - 1) {
         newParts.push(replacement);
       }
@@ -28,7 +32,6 @@ function insertReplacement(source, rx, replacement) {
   });
   return newParts;
 }
-
 /**
  * Takes a string with placeholder variables like `%{smart_count} file selected`
  * and replaces it with values from options `{smart_count: 5}`
@@ -36,32 +39,38 @@ function insertReplacement(source, rx, replacement) {
  * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
  * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
  *
- * @param phrase that needs interpolation, with placeholders
- * @param options with values that will be used to replace placeholders
+ * @param {string} phrase that needs interpolation, with placeholders
+ * @param {object} options with values that will be used to replace placeholders
+ * @returns {any[]} interpolated
  */
+
+
 function interpolate(phrase, options) {
   const dollarRegex = /\$/g;
   const dollarBillsYall = '$$$$';
   let interpolated = [phrase];
   if (options == null) return interpolated;
+
   for (const arg of Object.keys(options)) {
     if (arg !== '_') {
       // Ensure replacement value is escaped to prevent special $-prefixed
       // regex replace tokens. the "$$$$" is needed because each "$" needs to
       // be escaped with "$" itself, and we need two in the resulting output.
       let replacement = options[arg];
+
       if (typeof replacement === 'string') {
         replacement = dollarRegex[Symbol.replace](replacement, dollarBillsYall);
-      }
-      // We create a new `RegExp` each time instead of using a more-efficient
+      } // We create a new `RegExp` each time instead of using a more-efficient
       // string replace so that the same argument can be replaced multiple times
       // in the same phrase.
+
+
       interpolated = insertReplacement(interpolated, new RegExp(`%\\{${arg}\\}`, 'g'), replacement);
     }
   }
+
   return interpolated;
 }
-
 /**
  * Translates strings with interpolation & pluralization support.
  * Extensible with custom dictionaries and pluralization functions.
@@ -73,70 +82,91 @@ function interpolate(phrase, options) {
  *
  * Usage example: `translator.translate('files_chosen', {smart_count: 3})`
  */
+
+
 var _apply = /*#__PURE__*/_classPrivateFieldLooseKey("apply");
-export default class Translator {
+
+class Translator {
+  /**
+   * @param {object|Array<object>} locales - locale or list of locales.
+   */
   constructor(locales) {
     Object.defineProperty(this, _apply, {
       value: _apply2
     });
     this.locale = {
       strings: {},
+
       pluralize(n) {
         if (n === 1) {
           return 0;
         }
+
         return 1;
       }
+
     };
+
     if (Array.isArray(locales)) {
       locales.forEach(_classPrivateFieldLooseBase(this, _apply)[_apply], this);
     } else {
       _classPrivateFieldLooseBase(this, _apply)[_apply](locales);
     }
   }
+
   /**
    * Public translate method
    *
-   * @param key
-   * @param options with values that will be used later to replace placeholders in string
-   * @returns string translated (and interpolated)
+   * @param {string} key
+   * @param {object} options with values that will be used later to replace placeholders in string
+   * @returns {string} translated (and interpolated)
    */
   translate(key, options) {
     return this.translateArray(key, options).join('');
   }
-
   /**
    * Get a translation and return the translated and interpolated parts as an array.
    *
-   * @returns The translated and interpolated parts, in order.
+   * @param {string} key
+   * @param {object} options with values that will be used to replace placeholders
+   * @returns {Array} The translated and interpolated parts, in order.
    */
+
+
   translateArray(key, options) {
     if (!has(this.locale.strings, key)) {
       throw new Error(`missing string: ${key}`);
     }
+
     const string = this.locale.strings[key];
     const hasPluralForms = typeof string === 'object';
+
     if (hasPluralForms) {
       if (options && typeof options.smart_count !== 'undefined') {
         const plural = this.locale.pluralize(options.smart_count);
         return interpolate(string[plural], options);
       }
+
       throw new Error('Attempted to use a string with plural forms, but no value was given for %{smart_count}');
     }
+
     return interpolate(string, options);
   }
+
 }
+
 function _apply2(locale) {
   if (!(locale != null && locale.strings)) {
     return;
   }
+
   const prevLocale = this.locale;
-  this.locale = {
-    ...prevLocale,
-    strings: {
-      ...prevLocale.strings,
+  this.locale = { ...prevLocale,
+    strings: { ...prevLocale.strings,
       ...locale.strings
     }
   };
   this.locale.pluralize = locale.pluralize || prevLocale.pluralize;
 }
+
+module.exports = Translator;

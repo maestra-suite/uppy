@@ -1,7 +1,15 @@
-import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
-import VirtualList from '@uppy/utils/lib/VirtualList';
-import FileItem from "./FileItem/index.js";
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+const classNames = require('classnames');
+
+const {
+  h
+} = require('preact');
+
+const FileItem = require('./FileItem/index.js');
+
+const VirtualList = require('./VirtualList');
+
 function chunks(list, size) {
   const chunked = [];
   let currentChunk = [];
@@ -16,107 +24,75 @@ function chunks(list, size) {
   if (currentChunk.length) chunked.push(currentChunk);
   return chunked;
 }
-export default (_ref => {
-  let {
-    id,
-    error,
-    i18n,
-    uppy,
-    files,
-    acquirers,
-    resumableUploads,
-    hideRetryButton,
-    hidePauseResumeButton,
-    hideCancelButton,
-    showLinkToFileUploadResult,
-    showRemoveButtonAfterComplete,
-    isWide,
-    metaFields,
-    isSingleFile,
-    toggleFileCard,
-    handleRequestThumbnail,
-    handleCancelThumbnail,
-    recoveredState,
-    individualCancellation,
-    itemsPerRow,
-    openFileEditor,
-    canEditFile,
-    toggleAddFilesPanel,
-    containerWidth,
-    containerHeight
-  } = _ref;
-  // It's not great that this is hardcoded!
-  // It's ESPECIALLY not great that this is checking against `itemsPerRow`!
-  const rowHeight = itemsPerRow === 1
-  // Mobile
-  ? 71
-  // 190px height + 2 * 5px margin
-  : 200;
 
-  // Sort files by file.isGhost, ghost files first, only if recoveredState is present
-  const rows = useMemo(() => {
-    const sortByGhostComesFirst = (file1, file2) => files[file2].isGhost - files[file1].isGhost;
-    const fileIds = Object.keys(files);
-    if (recoveredState) fileIds.sort(sortByGhostComesFirst);
-    return chunks(fileIds, itemsPerRow);
-  }, [files, itemsPerRow, recoveredState]);
-  const renderRow = row =>
-  // The `role="presentation` attribute ensures that the list items are properly
+module.exports = props => {
+  const noFiles = props.totalFileCount === 0;
+  const dashboardFilesClass = classNames('uppy-Dashboard-files', {
+    'uppy-Dashboard-files--noFiles': noFiles
+  }); // It's not great that this is hardcoded!
+  // It's ESPECIALLY not great that this is checking against `itemsPerRow`!
+
+  const rowHeight = props.itemsPerRow === 1 // Mobile
+  ? 71 // 190px height + 2 * 5px margin
+  : 200;
+  const fileProps = {
+    // FIXME This is confusing, it's actually the Dashboard's plugin ID
+    id: props.id,
+    error: props.error,
+    // TODO move this to context
+    i18n: props.i18n,
+    uppy: props.uppy,
+    // features
+    acquirers: props.acquirers,
+    resumableUploads: props.resumableUploads,
+    individualCancellation: props.individualCancellation,
+    // visual options
+    hideRetryButton: props.hideRetryButton,
+    hidePauseResumeButton: props.hidePauseResumeButton,
+    hideCancelButton: props.hideCancelButton,
+    showLinkToFileUploadResult: props.showLinkToFileUploadResult,
+    showRemoveButtonAfterComplete: props.showRemoveButtonAfterComplete,
+    isWide: props.isWide,
+    metaFields: props.metaFields,
+    recoveredState: props.recoveredState,
+    // callbacks
+    toggleFileCard: props.toggleFileCard,
+    handleRequestThumbnail: props.handleRequestThumbnail,
+    handleCancelThumbnail: props.handleCancelThumbnail,
+    setFileMeta: props.uppy.setFileMeta
+  };
+
+  const sortByGhostComesFirst = (file1, file2) => {
+    return props.files[file2].isGhost - props.files[file1].isGhost;
+  }; // Sort files by file.isGhost, ghost files first, only if recoveredState is present
+
+
+  const files = Object.keys(props.files);
+  if (props.recoveredState) files.sort(sortByGhostComesFirst);
+  const rows = chunks(files, props.itemsPerRow);
+
+  const renderRow = row => // The `role="presentation` attribute ensures that the list items are properly
   // associated with the `VirtualList` element.
   // We use the first file ID as the key—this should not change across scroll rerenders
   h("div", {
-    class: "uppy-Dashboard-filesInner",
     role: "presentation",
     key: row[0]
-  }, row.map(fileID => h(FileItem, {
+  }, row.map(fileID => h(FileItem, _extends({
     key: fileID,
-    uppy: uppy
-    // FIXME This is confusing, it's actually the Dashboard's plugin ID
-    ,
-    id: id,
-    error: error
-    // TODO move this to context
-    ,
-    i18n: i18n
-    // features
-    ,
-    acquirers: acquirers,
-    resumableUploads: resumableUploads,
-    individualCancellation: individualCancellation
-    // visual options
-    ,
-    hideRetryButton: hideRetryButton,
-    hidePauseResumeButton: hidePauseResumeButton,
-    hideCancelButton: hideCancelButton,
-    showLinkToFileUploadResult: showLinkToFileUploadResult,
-    showRemoveButtonAfterComplete: showRemoveButtonAfterComplete,
-    isWide: isWide,
-    metaFields: metaFields,
-    recoveredState: recoveredState,
-    isSingleFile: isSingleFile,
-    containerWidth: containerWidth,
-    containerHeight: containerHeight
-    // callbacks
-    ,
-    toggleFileCard: toggleFileCard,
-    handleRequestThumbnail: handleRequestThumbnail,
-    handleCancelThumbnail: handleCancelThumbnail,
+    uppy: props.uppy
+  }, fileProps, {
     role: "listitem",
-    openFileEditor: openFileEditor,
-    canEditFile: canEditFile,
-    toggleAddFilesPanel: toggleAddFilesPanel,
-    file: files[fileID]
-  })));
-  if (isSingleFile) {
-    return h("div", {
-      class: "uppy-Dashboard-files"
-    }, renderRow(rows[0]));
-  }
+    openFileEditor: props.openFileEditor,
+    canEditFile: props.canEditFile,
+    toggleAddFilesPanel: props.toggleAddFilesPanel,
+    file: props.files[fileID]
+  }))));
+
   return h(VirtualList, {
-    class: "uppy-Dashboard-files",
+    class: dashboardFilesClass,
     role: "list",
     data: rows,
     renderRow: renderRow,
     rowHeight: rowHeight
   });
-});
+};

@@ -1,26 +1,28 @@
-import hasOwnProperty from "./hasProperty.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createAbortError = exports.AbortSignal = exports.AbortController = void 0;
+
 /**
  * Little AbortController proxy module so we can swap out the implementation easily later.
  */
-export const {
+const {
   AbortController
 } = globalThis;
-export const {
+exports.AbortController = AbortController;
+const {
   AbortSignal
 } = globalThis;
-export const createAbortError = function (message, options) {
+exports.AbortSignal = AbortSignal;
+
+const createAbortError = function (message) {
   if (message === void 0) {
     message = 'Aborted';
   }
-  const err = new DOMException(message, 'AbortError');
-  if (options != null && hasOwnProperty(options, 'cause')) {
-    Object.defineProperty(err, 'cause', {
-      // @ts-expect-error TS is drunk
-      __proto__: null,
-      configurable: true,
-      writable: true,
-      value: options.cause
-    });
-  }
-  return err;
+
+  return new DOMException(message, 'AbortError');
 };
+
+exports.createAbortError = createAbortError;

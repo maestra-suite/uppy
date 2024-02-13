@@ -7,13 +7,6 @@ import FileInfo from './FileInfo/index.jsx'
 import Buttons from './Buttons/index.jsx'
 
 export default class FileItem extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      speakers: 1
-    }
-  }
-  
   componentDidMount () {
     const { file } = this.props
     if (!file.preview) {
@@ -38,18 +31,6 @@ export default class FileItem extends Component {
     const { file } = this.props
     if (!file.preview) {
       this.props.handleCancelThumbnail(file)
-    }
-  }
-
-  setSpeakers = (event) => {
-    this.setState({
-      speakers: event.target.value
-    });
-    var file = this.props.file;
-    if (file && file.id) {
-      this.props.uppy.setFileMeta(file.id, {
-        speakerCount: event.target.value
-      });
     }
   }
 
@@ -121,12 +102,10 @@ export default class FileItem extends Component {
             id={this.props.id}
             acquirers={this.props.acquirers}
             containerWidth={this.props.containerWidth}
-            containerHeight={this.props.containerHeight}
             i18n={this.props.i18n}
             toggleAddFilesPanel={this.props.toggleAddFilesPanel}
             toggleFileCard={this.props.toggleFileCard}
             metaFields={this.props.metaFields}
-            isSingleFile={this.props.isSingleFile}
           />
           <Buttons
             file={file}
@@ -140,19 +119,6 @@ export default class FileItem extends Component {
             uppy={this.props.uppy}
             i18n={this.props.i18n}
           />
-          <div class="uppy-DropDown-SpeakerCount">
-            <select class="uppy-Dropdown-SpeakerCount-Select" value={this.state.speakers} onChange={this.setSpeakers}>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-            </select>
-          </div>
         </div>
       </div>
     )

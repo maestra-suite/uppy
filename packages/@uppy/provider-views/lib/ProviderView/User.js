@@ -1,17 +1,20 @@
-import { h } from 'preact';
-export default (_ref => {
+"use strict";
+
+var _preact = require("preact");
+
+module.exports = _ref => {
   let {
     i18n,
     logout,
     username
   } = _ref;
-  return [h("span", {
+  return [(0, _preact.h)("span", {
     className: "uppy-ProviderBrowser-user",
     key: "username"
-  }, username), h("button", {
+  }, username), (0, _preact.h)("button", {
     type: "button",
     onClick: logout,
-    className: "uppy-u-reset uppy-c-btn uppy-ProviderBrowser-userLogout",
+    className: "uppy-u-reset uppy-ProviderBrowser-userLogout",
     key: "logout"
   }, i18n('logOut'))];
-});
+};

@@ -1,13 +1,21 @@
-import hasProperty from "./hasProperty.js";
+"use strict";
+
+const hasProperty = require("./hasProperty.js");
+
 class ErrorWithCause extends Error {
   constructor(message, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
     super(message);
-    this.cause = options == null ? void 0 : options.cause;
+    this.cause = options.cause;
+
     if (this.cause && hasProperty(this.cause, 'isNetworkError')) {
       this.isNetworkError = this.cause.isNetworkError;
-    } else {
-      this.isNetworkError = false;
     }
   }
+
 }
-export default ErrorWithCause;
+
+module.exports = ErrorWithCause;

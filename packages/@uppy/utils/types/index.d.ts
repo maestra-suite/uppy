@@ -9,18 +9,18 @@ declare module '@uppy/utils/lib/Translator' {
   }
 
   class Translator {
-    constructor(opts: Translator.Locale | Translator.Locale[])
+    constructor (opts: Translator.Locale | Translator.Locale[])
 
-    translate(key: string, options: Record<string, unknown>): string
+    translate (key: string, options: Record<string, unknown>): string
 
-    translateArray(key: string, options: Record<string, unknown>): any[]
+    translateArray (key: string, options: Record<string, unknown>): any[]
   }
 
-  export default Translator
+  export = Translator
 }
 
-declare module '@uppy/utils/lib/EventManager' {
-  namespace EventManager {
+declare module '@uppy/utils/lib/EventTracker' {
+  namespace EventTracker {
     export type EventHandler = (...args: any[]) => void
     export interface Emitter {
       on: (event: string, handler: EventHandler) => void
@@ -28,26 +28,26 @@ declare module '@uppy/utils/lib/EventManager' {
     }
   }
 
-  class EventManager {
-    constructor(emitter: EventManager.Emitter)
+  class EventTracker {
+    constructor (emitter: EventTracker.Emitter)
 
-    on(event: string, handler: EventManager.EventHandler): void
+    on (event: string, handler: EventTracker.EventHandler): void
 
-    remove(): void
+    remove (): void
   }
 
-  export default EventManager
+  export = EventTracker
 }
 
 declare module '@uppy/utils/lib/ProgressTimeout' {
   class ProgressTimeout {
-    constructor(timeout: number, timeoutHandler: () => void)
+    constructor (timeout: number, timeoutHandler: () => void)
 
-    progress(): void
+    progress (): void
 
-    done(): void
+    done (): void
   }
-  export default ProgressTimeout
+  export = ProgressTimeout
 }
 
 declare module '@uppy/utils/lib/RateLimitedQueue' {
@@ -55,11 +55,10 @@ declare module '@uppy/utils/lib/RateLimitedQueue' {
     export type AbortFunction = () => void
     export interface AbortablePromise<T> extends Promise<T> {
       abort(): void
-      abortOn(signal: AbortSignal): this
     }
     export type QueueEntry = {
-      abort: () => void
-      done: () => void
+      abort: () => void,
+      done: () => void,
     }
     export type QueueOptions = {
       priority?: number
@@ -69,22 +68,14 @@ declare module '@uppy/utils/lib/RateLimitedQueue' {
   export class RateLimitedQueue {
     constructor(limit: number)
 
-    readonly isPaused: boolean
-
     run(
       fn: () => RateLimitedQueue.AbortFunction,
-      queueOptions?: RateLimitedQueue.QueueOptions,
+      queueOptions?: RateLimitedQueue.QueueOptions
     ): RateLimitedQueue.QueueEntry
-
-    rateLimit(duration: number): void
-
-    pause(duration?: number): void
-
-    resume(): void
 
     wrapPromiseFunction(
       fn: () => (...args: any[]) => Promise<any>,
-      queueOptions?: RateLimitedQueue.QueueOptions,
+      queueOptions?: RateLimitedQueue.QueueOptions
     ): (...args: any[]) => RateLimitedQueue.AbortablePromise<any>
   }
 
@@ -92,32 +83,32 @@ declare module '@uppy/utils/lib/RateLimitedQueue' {
 }
 
 declare module '@uppy/utils/lib/canvasToBlob' {
-  function canvasToBlob(
+  function canvasToBlob (
     canvas: HTMLCanvasElement,
     type: string,
-    quality?: number,
+    quality?: number
   ): Promise<Blob>
-  export default canvasToBlob
+  export = canvasToBlob
 }
 
 declare module '@uppy/utils/lib/dataURItoBlob' {
-  function dataURItoBlob(
+  function dataURItoBlob (
     dataURI: string,
-    opts: { mimeType?: string; name?: string },
+    opts: { mimeType?: string; name?: string }
   ): Blob
-  export default dataURItoBlob
+  export = dataURItoBlob
 }
 
 declare module '@uppy/utils/lib/dataURItoFile' {
-  function dataURItoFile(
+  function dataURItoFile (
     dataURI: string,
-    opts: { mimeType?: string; name?: string },
+    opts: { mimeType?: string; name?: string }
   ): File
-  export default dataURItoFile
+  export = dataURItoFile
 }
 
 declare module '@uppy/utils/lib/emitSocketProgress' {
-  import type { UppyFile } from '@uppy/utils'
+  import UppyUtils = require('@uppy/utils')
 
   interface ProgressData {
     progress: number
@@ -125,223 +116,134 @@ declare module '@uppy/utils/lib/emitSocketProgress' {
     bytesTotal: number
   }
 
-  function emitSocketProgress(
+  function emitSocketProgress (
     uploader: unknown,
     progressData: ProgressData,
-    file: UppyFile,
+    file: UppyUtils.UppyFile
   ): void
-  export default emitSocketProgress
+  export = emitSocketProgress
 }
 
 declare module '@uppy/utils/lib/findAllDOMElements' {
-  function findAllDOMElements(element: string | HTMLElement): HTMLElement[]
-  export default findAllDOMElements
+  function findAllDOMElements (element: string | HTMLElement): HTMLElement[]
+  export = findAllDOMElements
 }
 
 declare module '@uppy/utils/lib/findDOMElement' {
-  function findDOMElement(element: string | HTMLElement): HTMLElement | null
-  export default findDOMElement
+  function findDOMElement (element: string | HTMLElement): HTMLElement | null
+  export = findDOMElement
 }
 
 declare module '@uppy/utils/lib/generateFileID' {
-  import type { UppyFile } from '@uppy/utils'
+  import UppyUtils = require('@uppy/utils')
 
-  function generateFileID(file: UppyFile): string
-  export default generateFileID
+  function generateFileID (file: UppyUtils.UppyFile): string
+  export = generateFileID
 }
 
 declare module '@uppy/utils/lib/getBytesRemaining' {
-  function getBytesRemaining(progress: {
+  function getBytesRemaining (progress: {
     bytesTotal: number
     bytesUploaded: number
   }): number
-  export default getBytesRemaining
+  export = getBytesRemaining
 }
 
 declare module '@uppy/utils/lib/getETA' {
-  function getETA(progress: unknown): number
-  export default getETA
+  function getETA (progress: unknown): number
+  export = getETA
 }
 
 declare module '@uppy/utils/lib/getFileNameAndExtension' {
-  function getFileNameAndExtension(filename: string): {
-    name: string
-    extension: string | undefined
-  }
-  export default getFileNameAndExtension
+  function getFileNameAndExtension(
+    filename: string
+  ): { name: string, extension: string | undefined }
+  export = getFileNameAndExtension
 }
 
 declare module '@uppy/utils/lib/getFileType' {
-  import type { UppyFile } from '@uppy/utils'
+  import UppyUtils = require('@uppy/utils')
 
-  function getFileType(file: UppyFile): string
-  export default getFileType
+  function getFileType (file: UppyUtils.UppyFile): string
+  export = getFileType
 }
 
 declare module '@uppy/utils/lib/getFileTypeExtension' {
-  function getFileTypeExtension(mime: string): string
-  export default getFileTypeExtension
+  function getFileTypeExtension (mime: string): string
+  export = getFileTypeExtension
 }
 
 declare module '@uppy/utils/lib/getSocketHost' {
-  function getSocketHost(url: string): string
-  export default getSocketHost
+  function getSocketHost (url: string): string
+  export = getSocketHost
 }
 
 declare module '@uppy/utils/lib/getSpeed' {
-  function getSpeed(progress: {
+  function getSpeed (progress: {
+    bytesTotal: number
     bytesUploaded: number
-    uploadStarted: number
   }): number
-  export default getSpeed
+  export = getSpeed
 }
 
 declare module '@uppy/utils/lib/getTimeStamp' {
-  function getTimeStamp(): string
-  export default getTimeStamp
+  function getTimeStamp (): string
+  export = getTimeStamp
 }
 
 declare module '@uppy/utils/lib/isDOMElement' {
-  function isDOMElement(element: any): boolean
-  export default isDOMElement
+  function isDOMElement (element: any): boolean
+  export = isDOMElement
 }
 
 declare module '@uppy/utils/lib/isObjectURL' {
-  function isObjectURL(url: string): boolean
-  export default isObjectURL
+  function isObjectURL (url: string): boolean
+  export = isObjectURL
 }
 
 declare module '@uppy/utils/lib/isDragDropSupported' {
-  function isDragDropSupported(): boolean
-  export default isDragDropSupported
+  function isDragDropSupported (): boolean
+  export = isDragDropSupported
 }
 
 declare module '@uppy/utils/lib/isPreviewSupported' {
-  function isPreviewSupported(mime: string): boolean
-  export default isPreviewSupported
+  function isPreviewSupported (mime: string): boolean
+  export = isPreviewSupported
 }
 
 declare module '@uppy/utils/lib/isTouchDevice' {
-  function isTouchDevice(): boolean
-  export default isTouchDevice
+  function isTouchDevice (): boolean
+  export = isTouchDevice
 }
 
 declare module '@uppy/utils/lib/prettyETA' {
-  function prettyETA(seconds: number): string
-  export default prettyETA
+  function prettyETA (seconds: number): string
+  export = prettyETA
 }
 
 declare module '@uppy/utils/lib/secondsToTime' {
-  function secondsToTime(seconds: number): string
-  export default secondsToTime
+  function secondsToTime (seconds: number): string
+  export = secondsToTime
 }
 
 declare module '@uppy/utils/lib/settle' {
-  function settle<T>(
-    promises: Promise<T>[],
+  function settle<T> (
+    promises: Promise<T>[]
   ): Promise<{ successful: T[]; failed: any[] }>
-  export default settle
+  export = settle
 }
 
 declare module '@uppy/utils/lib/toArray' {
-  function toArray(list: any): any[]
-  export default toArray
-}
-
-declare module '@uppy/utils/lib/AbortController' {
-  import type { ErrorOptions } from '@uppy/utils/lib/ErrorWithCause'
-
-  export const AbortController: typeof globalThis.AbortController
-  export const AbortSignal: typeof globalThis.AbortSignal
-  export function createAbortError(
-    message?: string,
-    options?: ErrorOptions,
-  ): DOMException
+  function toArray (list: any): any[]
+  export = toArray
 }
 
 declare module '@uppy/utils/lib/getDroppedFiles' {
-  function getDroppedFiles(
+  function getDroppedFiles (
     dataTransfer: DataTransfer,
-    options?: Record<string, unknown>,
+    options?: Record<string, unknown>
   ): Promise<File[]>
-  export default getDroppedFiles
-}
-
-declare module '@uppy/utils/lib/getTextDirection' {
-  function getTextDirection(element: Node): string | undefined
-  export default getTextDirection
-}
-
-declare module '@uppy/utils/lib/isNetworkError' {
-  export default function isNetworkError(xhr: any): boolean
-}
-
-declare module '@uppy/utils/lib/NetworkError' {
-  class NetworkError extends Error {
-    readonly cause: any
-
-    readonly isNetworkError: true
-
-    readonly request?: XMLHttpRequest
-
-    constructor(error: any, xhr?: XMLHttpRequest)
-  }
-
-  export default NetworkError
-}
-
-declare module '@uppy/utils/lib/FOCUSABLE_ELEMENTS' {
-  const exports: string[]
-  export default exports
-}
-
-declare module '@uppy/utils/lib/truncateString' {
-  export default function truncateString(
-    string: string,
-    maxLength: number,
-  ): string
-}
-
-declare module '@uppy/utils/lib/remoteFileObjToLocal' {
-  export default function remoteFileObjToLocal(
-    file: object,
-  ): Record<string, unknown>
-}
-
-declare module '@uppy/utils/lib/fetchWithNetworkError' {
-  export default function fetchWithNetworkError(
-    ...options: unknown[]
-  ): Promise<Response>
-}
-
-declare module '@uppy/utils/lib/ErrorWithCause' {
-  interface ErrorOptions {
-    cause?: unknown
-  }
-
-  export default class ErrorWithCause extends Error {
-    cause: any
-
-    isNetworkError?: true
-
-    constructor(message: string, options?: ErrorOptions)
-  }
-}
-
-declare module '@uppy/utils/lib/delay' {
-  export default function delay(
-    ms: number,
-    opts?: { signal: AbortSignal },
-  ): Promise<void>
-}
-
-declare module '@uppy/utils/lib/hasProperty' {
-  export default function has(object: any, key: string): boolean
-}
-
-declare module '@uppy/utils/lib/mimeTypes' {
-  const exports: Record<string, string>
-  export default exports
+  export = getDroppedFiles
 }
 
 declare module '@uppy/utils' {
@@ -350,7 +252,7 @@ declare module '@uppy/utils' {
     [key: number]: T
   }
   export type InternalMetadata = { name: string; type?: string }
-  export interface FileProgress {
+  export interface FileProgress  {
     uploadStarted: number | null
     uploadComplete: boolean
     percentage: number
@@ -359,7 +261,7 @@ declare module '@uppy/utils' {
   }
   export interface UppyFile<
     TMeta = IndexedObject<any>,
-    TBody = IndexedObject<any>,
+    TBody = IndexedObject<any>
   > {
     data: Blob | File
     extension: string
@@ -385,8 +287,8 @@ declare module '@uppy/utils' {
     }
   }
   export interface Store {
-    getState(): Record<string, unknown>
-    setState(patch: Record<string, unknown>): void
-    subscribe(listener: any): () => void
+    getState (): Record<string, unknown>
+    setState (patch: Record<string, unknown>): void
+    subscribe (listener: any): () => void
   }
 }

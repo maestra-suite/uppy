@@ -1,10 +1,12 @@
-import { h } from 'preact';
-import classNames from 'classnames';
+"use strict";
+
+var _preact = require("preact");
+
 function GridListItem(props) {
   const {
     className,
     isDisabled,
-    restrictionError,
+    restrictionReason,
     isChecked,
     title,
     itemIconEl,
@@ -14,27 +16,26 @@ function GridListItem(props) {
     id,
     children
   } = props;
-  const checkBoxClassName = classNames('uppy-u-reset', 'uppy-ProviderBrowserItem-checkbox', 'uppy-ProviderBrowserItem-checkbox--grid', {
-    'uppy-ProviderBrowserItem-checkbox--is-checked': isChecked
-  });
-  return h("li", {
+  return (0, _preact.h)("li", {
     className: className,
-    title: isDisabled ? restrictionError == null ? void 0 : restrictionError.message : null
-  }, h("input", {
+    title: isDisabled ? restrictionReason : null
+  }, (0, _preact.h)("input", {
     type: "checkbox",
-    className: checkBoxClassName,
+    className: `uppy-u-reset uppy-ProviderBrowserItem-checkbox ${isChecked ? 'uppy-ProviderBrowserItem-checkbox--is-checked' : ''} uppy-ProviderBrowserItem-checkbox--grid`,
     onChange: toggleCheckbox,
     onKeyDown: recordShiftKeyPress,
-    onMouseDown: recordShiftKeyPress,
     name: "listitem",
     id: id,
     checked: isChecked,
     disabled: isDisabled,
     "data-uppy-super-focusable": true
-  }), h("label", {
+  }), (0, _preact.h)("label", {
     htmlFor: id,
     "aria-label": title,
     className: "uppy-u-reset uppy-ProviderBrowserItem-inner"
-  }, itemIconEl, showTitles && title, children));
+  }, (0, _preact.h)("span", {
+    className: "uppy-ProviderBrowserItem-inner-relative"
+  }, itemIconEl, showTitles && title, children)));
 }
-export default GridListItem;
+
+module.exports = GridListItem;

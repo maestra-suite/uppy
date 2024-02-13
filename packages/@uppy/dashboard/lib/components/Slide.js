@@ -1,8 +1,13 @@
-import { cloneElement, Component, toChildArray } from 'preact';
-import classNames from 'classnames';
+const {
+  cloneElement,
+  Component,
+  toChildArray
+} = require('preact');
+
+const classNames = require('classnames');
+
 const transitionName = 'uppy-transition-slideDownUp';
 const duration = 250;
-
 /**
  * Vertical slide transition.
  *
@@ -12,6 +17,7 @@ const duration = 250;
  * but it should be simple to extend this for any type of single-element
  * transition by setting the CSS name and duration as props.
  */
+
 class Slide extends Component {
   constructor(props) {
     super(props);
@@ -19,10 +25,10 @@ class Slide extends Component {
       cachedChildren: null,
       className: ''
     };
-  }
-
-  // TODO: refactor to stable lifecycle method
+  } // TODO: refactor to stable lifecycle method
   // eslint-disable-next-line
+
+
   componentWillUpdate(nextProps) {
     const {
       cachedChildren
@@ -31,9 +37,8 @@ class Slide extends Component {
     if (cachedChildren === child) return null;
     const patch = {
       cachedChildren: child
-    };
+    }; // Enter transition
 
-    // Enter transition
     if (child && !cachedChildren) {
       patch.className = `${transitionName}-enter`;
       cancelAnimationFrame(this.animationFrame);
@@ -42,7 +47,6 @@ class Slide extends Component {
       this.animationFrame = requestAnimationFrame(() => {
         // Force it to render before we add the active class
         // this.base.getBoundingClientRect()
-
         this.setState({
           className: `${transitionName}-enter ${transitionName}-enter-active`
         });
@@ -52,9 +56,9 @@ class Slide extends Component {
           });
         }, duration);
       });
-    }
+    } // Leave transition
 
-    // Leave transition
+
     if (cachedChildren && !child && this.leaveTimeout === undefined) {
       patch.cachedChildren = cachedChildren;
       patch.className = `${transitionName}-leave`;
@@ -72,22 +76,27 @@ class Slide extends Component {
           });
         }, duration);
       });
-    }
+    } // eslint-disable-next-line
 
-    // eslint-disable-next-line
+
     this.setState(patch);
   }
+
   render() {
     const {
       cachedChildren,
       className
     } = this.state;
+
     if (!cachedChildren) {
       return null;
     }
+
     return cloneElement(cachedChildren, {
       className: classNames(className, cachedChildren.props.className)
     });
   }
+
 }
-export default Slide;
+
+module.exports = Slide;

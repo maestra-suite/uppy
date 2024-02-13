@@ -1,1 +1,1 @@
-{"version":3,"names":["default"],"sources":["index.js"],"sourcesContent":["export { default } from './GoogleDrive.jsx'\n"],"mappings":"AAAA,SAASA,OAAO,QAAQ,kBAAmB"}
+{"version":3,"sources":["index.js"],"names":[],"mappings":";;yBAAwB,kB","sourcesContent":["export { default } from './GoogleDrive.jsx'\n"]}

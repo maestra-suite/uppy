@@ -1,8 +1,11 @@
 const {
   h
 } = require('preact');
+
 const classNames = require('classnames');
+
 const ignoreEvent = require('../utils/ignoreEvent.js');
+
 function PickerPanelContent(props) {
   return h("div", {
     className: classNames('uppy-DashboardContent-panel', props.className),
@@ -29,4 +32,5 @@ function PickerPanelContent(props) {
     className: `uppy-DashboardContent-panelBody ${props.activePickerPanel.id}`
   }, props.uppy.getPlugin(props.activePickerPanel.id).render(props.state)));
 }
+
 module.exports = PickerPanelContent;

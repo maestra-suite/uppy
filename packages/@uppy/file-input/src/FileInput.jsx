@@ -16,7 +16,7 @@ export default  class FileInput extends UIPlugin {
 
     this.defaultLocale = locale
 
-    // Default options, must be kept in sync with @uppy/react/src/FileInput.js.
+    // Default options
     const defaultOptions = {
       target: null,
       pretty: true,

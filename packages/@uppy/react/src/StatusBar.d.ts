@@ -1,8 +1,7 @@
 import type { StatusBarOptions } from '@uppy/status-bar'
-import type { ToUppyProps } from './CommonTypes'
+import { ToUppyProps } from './CommonTypes'
 
-export type StatusBarProps = ToUppyProps<StatusBarOptions> &
-  React.BaseHTMLAttributes<HTMLDivElement>
+export type StatusBarProps = ToUppyProps<StatusBarOptions>  & React.BaseHTMLAttributes<HTMLDivElement>
 
 /**
  * React component that renders a status bar containing upload progress and speed,

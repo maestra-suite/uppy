@@ -1,5 +1,5 @@
 import type { FileInputOptions } from '@uppy/file-input'
-import type { ToUppyProps } from './CommonTypes'
+import { ToUppyProps } from './CommonTypes'
 
 export type FileInputProps = ToUppyProps<FileInputOptions>
 

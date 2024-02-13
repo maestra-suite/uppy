@@ -7,7 +7,7 @@ const Breadcrumb = (props) => {
     <Fragment>
       <button
         type="button"
-        className="uppy-u-reset uppy-c-btn"
+        className="uppy-u-reset"
         onClick={getFolder}
       >
         {title}
@@ -18,18 +18,18 @@ const Breadcrumb = (props) => {
 }
 
 export default (props) => {
-  const { getFolder, title, breadcrumbsIcon, breadcrumbs } = props
+  const { getFolder, title, breadcrumbsIcon, directories } = props
 
   return (
     <div className="uppy-Provider-breadcrumbs">
       <div className="uppy-Provider-breadcrumbsIcon">{breadcrumbsIcon}</div>
       {
-        breadcrumbs.map((directory, i) => (
+        directories.map((directory, i) => (
           <Breadcrumb
             key={directory.id}
-            getFolder={() => getFolder(directory.requestPath)}
-            title={i === 0 ? title : directory.name}
-            isLast={i + 1 === breadcrumbs.length}
+            getFolder={() => getFolder(directory.id)}
+            title={i === 0 ? title : directory.title}
+            isLast={i + 1 === directories.length}
           />
         ))
       }

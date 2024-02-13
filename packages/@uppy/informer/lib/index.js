@@ -1,1 +1,3 @@
-export { default } from "./Informer.js";
+"use strict";
+
+module.exports = require("./Informer.js");

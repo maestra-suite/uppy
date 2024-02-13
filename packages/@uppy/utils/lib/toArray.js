@@ -1,4 +1,6 @@
+"use strict";
+
 /**
  * Converts list into array
  */
-export default Array.from;
+module.exports = Array.from;

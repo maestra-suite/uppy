@@ -1,16 +1,5 @@
-function createCancelError (cause) {
-  return new Error('Cancelled', { cause })
-}
-
-function abortOn (signal) {
-  if (signal != null) {
-    const abortPromise = () => this.abort(signal.reason)
-    signal.addEventListener('abort', abortPromise, { once: true })
-    const removeAbortListener = () => { signal.removeEventListener('abort', abortPromise) }
-    this.then?.(removeAbortListener, removeAbortListener)
-  }
-
-  return this
+function createCancelError () {
+  return new Error('Cancelled')
 }
 
 export class RateLimitedQueue {
@@ -50,11 +39,11 @@ export class RateLimitedQueue {
     }
 
     return {
-      abort: (cause) => {
+      abort: () => {
         if (done) return
         done = true
         this.#activeRequests -= 1
-        cancelActive?.(cause)
+        cancelActive()
         this.#queueNext()
       },
 
@@ -128,23 +117,6 @@ export class RateLimitedQueue {
     return this.#queue(fn, queueOptions)
   }
 
-  wrapSyncFunction (fn, queueOptions) {
-    return (...args) => {
-      const queuedRequest = this.run(() => {
-        fn(...args)
-        queueMicrotask(() => queuedRequest.done())
-        return () => {}
-      }, queueOptions)
-
-      return {
-        abortOn,
-        abort () {
-          queuedRequest.abort()
-        },
-      }
-    }
-  }
-
   wrapPromiseFunction (fn, queueOptions) {
     return (...args) => {
       let queuedRequest
@@ -174,16 +146,15 @@ export class RateLimitedQueue {
             }
           })
 
-          return (cause) => {
-            cancelError = createCancelError(cause)
+          return () => {
+            cancelError = createCancelError()
           }
         }, queueOptions)
       })
 
-      outerPromise.abort = (cause) => {
-        queuedRequest.abort(cause)
+      outerPromise.abort = () => {
+        queuedRequest.abort()
       }
-      outerPromise.abortOn = abortOn
 
       return outerPromise
     }

@@ -1,35 +1,41 @@
-import { createElement as h, Component } from 'react';
-import DashboardPlugin from '@uppy/dashboard';
-import { dashboard as basePropTypes } from './propTypes.js';
-import getHTMLProps from './getHTMLProps.js';
-import nonHtmlPropsHaveChanged from './nonHtmlPropsHaveChanged.js';
+const React = require('react');
 
+const DashboardPlugin = require('@uppy/dashboard');
+
+const basePropTypes = require('./propTypes').dashboard;
+
+const getHTMLProps = require('./getHTMLProps');
+
+const nonHtmlPropsHaveChanged = require('./nonHtmlPropsHaveChanged');
+
+const h = React.createElement;
 /**
  * React Component that renders a Dashboard for an Uppy instance. This component
  * renders the Dashboard inline, so you can put it anywhere you want.
  */
 
-class Dashboard extends Component {
+class Dashboard extends React.Component {
   componentDidMount() {
     this.installPlugin();
   }
+
   componentDidUpdate(prevProps) {
-    // eslint-disable-next-line react/destructuring-assignment
     if (prevProps.uppy !== this.props.uppy) {
       this.uninstallPlugin(prevProps);
       this.installPlugin();
-    } else if (nonHtmlPropsHaveChanged(this.props, prevProps)) {
-      const options = {
-        ...this.props,
+    } else if (nonHtmlPropsHaveChanged(this, prevProps)) {
+      const options = { ...this.props,
         target: this.container
       };
       delete options.uppy;
       this.plugin.setOptions(options);
     }
   }
+
   componentWillUnmount() {
     this.uninstallPlugin();
   }
+
   installPlugin() {
     const {
       uppy
@@ -43,27 +49,34 @@ class Dashboard extends Component {
     uppy.use(DashboardPlugin, options);
     this.plugin = uppy.getPlugin(options.id);
   }
+
   uninstallPlugin(props) {
     if (props === void 0) {
       props = this.props;
     }
+
     const {
       uppy
     } = props;
     uppy.removePlugin(this.plugin);
   }
+
   render() {
+    // TODO: stop exposing `validProps` as a public property and rename it to `htmlProps`
+    this.validProps = getHTMLProps(this.props);
     return h('div', {
       className: 'uppy-Container',
       ref: container => {
         this.container = container;
       },
-      ...getHTMLProps(this.props)
+      ...this.validProps
     });
   }
+
 }
+
 Dashboard.propTypes = basePropTypes;
 Dashboard.defaultProps = {
   inline: true
 };
-export default Dashboard;
+module.exports = Dashboard;

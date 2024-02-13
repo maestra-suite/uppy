@@ -1,1 +1,3 @@
-export { default } from "./Zoom.js";
+"use strict";
+
+module.exports = require("./Zoom.js");

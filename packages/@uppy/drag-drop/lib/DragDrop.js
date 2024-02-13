@@ -1,70 +1,79 @@
-import { UIPlugin } from '@uppy/core';
-import toArray from '@uppy/utils/lib/toArray';
-import isDragDropSupported from '@uppy/utils/lib/isDragDropSupported';
-import getDroppedFiles from '@uppy/utils/lib/getDroppedFiles';
-import { h } from 'preact';
-const packageJson = {
-  "version": "3.0.3"
-};
-import locale from './locale.js';
+"use strict";
 
+var _core = require("@uppy/core");
+
+var _preact = require("preact");
+
+const toArray = require("@uppy/utils/lib/toArray");
+
+const isDragDropSupported = require("@uppy/utils/lib/isDragDropSupported");
+
+const getDroppedFiles = require("@uppy/utils/lib/getDroppedFiles");
+
+const packageJson = {
+  "version": "2.1.2"
+};
+
+const locale = require("./locale.js");
 /**
  * Drag & Drop plugin
  *
  */
-export default class DragDrop extends UIPlugin {
+
+
+class DragDrop extends _core.UIPlugin {
   constructor(uppy, opts) {
     super(uppy, opts);
+
     this.handleDrop = async event => {
       var _this$opts$onDrop, _this$opts;
+
       event.preventDefault();
       event.stopPropagation();
-      clearTimeout(this.removeDragOverClassTimeout);
+      clearTimeout(this.removeDragOverClassTimeout); // Remove dragover class
 
-      // Remove dragover class
       this.setPluginState({
         isDraggingOver: false
       });
+
       const logDropError = error => {
         this.uppy.log(error, 'error');
-      };
+      }; // Add all dropped files
 
-      // Add all dropped files
+
       const files = await getDroppedFiles(event.dataTransfer, {
         logDropError
       });
+
       if (files.length > 0) {
         this.uppy.log('[DragDrop] Files dropped');
         this.addFiles(files);
       }
+
       (_this$opts$onDrop = (_this$opts = this.opts).onDrop) == null ? void 0 : _this$opts$onDrop.call(_this$opts, event);
     };
+
     this.type = 'acquirer';
     this.id = this.opts.id || 'DragDrop';
     this.title = 'Drag & Drop';
-    this.defaultLocale = locale;
+    this.defaultLocale = locale; // Default options
 
-    // Default options, must be kept in sync with @uppy/react/src/DragDrop.js.
     const defaultOpts = {
       target: null,
       inputName: 'files[]',
       width: '100%',
       height: '100%',
       note: null
-    };
+    }; // Merge default options with the ones set by user
 
-    // Merge default options with the ones set by user
-    this.opts = {
-      ...defaultOpts,
+    this.opts = { ...defaultOpts,
       ...opts
     };
-    this.i18nInit();
+    this.i18nInit(); // Check for browser dragDrop support
 
-    // Check for browser dragDrop support
     this.isDragDropSupported = isDragDropSupported();
-    this.removeDragOverClassTimeout = null;
+    this.removeDragOverClassTimeout = null; // Bind `this` to class methods
 
-    // Bind `this` to class methods
     this.onInputChange = this.onInputChange.bind(this);
     this.handleDragOver = this.handleDragOver.bind(this);
     this.handleDragLeave = this.handleDragLeave.bind(this);
@@ -72,6 +81,7 @@ export default class DragDrop extends UIPlugin {
     this.addFiles = this.addFiles.bind(this);
     this.render = this.render.bind(this);
   }
+
   addFiles(files) {
     const descriptors = files.map(file => ({
       source: this.id,
@@ -84,34 +94,38 @@ export default class DragDrop extends UIPlugin {
         relativePath: file.relativePath || null
       }
     }));
+
     try {
       this.uppy.addFiles(descriptors);
     } catch (err) {
       this.uppy.log(err);
     }
   }
+
   onInputChange(event) {
     const files = toArray(event.target.files);
+
     if (files.length > 0) {
       this.uppy.log('[DragDrop] Files selected through input');
       this.addFiles(files);
-    }
-
-    // We clear the input after a file is selected, because otherwise
+    } // We clear the input after a file is selected, because otherwise
     // change event is not fired in Chrome and Safari when a file
     // with the same name is selected.
     // ___Why not use value="" on <input/> instead?
     //    Because if we use that method of clearing the input,
     //    Chrome will not trigger change if we drop the same file twice (Issue #768).
     // eslint-disable-next-line no-param-reassign
+
+
     event.target.value = null;
   }
+
   handleDragOver(event) {
     var _this$opts$onDragOver, _this$opts2;
-    event.preventDefault();
-    event.stopPropagation();
 
-    // Check if the "type" of the datatransfer object includes files. If not, deny drop.
+    event.preventDefault();
+    event.stopPropagation(); // Check if the "type" of the datatransfer object includes files. If not, deny drop.
+
     const {
       types
     } = event.dataTransfer;
@@ -119,18 +133,19 @@ export default class DragDrop extends UIPlugin {
     const {
       allowNewUpload
     } = this.uppy.getState();
+
     if (!hasFiles || !allowNewUpload) {
       // eslint-disable-next-line no-param-reassign
       event.dataTransfer.dropEffect = 'none';
       clearTimeout(this.removeDragOverClassTimeout);
       return;
-    }
-
-    // Add a small (+) icon on drop
+    } // Add a small (+) icon on drop
     // (and prevent browsers from interpreting this as files being _moved_ into the browser
     // https://github.com/transloadit/uppy/issues/1978)
     //
     // eslint-disable-next-line no-param-reassign
+
+
     event.dataTransfer.dropEffect = 'copy';
     clearTimeout(this.removeDragOverClassTimeout);
     this.setPluginState({
@@ -138,13 +153,15 @@ export default class DragDrop extends UIPlugin {
     });
     (_this$opts$onDragOver = (_this$opts2 = this.opts).onDragOver) == null ? void 0 : _this$opts$onDragOver.call(_this$opts2, event);
   }
+
   handleDragLeave(event) {
     var _this$opts$onDragLeav, _this$opts3;
+
     event.preventDefault();
     event.stopPropagation();
-    clearTimeout(this.removeDragOverClassTimeout);
-    // Timeout against flickering, this solution is taken from drag-drop library.
+    clearTimeout(this.removeDragOverClassTimeout); // Timeout against flickering, this solution is taken from drag-drop library.
     // Solution with 'pointer-events: none' didn't work across browsers.
+
     this.removeDragOverClassTimeout = setTimeout(() => {
       this.setPluginState({
         isDraggingOver: false
@@ -152,11 +169,12 @@ export default class DragDrop extends UIPlugin {
     }, 50);
     (_this$opts$onDragLeav = (_this$opts3 = this.opts).onDragLeave) == null ? void 0 : _this$opts$onDragLeav.call(_this$opts3, event);
   }
+
   renderHiddenFileInput() {
     const {
       restrictions
     } = this.uppy.opts;
-    return h("input", {
+    return (0, _preact.h)("input", {
       className: "uppy-DragDrop-input",
       type: "file",
       hidden: true,
@@ -169,33 +187,37 @@ export default class DragDrop extends UIPlugin {
       onChange: this.onInputChange
     });
   }
+
   static renderArrowSvg() {
-    return h("svg", {
+    return (0, _preact.h)("svg", {
       "aria-hidden": "true",
       focusable: "false",
       className: "uppy-c-icon uppy-DragDrop-arrow",
       width: "16",
       height: "16",
       viewBox: "0 0 16 16"
-    }, h("path", {
+    }, (0, _preact.h)("path", {
       d: "M11 10V0H5v10H2l6 6 6-6h-3zm0 0",
       fillRule: "evenodd"
     }));
   }
+
   renderLabel() {
-    return h("div", {
+    return (0, _preact.h)("div", {
       className: "uppy-DragDrop-label"
     }, this.i18nArray('dropHereOr', {
-      browse: h("span", {
+      browse: (0, _preact.h)("span", {
         className: "uppy-DragDrop-browse"
       }, this.i18n('browse'))
     }));
   }
+
   renderNote() {
-    return h("span", {
+    return (0, _preact.h)("span", {
       className: "uppy-DragDrop-note"
     }, this.opts.note);
   }
+
   render() {
     const dragDropClass = `uppy-u-reset
       uppy-DragDrop-container
@@ -206,7 +228,7 @@ export default class DragDrop extends UIPlugin {
       width: this.opts.width,
       height: this.opts.height
     };
-    return h("button", {
+    return (0, _preact.h)("button", {
       type: "button",
       className: dragDropClass,
       style: dragDropStyle,
@@ -214,10 +236,11 @@ export default class DragDrop extends UIPlugin {
       onDragOver: this.handleDragOver,
       onDragLeave: this.handleDragLeave,
       onDrop: this.handleDrop
-    }, this.renderHiddenFileInput(), h("div", {
+    }, this.renderHiddenFileInput(), (0, _preact.h)("div", {
       className: "uppy-DragDrop-inner"
     }, DragDrop.renderArrowSvg(), this.renderLabel(), this.renderNote()));
   }
+
   install() {
     const {
       target
@@ -225,12 +248,17 @@ export default class DragDrop extends UIPlugin {
     this.setPluginState({
       isDraggingOver: false
     });
+
     if (target) {
       this.mount(target, this);
     }
   }
+
   uninstall() {
     this.unmount();
   }
+
 }
+
 DragDrop.VERSION = packageJson.version;
+module.exports = DragDrop;

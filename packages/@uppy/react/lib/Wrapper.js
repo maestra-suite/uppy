@@ -1,55 +1,61 @@
-import { createElement as h, Component } from 'react';
-import PropTypes from 'prop-types';
-import { uppy as uppyPropType } from './propTypes.js';
-class UppyWrapper extends Component {
+const React = require('react');
+
+const PropTypes = require('prop-types');
+
+const uppyPropType = require('./propTypes').uppy;
+
+const h = React.createElement;
+
+class UppyWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.refContainer = this.refContainer.bind(this);
   }
+
   componentDidMount() {
     this.installPlugin();
   }
+
   componentDidUpdate(prevProps) {
-    const {
-      uppy
-    } = this.props;
-    if (prevProps.uppy !== uppy) {
+    if (prevProps.uppy !== this.props.uppy) {
       this.uninstallPlugin(prevProps);
       this.installPlugin();
     }
   }
+
   componentWillUnmount() {
     this.uninstallPlugin();
   }
+
   installPlugin() {
-    const {
-      plugin,
-      uppy
-    } = this.props;
-    const pluginObj = uppy.getPlugin(plugin);
-    pluginObj.mount(this.container, pluginObj);
+    const plugin = this.props.uppy.getPlugin(this.props.plugin);
+    plugin.mount(this.container, plugin);
   }
-  uninstallPlugin(_temp) {
-    let {
-      uppy
-    } = _temp === void 0 ? this.props : _temp;
-    const {
-      plugin
-    } = this.props;
-    uppy.getPlugin(plugin).unmount();
+
+  uninstallPlugin(props) {
+    if (props === void 0) {
+      props = this.props;
+    }
+
+    const plugin = props.uppy.getPlugin(this.props.plugin);
+    plugin.unmount();
   }
+
   refContainer(container) {
     this.container = container;
   }
+
   render() {
     return h('div', {
       className: 'uppy-Container',
       ref: this.refContainer
     });
   }
+
 }
+
 UppyWrapper.propTypes = {
-  uppy: uppyPropType.isRequired,
+  uppy: uppyPropType,
   plugin: PropTypes.string.isRequired
 };
-export default UppyWrapper;
+module.exports = UppyWrapper;

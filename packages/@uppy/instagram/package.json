@@ -1,7 +1,7 @@
 {
   "name": "@uppy/instagram",
   "description": "Import photos and videos from Instagram, into Uppy.",
-  "version": "3.2.0",
+  "version": "2.1.2",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
@@ -24,12 +24,12 @@
     "url": "git+https://github.com/transloadit/uppy.git"
   },
   "dependencies": {
-    "@uppy/companion-client": "workspace:^",
-    "@uppy/provider-views": "workspace:^",
-    "@uppy/utils": "workspace:^",
+    "@uppy/companion-client": "^2.2.2",
+    "@uppy/provider-views": "^2.1.3",
+    "@uppy/utils": "^4.1.2",
     "preact": "^10.5.13"
   },
   "peerDependencies": {
-    "@uppy/core": "workspace:^"
+    "@uppy/core": "^2.3.3"
   }
 }

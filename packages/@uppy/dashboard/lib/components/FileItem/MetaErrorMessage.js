@@ -1,10 +1,13 @@
-import { h } from 'preact';
+const {
+  h
+} = require('preact');
+
 const metaFieldIdToName = (metaFieldId, metaFields) => {
-  const fields = typeof metaFields === 'function' ? metaFields() : metaFields;
-  const field = fields.filter(f => f.id === metaFieldId);
+  const field = metaFields.filter(f => f.id === metaFieldId);
   return field[0].name;
 };
-export default function renderMissingMetaFieldsError(props) {
+
+module.exports = function renderMissingMetaFieldsError(props) {
   const {
     file,
     toggleFileCard,
@@ -14,9 +17,11 @@ export default function renderMissingMetaFieldsError(props) {
   const {
     missingRequiredMetaFields
   } = file;
+
   if (!(missingRequiredMetaFields != null && missingRequiredMetaFields.length)) {
     return null;
   }
+
   const metaFieldsString = missingRequiredMetaFields.map(missingMetaField => metaFieldIdToName(missingMetaField, metaFields)).join(', ');
   return h("div", {
     className: "uppy-Dashboard-Item-errorMessage"
@@ -28,4 +33,4 @@ export default function renderMissingMetaFieldsError(props) {
     class: "uppy-u-reset uppy-Dashboard-Item-errorMessageBtn",
     onClick: () => toggleFileCard(true, file.id)
   }, i18n('editFile')));
-}
+};

@@ -1,47 +1,50 @@
-import { UIPlugin } from '@uppy/core';
-import { Provider } from '@uppy/companion-client';
-import { h } from 'preact';
+"use strict";
+
+var _core = require("@uppy/core");
+
+var _companionClient = require("@uppy/companion-client");
+
+var _preact = require("preact");
+
 const packageJson = {
-  "version": "3.3.0"
+  "version": "2.1.2"
 };
-import DriveProviderViews from './DriveProviderViews.js';
-import locale from './locale.js';
-export default class GoogleDrive extends UIPlugin {
+
+const DriveProviderViews = require("./DriveProviderViews.js");
+
+const locale = require("./locale.js");
+
+class GoogleDrive extends _core.UIPlugin {
   constructor(uppy, opts) {
     super(uppy, opts);
     this.id = this.opts.id || 'GoogleDrive';
     this.title = this.opts.title || 'Google Drive';
-    Provider.initPlugin(this, opts);
+
+    _companionClient.Provider.initPlugin(this, opts);
+
     this.title = this.opts.title || 'Google Drive';
-    this.icon = () => h("svg", {
+
+    this.icon = () => (0, _preact.h)("svg", {
       "aria-hidden": "true",
       focusable: "false",
       width: "32",
       height: "32",
       viewBox: "0 0 32 32"
-    }, h("g", {
-      fillRule: "nonzero",
-      fill: "none"
-    }, h("path", {
-      d: "M6.663 22.284l.97 1.62c.202.34.492.609.832.804l3.465-5.798H5c0 .378.1.755.302 1.096l1.361 2.278z",
-      fill: "#0066DA"
-    }), h("path", {
-      d: "M16 12.09l-3.465-5.798c-.34.195-.63.463-.832.804l-6.4 10.718A2.15 2.15 0 005 18.91h6.93L16 12.09z",
-      fill: "#00AC47"
-    }), h("path", {
-      d: "M23.535 24.708c.34-.195.63-.463.832-.804l.403-.67 1.928-3.228c.201-.34.302-.718.302-1.096h-6.93l1.474 2.802 1.991 2.996z",
-      fill: "#EA4335"
-    }), h("path", {
-      d: "M16 12.09l3.465-5.798A2.274 2.274 0 0018.331 6h-4.662c-.403 0-.794.11-1.134.292L16 12.09z",
-      fill: "#00832D"
-    }), h("path", {
-      d: "M20.07 18.91h-8.14l-3.465 5.798c.34.195.73.292 1.134.292h12.802c.403 0 .794-.11 1.134-.292L20.07 18.91z",
-      fill: "#2684FC"
-    }), h("path", {
-      d: "M23.497 12.455l-3.2-5.359a2.252 2.252 0 00-.832-.804L16 12.09l4.07 6.82h6.917c0-.377-.1-.755-.302-1.096l-3.188-5.359z",
-      fill: "#FFBA00"
+    }, (0, _preact.h)("g", {
+      fill: "none",
+      fillRule: "evenodd"
+    }, (0, _preact.h)("rect", {
+      className: "uppy-ProviderIconBg",
+      fill: "#4285F4",
+      width: "32",
+      height: "32",
+      rx: "16"
+    }), (0, _preact.h)("path", {
+      d: "M25.216 17.736L19.043 7h-6.086l6.175 10.736h6.084zm-11.275.896L10.9 24h11.723l3.04-5.368H13.942zm-1.789-10.29l-5.816 10.29L9.38 24l5.905-10.29-3.132-5.369z",
+      fill: "#FFF"
     })));
-    this.provider = new Provider(uppy, {
+
+    this.provider = new _companionClient.Provider(uppy, {
       companionUrl: this.opts.companionUrl,
       companionHeaders: this.opts.companionHeaders,
       companionKeysParams: this.opts.companionKeysParams,
@@ -55,27 +58,34 @@ export default class GoogleDrive extends UIPlugin {
     this.onFirstRender = this.onFirstRender.bind(this);
     this.render = this.render.bind(this);
   }
+
   install() {
     this.view = new DriveProviderViews(this, {
-      provider: this.provider,
-      loadAllFiles: true
+      provider: this.provider
     });
     const {
       target
     } = this.opts;
+
     if (target) {
       this.mount(target, this);
     }
   }
+
   uninstall() {
     this.view.tearDown();
     this.unmount();
   }
+
   onFirstRender() {
-    return Promise.all([this.provider.fetchPreAuthToken(), this.view.getFolder('root')]);
+    return Promise.all([this.provider.fetchPreAuthToken(), this.view.getFolder('root', '/')]);
   }
+
   render(state) {
     return this.view.render(state);
   }
+
 }
+
 GoogleDrive.VERSION = packageJson.version;
+module.exports = GoogleDrive;

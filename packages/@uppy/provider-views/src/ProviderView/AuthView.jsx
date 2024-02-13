@@ -1,5 +1,4 @@
 import { h } from 'preact'
-import { useCallback } from 'preact/hooks'
 
 function GoogleIcon () {
   return (
@@ -37,46 +36,11 @@ function GoogleIcon () {
   )
 }
 
-const DefaultForm = ({ pluginName, i18n, onAuth }) => {
+function AuthView (props) {
+  const { pluginName, pluginIcon, i18nArray, handleAuth } = props
   // In order to comply with Google's brand we need to create a different button
   // for the Google Drive plugin
   const isGoogleDrive = pluginName === 'Google Drive'
-
-  const onSubmit = useCallback((e) => {
-    e.preventDefault()
-    onAuth()
-  }, [onAuth])
-
-  return (
-    <form onSubmit={onSubmit}>
-      {isGoogleDrive ? (
-        <button
-          type="submit"
-          className="uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Provider-authBtn uppy-Provider-btn-google"
-          data-uppy-super-focusable
-        >
-          <GoogleIcon />
-          {i18n('signInWithGoogle')}
-        </button>
-      ) : (
-        <button
-          type="submit"
-          className="uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Provider-authBtn"
-          data-uppy-super-focusable
-        >
-          {i18n('authenticateWith', { pluginName })}
-        </button>
-      )}
-    </form>
-  )
-}
-
-const defaultRenderForm = ({ pluginName, i18n, onAuth }) => (
-  <DefaultForm pluginName={pluginName} i18n={i18n} onAuth={onAuth} />
-)
-
-function AuthView (props) {
-  const { loading, pluginName, pluginIcon, i18n, handleAuth, renderForm = defaultRenderForm } = props
 
   const pluginNameComponent = (
     <span className="uppy-Provider-authTitleName">
@@ -88,14 +52,30 @@ function AuthView (props) {
     <div className="uppy-Provider-auth">
       <div className="uppy-Provider-authIcon">{pluginIcon()}</div>
       <div className="uppy-Provider-authTitle">
-        {i18n('authenticateWithTitle', {
+        {i18nArray('authenticateWithTitle', {
           pluginName: pluginNameComponent,
         })}
       </div>
-
-      <div className="uppy-Provider-authForm">
-        {renderForm({ pluginName, i18n, loading, onAuth: handleAuth })}
-      </div>
+      {isGoogleDrive ? (
+        <button
+          type="button"
+          className="uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Provider-authBtn uppy-Provider-btn-google"
+          onClick={handleAuth}
+          data-uppy-super-focusable
+        >
+          <GoogleIcon />
+          {i18nArray('signInWithGoogle')}
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Provider-authBtn"
+          onClick={handleAuth}
+          data-uppy-super-focusable
+        >
+          {i18nArray('authenticateWith', { pluginName })}
+        </button>
+      )}
     </div>
   )
 }

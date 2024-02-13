@@ -1,30 +1,26 @@
 import { h, Component } from 'preact'
-import { nanoid } from 'nanoid/non-secure'
 
 class UrlUI extends Component {
-  form = document.createElement('form')
-
   constructor (props) {
     super(props)
-    this.form.id = nanoid()
+    this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
   componentDidMount () {
     this.input.value = ''
-    this.form.addEventListener('submit', this.#handleSubmit)
-    document.body.appendChild(this.form)
   }
 
-  componentWillUnmount () {
-    this.form.removeEventListener('submit', this.#handleSubmit)
-    document.body.removeChild(this.form)
-  }
-
-  #handleSubmit = (ev) => {
-    ev.preventDefault()
+  handleKeyPress (ev) {
     const { addFile } = this.props
-    const preparedValue = this.input.value.trim()
-    addFile(preparedValue)
+    if (ev.keyCode === 13) {
+      addFile(this.input.value)
+    }
+  }
+
+  handleClick () {
+    const { addFile } = this.props
+    addFile(this.input.value)
   }
 
   render () {
@@ -36,14 +32,14 @@ class UrlUI extends Component {
           type="text"
           aria-label={i18n('enterUrlToImport')}
           placeholder={i18n('enterUrlToImport')}
+          onKeyUp={this.handleKeyPress}
           ref={(input) => { this.input = input }}
           data-uppy-super-focusable
-          form={this.form.id}
         />
         <button
           className="uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Url-importButton"
-          type="submit"
-          form={this.form.id}
+          type="button"
+          onClick={this.handleClick}
         >
           {i18n('import')}
         </button>

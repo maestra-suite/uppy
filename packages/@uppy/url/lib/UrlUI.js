@@ -1,56 +1,49 @@
-function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
-var id = 0;
-function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
-import { h, Component } from 'preact';
-import { nanoid } from 'nanoid/non-secure';
-var _handleSubmit = /*#__PURE__*/_classPrivateFieldLooseKey("handleSubmit");
+const {
+  h,
+  Component
+} = require('preact');
+
 class UrlUI extends Component {
   constructor(props) {
     super(props);
-    this.form = document.createElement('form');
-    Object.defineProperty(this, _handleSubmit, {
-      writable: true,
-      value: ev => {
-        ev.preventDefault();
-        const {
-          addFile
-        } = this.props;
-        const preparedValue = this.input.value.trim();
-        addFile(preparedValue);
-      }
-    });
-    this.form.id = nanoid();
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
+
   componentDidMount() {
     this.input.value = '';
-    this.form.addEventListener('submit', _classPrivateFieldLooseBase(this, _handleSubmit)[_handleSubmit]);
-    document.body.appendChild(this.form);
   }
-  componentWillUnmount() {
-    this.form.removeEventListener('submit', _classPrivateFieldLooseBase(this, _handleSubmit)[_handleSubmit]);
-    document.body.removeChild(this.form);
+
+  handleKeyPress(ev) {
+    if (ev.keyCode === 13) {
+      this.props.addFile(this.input.value);
+    }
   }
+
+  handleClick() {
+    this.props.addFile(this.input.value);
+  }
+
   render() {
-    const {
-      i18n
-    } = this.props;
     return h("div", {
       className: "uppy-Url"
     }, h("input", {
       className: "uppy-u-reset uppy-c-textInput uppy-Url-input",
       type: "text",
-      "aria-label": i18n('enterUrlToImport'),
-      placeholder: i18n('enterUrlToImport'),
+      "aria-label": this.props.i18n('enterUrlToImport'),
+      placeholder: this.props.i18n('enterUrlToImport'),
+      onKeyUp: this.handleKeyPress,
       ref: input => {
         this.input = input;
       },
-      "data-uppy-super-focusable": true,
-      form: this.form.id
+      "data-uppy-super-focusable": true
     }), h("button", {
       className: "uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Url-importButton",
-      type: "submit",
-      form: this.form.id
-    }, i18n('import')));
+      type: "button",
+      onClick: this.handleClick
+    }, this.props.i18n('import')));
   }
+
 }
-export default UrlUI;
+
+module.exports = UrlUI;

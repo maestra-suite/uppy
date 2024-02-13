@@ -1,1 +1,3 @@
-export { default } from "./GoogleDrive.js";
+"use strict";
+
+module.exports = require("./GoogleDrive.js");

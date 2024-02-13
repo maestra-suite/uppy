@@ -1,7 +1,7 @@
 {
   "name": "@uppy/aws-s3-multipart",
   "description": "Upload to Amazon S3 with Uppy and S3's Multipart upload strategy",
-  "version": "3.10.0",
+  "version": "2.4.3",
   "license": "MIT",
   "main": "lib/index.js",
   "type": "module",
@@ -24,18 +24,15 @@
     "url": "git+https://github.com/transloadit/uppy.git"
   },
   "dependencies": {
-    "@uppy/companion-client": "workspace:^",
-    "@uppy/utils": "workspace:^",
-    "firebase": "^9.22.1"
+    "@uppy/companion-client": "^2.2.2",
+    "@uppy/utils": "^4.1.2"
   },
   "devDependencies": {
-    "@aws-sdk/client-s3": "^3.362.0",
-    "@aws-sdk/s3-request-presigner": "^3.362.0",
+    "@jest/globals": "^27.4.2",
     "nock": "^13.1.0",
-    "vitest": "^1.2.1",
     "whatwg-fetch": "3.6.2"
   },
   "peerDependencies": {
-    "@uppy/core": "workspace:^"
+    "@uppy/core": "^2.3.3"
   }
 }

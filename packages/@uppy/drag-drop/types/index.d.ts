@@ -1,7 +1,7 @@
-import type { PluginTarget, UIPlugin, UIPluginOptions } from '@uppy/core'
+import type { PluginOptions, UIPlugin, PluginTarget } from '@uppy/core'
 import DragDropLocale from './generatedLocale'
 
-export interface DragDropOptions extends UIPluginOptions {
+export interface DragDropOptions extends PluginOptions {
   target?: PluginTarget
   inputName?: string
   allowMultipleFiles?: boolean

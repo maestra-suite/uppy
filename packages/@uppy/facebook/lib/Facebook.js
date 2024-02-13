@@ -1,34 +1,50 @@
-import { UIPlugin } from '@uppy/core';
-import { Provider } from '@uppy/companion-client';
-import { ProviderViews } from '@uppy/provider-views';
-import { h } from 'preact';
+"use strict";
+
+var _core = require("@uppy/core");
+
+var _companionClient = require("@uppy/companion-client");
+
+var _providerViews = require("@uppy/provider-views");
+
+var _preact = require("preact");
+
 const packageJson = {
-  "version": "3.1.3"
+  "version": "2.0.8"
 };
-import locale from './locale.js';
-export default class Facebook extends UIPlugin {
+
+const locale = require("./locale.js");
+
+class Facebook extends _core.UIPlugin {
   constructor(uppy, opts) {
     super(uppy, opts);
     this.id = this.opts.id || 'Facebook';
-    Provider.initPlugin(this, opts);
+
+    _companionClient.Provider.initPlugin(this, opts);
+
     this.title = this.opts.title || 'Facebook';
-    this.icon = () => h("svg", {
+
+    this.icon = () => (0, _preact.h)("svg", {
       "aria-hidden": "true",
       focusable: "false",
       width: "32",
       height: "32",
       viewBox: "0 0 32 32"
-    }, h("g", {
+    }, (0, _preact.h)("g", {
       fill: "none",
       fillRule: "evenodd"
-    }, h("path", {
-      d: "M27 16c0-6.075-4.925-11-11-11S5 9.925 5 16c0 5.49 4.023 10.041 9.281 10.866V19.18h-2.793V16h2.793v-2.423c0-2.757 1.642-4.28 4.155-4.28 1.204 0 2.462.215 2.462.215v2.707h-1.387c-1.366 0-1.792.848-1.792 1.718V16h3.05l-.487 3.18h-2.563v7.686C22.977 26.041 27 21.49 27 16",
-      fill: "#1777F2"
-    }), h("path", {
-      d: "M20.282 19.18L20.77 16h-3.051v-2.063c0-.87.426-1.718 1.792-1.718h1.387V9.512s-1.258-.215-2.462-.215c-2.513 0-4.155 1.523-4.155 4.28V16h-2.793v3.18h2.793v7.686a11.082 11.082 0 003.438 0V19.18h2.563",
-      fill: "#FFFFFE"
+    }, (0, _preact.h)("rect", {
+      className: "uppy-ProviderIconBg",
+      width: "32",
+      height: "32",
+      rx: "16",
+      fill: "#3C5A99"
+    }), (0, _preact.h)("path", {
+      d: "M17.842 26v-8.667h2.653l.398-3.377h-3.051v-2.157c0-.978.248-1.644 1.527-1.644H21V7.132A19.914 19.914 0 0 0 18.623 7c-2.352 0-3.963 1.574-3.963 4.465v2.49H12v3.378h2.66V26h3.182z",
+      fill: "#FFF",
+      fillRule: "nonzero"
     })));
-    this.provider = new Provider(uppy, {
+
+    this.provider = new _companionClient.Provider(uppy, {
       companionUrl: this.opts.companionUrl,
       companionHeaders: this.opts.companionHeaders,
       companionKeysParams: this.opts.companionKeysParams,
@@ -42,32 +58,42 @@ export default class Facebook extends UIPlugin {
     this.onFirstRender = this.onFirstRender.bind(this);
     this.render = this.render.bind(this);
   }
+
   install() {
-    this.view = new ProviderViews(this, {
+    this.view = new _providerViews.ProviderViews(this, {
       provider: this.provider
     });
     const {
       target
     } = this.opts;
+
     if (target) {
       this.mount(target, this);
     }
   }
+
   uninstall() {
     this.view.tearDown();
     this.unmount();
   }
+
   onFirstRender() {
     return Promise.all([this.provider.fetchPreAuthToken(), this.view.getFolder()]);
   }
+
   render(state) {
     const viewOptions = {};
+
     if (this.getPluginState().files.length && !this.getPluginState().folders.length) {
       viewOptions.viewType = 'grid';
       viewOptions.showFilter = false;
       viewOptions.showTitles = false;
     }
+
     return this.view.render(state, viewOptions);
   }
+
 }
+
 Facebook.VERSION = packageJson.version;
+module.exports = Facebook;

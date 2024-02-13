@@ -11,7 +11,7 @@ function ListItem (props) {
   const {
     className,
     isDisabled,
-    restrictionError,
+    restrictionReason,
     isCheckboxDisabled,
     isChecked,
     toggleCheckbox,
@@ -28,7 +28,7 @@ function ListItem (props) {
   return (
     <li
       className={className}
-      title={isDisabled ? restrictionError?.message : null}
+      title={isDisabled ? restrictionReason : null}
     >
       {!isCheckboxDisabled ? (
         <input
@@ -36,7 +36,6 @@ function ListItem (props) {
           className={`uppy-u-reset uppy-ProviderBrowserItem-checkbox ${isChecked ? 'uppy-ProviderBrowserItem-checkbox--is-checked' : ''}`}
           onChange={toggleCheckbox}
           onKeyDown={recordShiftKeyPress}
-          onMouseDown={recordShiftKeyPress}
           // for the <label/>
           name="listitem"
           id={id}
@@ -62,7 +61,7 @@ function ListItem (props) {
         // button to open a folder
         <button
           type="button"
-          className="uppy-u-reset uppy-c-btn uppy-ProviderBrowserItem-inner"
+          className="uppy-u-reset uppy-ProviderBrowserItem-inner"
           onClick={handleFolderClick}
           aria-label={i18n('openFolderNamed', { name: title })}
         >

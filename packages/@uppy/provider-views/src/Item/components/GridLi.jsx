@@ -1,11 +1,10 @@
 import { h } from 'preact'
-import classNames from 'classnames'
 
 function GridListItem (props) {
   const {
     className,
     isDisabled,
-    restrictionError,
+    restrictionReason,
     isChecked,
     title,
     itemIconEl,
@@ -16,24 +15,18 @@ function GridListItem (props) {
     children,
   } = props
 
-  const checkBoxClassName = classNames(
-    'uppy-u-reset',
-    'uppy-ProviderBrowserItem-checkbox',
-    'uppy-ProviderBrowserItem-checkbox--grid',
-    { 'uppy-ProviderBrowserItem-checkbox--is-checked': isChecked },
-  )
-
   return (
     <li
       className={className}
-      title={isDisabled ? restrictionError?.message : null}
+      title={isDisabled ? restrictionReason : null}
     >
       <input
         type="checkbox"
-        className={checkBoxClassName}
+        className={`uppy-u-reset uppy-ProviderBrowserItem-checkbox ${
+          isChecked ? 'uppy-ProviderBrowserItem-checkbox--is-checked' : ''
+        } uppy-ProviderBrowserItem-checkbox--grid`}
         onChange={toggleCheckbox}
         onKeyDown={recordShiftKeyPress}
-        onMouseDown={recordShiftKeyPress}
         name="listitem"
         id={id}
         checked={isChecked}
@@ -45,9 +38,13 @@ function GridListItem (props) {
         aria-label={title}
         className="uppy-u-reset uppy-ProviderBrowserItem-inner"
       >
-        {itemIconEl}
-        {showTitles && title}
-        {children}
+        <span className="uppy-ProviderBrowserItem-inner-relative">
+          {itemIconEl}
+
+          {showTitles && title}
+
+          {children}
+        </span>
       </label>
     </li>
   )

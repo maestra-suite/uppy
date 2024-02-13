@@ -1,5 +1,9 @@
-import { h } from 'preact';
-import copyToClipboard from '../../../utils/copyToClipboard.js';
+const {
+  h
+} = require('preact');
+
+const copyToClipboard = require('../../../utils/copyToClipboard');
+
 function EditButton(_ref) {
   let {
     file,
@@ -9,9 +13,10 @@ function EditButton(_ref) {
     i18n,
     onClick
   } = _ref;
+
   if (!uploadInProgressOrComplete && metaFields && metaFields.length > 0 || !uploadInProgressOrComplete && canEditFile(file)) {
     return h("button", {
-      className: "uppy-u-reset uppy-c-btn uppy-Dashboard-Item-action uppy-Dashboard-Item-action--edit",
+      className: "uppy-u-reset uppy-Dashboard-Item-action uppy-Dashboard-Item-action--edit",
       type: "button",
       "aria-label": i18n('editFileWithFilename', {
         file: file.meta.name
@@ -43,8 +48,10 @@ function EditButton(_ref) {
       d: "M6.793 2.5L9.5 5.207l.707-.707L7.5 1.793z"
     }))));
   }
+
   return null;
 }
+
 function RemoveButton(_ref2) {
   let {
     i18n,
@@ -75,16 +82,17 @@ function RemoveButton(_ref2) {
     d: "M13 12.222l-.778.778L9 9.778 5.778 13 5 12.222 8.222 9 5 5.778 5.778 5 9 8.222 12.222 5l.778.778L9.778 9z"
   })));
 }
+
 const copyLinkToClipboard = (event, props) => {
   copyToClipboard(props.file.uploadURL, props.i18n('copyLinkToClipboardFallback')).then(() => {
     props.uppy.log('Link copied to clipboard.');
     props.uppy.info(props.i18n('copyLinkToClipboardSuccess'), 'info', 3000);
-  }).catch(props.uppy.log)
-  // avoid losing focus
+  }).catch(props.uppy.log) // avoid losing focus
   .then(() => event.target.focus({
     preventScroll: true
   }));
 };
+
 function CopyLinkButton(props) {
   const {
     i18n
@@ -106,7 +114,8 @@ function CopyLinkButton(props) {
     d: "M7.94 7.703a2.613 2.613 0 0 1-.626 2.681l-.852.851a2.597 2.597 0 0 1-1.849.766A2.616 2.616 0 0 1 2.764 7.54l.852-.852a2.596 2.596 0 0 1 2.69-.625L5.267 7.099a1.44 1.44 0 0 0-.833.407l-.852.851a1.458 1.458 0 0 0 1.03 2.486c.39 0 .755-.152 1.03-.426l.852-.852c.231-.231.363-.522.406-.824l1.04-1.038zm4.295-5.937A2.596 2.596 0 0 0 10.387 1c-.698 0-1.355.272-1.849.766l-.852.851a2.614 2.614 0 0 0-.624 2.688l1.036-1.036c.041-.304.173-.6.407-.833l.852-.852c.275-.275.64-.426 1.03-.426a1.458 1.458 0 0 1 1.03 2.486l-.852.851a1.442 1.442 0 0 1-.824.406l-1.04 1.04a2.596 2.596 0 0 0 2.683-.628l.851-.85a2.616 2.616 0 0 0 0-3.697zm-6.88 6.883a.577.577 0 0 0 .82 0l3.474-3.474a.579.579 0 1 0-.819-.82L5.355 7.83a.579.579 0 0 0 0 .819z"
   })));
 }
-export default function Buttons(props) {
+
+module.exports = function Buttons(props) {
   const {
     uppy,
     file,
@@ -119,6 +128,7 @@ export default function Buttons(props) {
     toggleFileCard,
     openFileEditor
   } = props;
+
   const editAction = () => {
     if (metaFields && metaFields.length > 0) {
       toggleFileCard(true, file.id);
@@ -126,6 +136,7 @@ export default function Buttons(props) {
       openFileEditor(file);
     }
   };
+
   return h("div", {
     className: "uppy-Dashboard-Item-actionWrapper"
   }, h(EditButton, {
@@ -145,4 +156,4 @@ export default function Buttons(props) {
     uppy: uppy,
     onClick: () => props.uppy.removeFile(file.id, 'removed-by-user')
   }) : null);
-}
+};

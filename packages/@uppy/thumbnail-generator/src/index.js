@@ -2,7 +2,7 @@ import { UIPlugin } from '@uppy/core'
 import dataURItoBlob from '@uppy/utils/lib/dataURItoBlob'
 import isObjectURL from '@uppy/utils/lib/isObjectURL'
 import isPreviewSupported from '@uppy/utils/lib/isPreviewSupported'
-import { rotation } from 'exifr/dist/mini.esm.mjs'
+import { rotation } from 'exifr/dist/mini.umd.js'
 
 import locale from './locale.js'
 import packageJson from '../package.json'
@@ -162,9 +162,9 @@ export default class ThumbnailGenerator extends UIPlugin {
     return Promise.all([onload, orientationPromise])
       .then(([image, orientation]) => {
         const dimensions = this.getProportionalDimensions(image, targetWidth, targetHeight, orientation.deg)
-        const rotatedImage = rotateImage(image, orientation)
+        const rotatedImage = this.rotateImage(image, orientation)
         const resizedImage = this.resizeImage(rotatedImage, dimensions.width, dimensions.height)
-        return canvasToBlob(resizedImage, this.thumbnailType, 80)
+        return this.canvasToBlob(resizedImage, this.thumbnailType, 80)
       })
       .then(blob => {
         return URL.createObjectURL(blob)
@@ -208,12 +208,11 @@ export default class ThumbnailGenerator extends UIPlugin {
    *
    * Returns a Canvas with the resized image on it.
    */
-  // eslint-disable-next-line class-methods-use-this
   resizeImage (image, targetWidth, targetHeight) {
     // Resizing in steps refactored to use a solution from
     // https://blog.uploadcare.com/image-resize-in-browsers-is-broken-e38eed08df01
 
-    let img = protect(image)
+    let img = this.protect(image)
 
     let steps = Math.ceil(Math.log2(img.width / targetWidth))
     if (steps < 1) {
@@ -399,3 +398,8 @@ export default class ThumbnailGenerator extends UIPlugin {
     }
   }
 }
+
+// TODO: remove these methods from the prototype in the next major.
+ThumbnailGenerator.prototype.canvasToBlob = canvasToBlob
+ThumbnailGenerator.prototype.protect = protect
+ThumbnailGenerator.prototype.rotateImage = rotateImage

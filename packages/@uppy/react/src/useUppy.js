@@ -1,10 +1,7 @@
-import { useEffect, useRef } from 'react'
-import { Uppy as UppyCore } from '@uppy/core'
+const { useEffect, useRef } = require('react')
+const UppyCore = require('@uppy/core').Uppy
 
-/**
- * @deprecated Initialize Uppy outside of the component.
- */
-export default function useUppy (factory) {
+module.exports = function useUppy (factory) {
   if (typeof factory !== 'function') {
     throw new TypeError('useUppy: expected a function that returns a new Uppy instance')
   }
@@ -20,7 +17,7 @@ export default function useUppy (factory) {
 
   useEffect(() => {
     return () => {
-      uppy.current?.close({ reason: 'unmount' })
+      uppy.current.close({ reason: 'unmount' })
       uppy.current = undefined
     }
   }, [uppy])

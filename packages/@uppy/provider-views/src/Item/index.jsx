@@ -42,7 +42,6 @@ export default (props) => {
             target="_blank"
             rel="noopener noreferrer"
             className="uppy-ProviderBrowserItem-author"
-            tabIndex="-1"
           >
             {author.name}
           </a>

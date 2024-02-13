@@ -1,53 +1,60 @@
-import { h } from 'preact';
-import FilePreview from "../../FilePreview.js";
-import MetaErrorMessage from "../MetaErrorMessage.js";
-import getFileTypeIcon from "../../../utils/getFileTypeIcon.js";
+const {
+  h
+} = require('preact');
+
+const FilePreview = require('../../FilePreview');
+
+const MetaErrorMessage = require('../MetaErrorMessage');
+
+const getFileTypeIcon = require('../../../utils/getFileTypeIcon');
+
 const getYouTubeID = require('get-youtube-id');
+
 function matchYoutubeUrl(url) {
   var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+
   if (url.match(p)) {
     return url.match(p)[1];
   }
+
   return false;
 }
-export default function FilePreviewAndLink(props) {
-  var _props$file;
-  const {
-    file,
-    i18n,
-    toggleFileCard,
-    metaFields,
-    showLinkToFileUploadResult
-  } = props;
-  const white = 'rgba(255, 255, 255, 0.5)';
-  const previewBackgroundColor = file.preview ? white : getFileTypeIcon(props.file.type).color;
+
+module.exports = function FilePreviewAndLink(props) {
+  var _props$file, _props$file$remote, _props$file$remote$bo;
+
   let thumbnail = false;
-  const url = props == null || (_props$file = props.file) == null || (_props$file = _props$file.remote) == null || (_props$file = _props$file.body) == null ? void 0 : _props$file.url;
+  const url = props == null ? void 0 : (_props$file = props.file) == null ? void 0 : (_props$file$remote = _props$file.remote) == null ? void 0 : (_props$file$remote$bo = _props$file$remote.body) == null ? void 0 : _props$file$remote$bo.url;
+
   if (url && matchYoutubeUrl(url)) {
     const videoID = getYouTubeID(url, {
       fuzzy: false
     });
     thumbnail = `https://img.youtube.com/vi/${videoID}/default.jpg`;
   }
+
   return h("div", {
-    className: "uppy-Dashboard-Item-previewInnerWrap",
+    class: "uppy-Dashboard-Item-previewInnerWrap",
     style: {
-      backgroundColor: previewBackgroundColor
+      background: thumbnail ? `url(${thumbnail})` : getFileTypeIcon(props.file.type).color,
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover'
     }
-  }, showLinkToFileUploadResult && file.uploadURL && h("a", {
+  }, props.showLinkToFileUploadResult && props.file.uploadURL && h("a", {
     className: "uppy-Dashboard-Item-previewLink",
-    href: file.uploadURL,
+    href: props.file.uploadURL,
     rel: "noreferrer noopener",
     target: "_blank",
-    "aria-label": file.meta.name
+    "aria-label": props.file.meta.name
   }, h("span", {
     hidden: true
-  }, file.meta.name)), !thumbnail && h(FilePreview, {
-    file: file
+  }, props.file.meta.name)), !thumbnail && h(FilePreview, {
+    file: props.file
   }), h(MetaErrorMessage, {
-    file: file,
-    i18n: i18n,
-    toggleFileCard: toggleFileCard,
-    metaFields: metaFields
+    file: props.file,
+    i18n: props.i18n,
+    toggleFileCard: props.toggleFileCard,
+    metaFields: props.metaFields
   }));
-}
+};

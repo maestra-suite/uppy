@@ -1,9 +1,14 @@
-import { h } from 'preact';
-import getFileTypeIcon from "../utils/getFileTypeIcon.js";
-export default function FilePreview(props) {
+const {
+  h
+} = require('preact');
+
+const getFileTypeIcon = require('../utils/getFileTypeIcon');
+
+module.exports = function FilePreview(props) {
   const {
     file
   } = props;
+
   if (file.preview) {
     return h("img", {
       className: "uppy-Dashboard-Item-previewImg",
@@ -11,6 +16,7 @@ export default function FilePreview(props) {
       src: file.preview
     });
   }
+
   const {
     color,
     icon
@@ -36,4 +42,4 @@ export default function FilePreview(props) {
     rx: "3",
     fillRule: "evenodd"
   })));
-}
+};
