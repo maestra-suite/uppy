@@ -38,7 +38,7 @@ module.exports = class Url extends UIPlugin {
     const defaultOptions = {}
 
     this.opts = { ...defaultOptions, ...opts }
-
+    this.activeRequests = {}
     this.i18nInit()
 
     this.hostname = this.opts.companionUrl
@@ -108,8 +108,15 @@ module.exports = class Url extends UIPlugin {
       return
     }
 
+    if (this.activeRequests[url]) {
+      this.uppy.log(`[URL] Request for this URL is already in progress: ${url}`)
+      return // Optionally, handle queuing of requests here
+    }
+    // Mark this URL as having an active request
+    this.activeRequests[url] = true
     return this.getMeta(url)
       .then((meta) => {
+        delete this.activeRequests[url]
         const tagFile = {
           source: this.id,
           name: this.getFileNameFromUrl(url, meta),
@@ -152,6 +159,7 @@ module.exports = class Url extends UIPlugin {
         }
       })
       .catch((err) => {
+        delete this.activeRequests[url]
         this.uppy.log(err)
         this.uppy.info({
           message: this.i18n('failedToFetch'),
