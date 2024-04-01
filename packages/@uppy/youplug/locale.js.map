@@ -1,1 +1,0 @@
-{"version":3,"sources":["locale.js"],"names":["module","exports","strings"],"mappings":"AAAAA,MAAM,CAACC,OAAP,GAAiB;AACfC,EAAAA,OAAO,EAAE;AADM,CAAjB","sourcesContent":["module.exports = {\n  strings: {\n  }\n}\n"]}
