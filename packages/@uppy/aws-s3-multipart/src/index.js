@@ -400,7 +400,7 @@ module.exports = class AwsS3Multipart extends BasePlugin {
         this.resetUploaderReferences(file.id)
         queuedRequest.done()
         reject(new Error(errorMessage));
-        reject(new Error(errData.error))
+        //reject(new Error(errData.error))
       })
 
       socket.on('success', (data) => {
