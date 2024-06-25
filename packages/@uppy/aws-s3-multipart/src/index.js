@@ -395,9 +395,11 @@ module.exports = class AwsS3Multipart extends BasePlugin {
       socket.on('progress', (progressData) => emitSocketProgress(this, progressData, file))
 
       socket.on('error', (errData) => {
+        const errorMessage = errData.error ? `Upload error: ${JSON.stringify(errData.error)}` : 'Upload error: An unknown error occurred';
         this.uppy.emit('upload-error', file, new Error(errData.error))
         this.resetUploaderReferences(file.id)
         queuedRequest.done()
+        reject(new Error(errorMessage));
         reject(new Error(errData.error))
       })
 
