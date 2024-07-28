@@ -88,16 +88,33 @@ module.exports = class Url extends UIPlugin {
     return defaultProtocol + url
   }
 
-  getMeta (url) {
-    return this.client.post('url/meta', { url })
-      .then((res) => {
+  getMeta(url) {
+    this.setState({
+      gettingMeta: true
+    })
+    if (this.state.gettingMeta) {
+      return
+    }
+    try {
+      return this.client.post('url/meta', {
+        url
+      }).then(res => {
         if (res.error) {
-          this.uppy.log('[URL] Error:')
-          this.uppy.log(res.error)
-          throw new Error('Failed to fetch the file')
+          this.uppy.log('[URL] Error:');
+          this.uppy.log(res.error);
+          throw new Error('Failed to fetch the file');
         }
-        return res
+        return res;
+      });
+    }
+    catch (error) {
+      this.uppy.log(error)
+    }
+    finally {
+      this.setState({
+        gettingMeta: false
       })
+    }
   }
 
   async addFile (url) {
