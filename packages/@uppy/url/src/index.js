@@ -89,10 +89,6 @@ module.exports = class Url extends UIPlugin {
   }
 
   getMeta (url) {
-    this.gettingMeta = true
-    if (this.gettingMeta) {
-      return
-    }
     try {
       return this.client.post('url/meta', {
         url,
@@ -106,8 +102,6 @@ module.exports = class Url extends UIPlugin {
       })
     } catch (error) {
       this.uppy.log(error)
-    } finally {
-      this.gettingMeta = false
     }
   }
 
