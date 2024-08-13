@@ -10755,8 +10755,6 @@ __metadata:
   dependencies:
     "@uppy/companion-client": "workspace:^"
     "@uppy/utils": "workspace:^"
-    get-youtube-id: ^1.0.1
-    get-youtube-title: ^1.0.1
     preact: ^10.5.13
   peerDependencies:
     "@uppy/core": "workspace:^"
@@ -22829,20 +22827,6 @@ __metadata:
   version: 2.0.6
   resolution: "get-value@npm:2.0.6"
   checksum: 5c3b99cb5398ea8016bf46ff17afc5d1d286874d2ad38ca5edb6e87d75c0965b0094cb9a9dddef2c59c23d250702323539a7fbdd870620db38c7e7d7ec87c1eb
-  languageName: node
-  linkType: hard
-
-"get-youtube-id@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "get-youtube-id@npm:1.0.1"
-  checksum: 64790c99e0c25f45558b903c9b96ab72f9bcb381e61f78dc4dc9df824206aa162f5e7b2400050d4e883eda4031a2abc1c6e5ca081d253c1d43559c5546ce53d5
-  languageName: node
-  linkType: hard
-
-"get-youtube-title@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "get-youtube-title@npm:1.0.1"
-  checksum: 79047e70d70eb7f35590ceb23aa06feac1df79bbc37d6799ea2bfd814767f420a6e9b5742e86d31671d0f0d6e2a535277ebcd07c2c57ea2e946fd3400327d530
   languageName: node
   linkType: hard
 
