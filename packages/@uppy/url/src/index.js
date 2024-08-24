@@ -124,7 +124,7 @@ module.exports = class Url extends UIPlugin {
         delete this.activeRequests[url]
         const tagFile = {
           source: this.id,
-          name: this.getFileNameFromUrl(url, meta),
+          name: meta.name || this.getFileNameFromUrl(url, meta),
           type: meta.type,
           thumbnail: meta.thumbnail || '',
           data: {
@@ -144,10 +144,10 @@ module.exports = class Url extends UIPlugin {
             providerOptions: this.client.opts,
           },
         }
-        if (meta.videoId) {
+        if (meta.videoId || meta.videoID) {
           tagFile.meta = {
             videoId: meta.videoId || meta.videoID,
-            name: meta.name,
+            name: meta.name || this.getFileNameFromUrl(url, meta),
             thumbnail: meta.thumbnail,
           }
         }
