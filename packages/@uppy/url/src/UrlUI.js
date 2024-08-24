@@ -3,6 +3,9 @@ const { h, Component } = require('preact')
 class UrlUI extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      isFetching: false, // Add state to track the fetch status
+    }
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.handleClick = this.handleClick.bind(this)
   }
@@ -11,14 +14,31 @@ class UrlUI extends Component {
     this.input.value = ''
   }
 
+  handleAddFile () {
+    const url = this.input.value
+    if (!url) return
+
+    if (this.state.isFetching) {
+      return
+    }
+
+    this.setState({ isFetching: true }) // Set state to fetching
+
+    this.props.addFile(url).then(() => {
+      this.setState({ isFetching: false }) // Reset state when done
+    }).catch(() => {
+      this.setState({ isFetching: false }) // Reset state on error
+    })
+  }
+
   handleKeyPress (ev) {
     if (ev.keyCode === 13) {
-      this.props.addFile(this.input.value)
+      this.handleAddFile()
     }
   }
 
   handleClick () {
-    this.props.addFile(this.input.value)
+    this.handleAddFile()
   }
 
   render () {
@@ -38,7 +58,7 @@ class UrlUI extends Component {
           type="button"
           onClick={this.handleClick}
         >
-          {this.props.i18n('import')}
+          {this.state.isFetching ? 'Importing' : this.props.i18n('import')}
         </button>
       </div>
     )

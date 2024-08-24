@@ -1,22 +1,24 @@
 const { h } = require('preact')
+const getYouTubeID = require('get-youtube-id')
 const FilePreview = require('../../FilePreview')
 const MetaErrorMessage = require('../MetaErrorMessage')
 const getFileTypeIcon = require('../../../utils/getFileTypeIcon')
-const getYouTubeID = require('get-youtube-id');
 
-function matchYoutubeUrl(url) {
-  var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+function matchYoutubeUrl (url) {
+  const p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
   if (url.match(p)) {
-    return url.match(p)[1];
+    return url.match(p)[1]
   }
-  return false;
+  return false
 }
 
-module.exports = function FilePreviewAndLink(props) {
+module.exports = function FilePreviewAndLink (props) {
   let thumbnail = false
   const url = props?.file?.remote?.body?.url
-  if (url && matchYoutubeUrl(url)) {
-    const videoID = getYouTubeID(url, { fuzzy: false });
+  if (props?.file?.meta?.thumbnail) {
+    thumbnail = props.file.meta.thumbnail
+  } else if (url && matchYoutubeUrl(url)) {
+    const videoID = getYouTubeID(url, { fuzzy: false })
     thumbnail = `https://img.youtube.com/vi/${videoID}/default.jpg`
   }
 
@@ -41,8 +43,8 @@ module.exports = function FilePreviewAndLink(props) {
           )
       }
       {
-        !thumbnail &&
-        <FilePreview file={props.file} />
+        !thumbnail
+        && <FilePreview file={props.file} />
       }
       <MetaErrorMessage
         file={props.file}

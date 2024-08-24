@@ -110,12 +110,12 @@ module.exports = class Url extends UIPlugin {
     if (!this.checkIfCorrectURL(url)) {
       this.uppy.log(`[URL] Incorrect URL entered: ${url}`)
       this.uppy.info(this.i18n('enterCorrectUrl'), 'error', 4000)
-      return
+      return false
     }
 
     if (this.activeRequests[url]) {
       this.uppy.log(`[URL] Request for this URL is already in progress: ${url}`)
-      return // Optionally, handle queuing of requests here
+      return false // Optionally, handle queuing of requests here
     }
     // Mark this URL as having an active request
     this.activeRequests[url] = true
@@ -146,8 +146,9 @@ module.exports = class Url extends UIPlugin {
         }
         if (meta.videoId) {
           tagFile.meta = {
-            videoId: meta.videoId,
+            videoId: meta.videoId || meta.videoID,
             name: meta.name,
+            thumbnail: meta.thumbnail,
           }
         }
         return tagFile
