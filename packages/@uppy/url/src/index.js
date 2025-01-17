@@ -140,6 +140,7 @@ module.exports = class Url extends UIPlugin {
             body: {
               fileId: url,
               url,
+              size: meta.size,
             },
             providerOptions: this.client.opts,
           },
