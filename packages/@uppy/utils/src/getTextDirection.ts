@@ -16,4 +16,6 @@ function getTextDirection(element?: HTMLElement): string | undefined {
   return element?.dir
 }
 
+export { getTextDirection }
+
 export default getTextDirection

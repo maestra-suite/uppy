@@ -1,6 +1,6 @@
 import BasePlugin from '@uppy/core/lib/BasePlugin.js'
 import { RequestClient } from '@uppy/companion-client'
-import EventManager from '@uppy/utils/lib/EventManager'
+import EventManager from '@uppy/core/lib/EventManager.js'
 import { RateLimitedQueue } from '@uppy/utils/lib/RateLimitedQueue'
 import { filterNonFailedFiles, filterFilesToEmitUploadStarted } from '@uppy/utils/lib/fileFilters'
 import { createAbortError } from '@uppy/utils/lib/AbortController'

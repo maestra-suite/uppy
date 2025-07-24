@@ -2,8 +2,8 @@ import type { Body, Meta, UppyFile } from '@uppy/utils/lib/UppyFile'
 import type { Uppy, State } from '@uppy/core/src/Uppy.ts'
 import type { DefinePluginOpts } from '@uppy/core/lib/BasePlugin.ts'
 import { UIPlugin } from '@uppy/core'
+import getTextDirection from "@uppy/utils/lib/getTextDirection";
 import emaFilter from '@uppy/utils/lib/emaFilter'
-import getTextDirection from '@uppy/utils/lib/getTextDirection'
 import statusBarStates from './StatusBarStates.ts'
 import StatusBarUI, { type StatusBarUIProps } from './StatusBarUI.tsx'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

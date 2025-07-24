@@ -6,19 +6,6 @@ import FileProgress from './FileProgress/index.jsx'
 import FileInfo from './FileInfo/index.jsx'
 import Buttons from './Buttons/index.jsx'
 
-export const SpeakerCountOptions = [
-  { value: 'auto', label: 'Auto' },
-  { value: '1', label: '1' },
-  { value: '2', label: '2' },
-  { value: '3', label: '3' },
-  { value: '4', label: '4' },
-  { value: '5', label: '5' },
-  { value: '6', label: '6' },
-  { value: '7', label: '7' },
-  { value: '8', label: '8' },
-  { value: '9', label: '9' }
-];
-
 export default class FileItem extends Component {
   constructor(props) {
     super(props)
@@ -58,7 +45,7 @@ export default class FileItem extends Component {
     this.setState({
       speakers: event.target.value
     });
-    var file = this.props.file;
+    const {file} = this.props;
     if (file && file.id) {
       this.props.uppy.setFileMeta(file.id, {
         speakerCount: event.target.value
@@ -92,11 +79,24 @@ export default class FileItem extends Component {
       'is-inprogress': uploadInProgress && !this.props.recoveredState,
       'is-processing': isProcessing,
       'is-complete': isUploaded,
-      'is-error': !!error,
+      'is-error': Boolean(error),
       'is-resumable': this.props.resumableUploads,
       'is-noIndividualCancellation': !this.props.individualCancellation,
       'is-ghost': isGhost,
     })
+
+    const SpeakerCountOptions = [
+      { value: 'auto', label: 'Auto' },
+      { value: '1', label: '1' },
+      { value: '2', label: '2' },
+      { value: '3', label: '3' },
+      { value: '4', label: '4' },
+      { value: '5', label: '5' },
+      { value: '6', label: '6' },
+      { value: '7', label: '7' },
+      { value: '8', label: '8' },
+      { value: '9', label: '9' }
+    ];
 
     return (
       <div
@@ -155,15 +155,15 @@ export default class FileItem extends Component {
           />
           <div class="uppy-DropDown-SpeakerCount">
             <select class="uppy-Dropdown-SpeakerCount-Select" value={this.state.speakers} onChange={this.setSpeakers}>
-             {
-              SpeakerCountOptions.map((option) => {
-                return (
-                  <option value={option.value} key={option.value} id={`uppy_speakerCount_${option.value}`}>
-                    {option.label}
-                  </option>
-                )
-              })
-             }
+              {
+                SpeakerCountOptions.map((option) => {
+                  return (
+                    <option value={option.value} key={option.value} id={`uppy_speakerCount_${option.value}`}>
+                      {option.label}
+                    </option>
+                  )
+                })
+              }
             </select>
           </div>
         </div>
