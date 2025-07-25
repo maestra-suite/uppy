@@ -32,6 +32,12 @@ export default class FileItem extends Component {
     if (!file.preview) {
       this.props.handleRequestThumbnail(file)
     }
+
+    if (file.meta && file.meta.speakerCount && file.meta.speakerCount !== this.state.speakers) {
+      this.setState({
+        speakers: file.meta.speakerCount
+      });
+    }
   }
 
   componentWillUnmount () {
