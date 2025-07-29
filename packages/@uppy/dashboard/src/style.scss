@@ -324,7 +324,6 @@
 }
 
 .uppy-Dashboard-AddFiles-info {
-
   // hide on short note and “powered by” on short screens
   // such as CodePen, or inline dashboard with height < 400px
   display: none;
@@ -525,7 +524,6 @@
 }
 
 .uppy-DashboardContent-bar {
-
   // For .uppy-DashboardContent-title's position: absolute
   position: relative;
   z-index: $zIndex-4;
@@ -534,11 +532,11 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   height: 40px;
   padding: 0 10px;
   background-color: $gray-50;
   border-bottom: 1px solid $gray-200;
+  gap: 0.5em;
 
   .uppy-size--md & {
     height: 50px;

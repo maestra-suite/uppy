@@ -7,13 +7,13 @@ const FileInfo = require('./FileInfo')
 const Buttons = require('./Buttons')
 
 module.exports = class FileItem extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
-      speakers: 1
+      speakers: props.file.meta.speakerCount || 1,
     }
   }
-  
+
   componentDidMount () {
     const { file } = this.props
     if (!file.preview) {
@@ -25,12 +25,17 @@ module.exports = class FileItem extends Component {
     return !shallowEqual(this.props, nextProps)
   }
 
-  // VirtualList mounts FileItems again and they emit `thumbnail:request`
-  // Otherwise thumbnails are broken or missing after Golden Retriever restores files
   componentDidUpdate () {
     const { file } = this.props
     if (!file.preview) {
       this.props.handleRequestThumbnail(file)
+    }
+
+    if (file?.meta?.speakerCount && file?.meta?.speakerCount !== this.state.speakers) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        speakers: file.meta.speakerCount,
+      })
     }
   }
 
@@ -43,13 +48,31 @@ module.exports = class FileItem extends Component {
 
   setSpeakers = (event) => {
     this.setState({
-      speakers: event.target.value
-    });
-    var file = this.props.file;
+      speakers: event.target.value,
+    })
+    const { file } = this.props
     if (file && file.id) {
       this.props.uppy.setFileMeta(file.id, {
-        speakerCount: event.target.value
-      });
+        speakerCount: event.target.value,
+      })
+    }
+  }
+
+  setElevenlabsForcedAlignmentFile = (event) => {
+    const { file } = this.props
+    if (file && file.id) {
+      let forcedAlignmentFile = event.target.files[0]
+
+      console.log('forcedAlignmentFile', forcedAlignmentFile)
+
+      if (forcedAlignmentFile) {
+        forcedAlignmentFile = forcedAlignmentFile.text()
+        console.log('forcedAlignmentFile TEXT', forcedAlignmentFile)
+
+        this.props.uppy.setFileMeta(file.id, {
+          forcedAlignment: forcedAlignmentFile,
+        })
+      }
     }
   }
 
@@ -73,6 +96,19 @@ module.exports = class FileItem extends Component {
     if (isUploaded && this.props.showRemoveButtonAfterComplete) {
       showRemoveButton = true
     }
+
+    const speakerCountOptions = [
+      { value: 1, label: '1' },
+      { value: 2, label: '2' },
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
+      { value: 7, label: '7' },
+      { value: 8, label: '8' },
+      { value: 9, label: '9' },
+      { value: 'auto', label: 'Auto' },
+    ]
 
     const dashboardItemClass = classNames({
       'uppy-Dashboard-Item': true,
@@ -114,7 +150,6 @@ module.exports = class FileItem extends Component {
             i18n={this.props.i18n}
           />
         </div>
-
         <div className="uppy-Dashboard-Item-fileInfoAndButtons">
           <FileInfo
             file={file}
@@ -138,17 +173,36 @@ module.exports = class FileItem extends Component {
             uppy={this.props.uppy}
             i18n={this.props.i18n}
           />
+          {file?.meta?.isElevenlabsTranscript && (
+          <div className="uppy-Dashboard-Item-ElevenLabsFileInputWrapper">
+            <input
+              className="uppy-Dashboard-Item-ElevenLabsFileInput"
+              type="file"
+              accept=".txt"
+              onChange={this.setElevenlabsForcedAlignmentFile}
+              ref={(input) => { this.elevenlabsFileInput = input }}
+              style={{ display: 'none' }}
+            />
+            <button
+              className="uppy-Dashboard-Item-ElevenLabsFileBtn"
+              type="button"
+              onClick={() => this.elevenlabsFileInput?.click()}
+            >
+              Text File
+            </button>
+          </div>
+          )}
           <div class="uppy-DropDown-SpeakerCount">
             <select class="uppy-Dropdown-SpeakerCount-Select" value={this.state.speakers} onChange={this.setSpeakers}>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
+              {
+                speakerCountOptions.map((option) => {
+                  return (
+                    <option value={option.value} key={option.value} id={`uppy_speakerCount_${option.value}`}>
+                      {option.label}
+                    </option>
+                  )
+                })
+              }
             </select>
           </div>
         </div>
