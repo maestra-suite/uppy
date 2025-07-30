@@ -23,7 +23,8 @@ module.exports = class FileItem extends Component {
   }
 
   shouldComponentUpdate (nextProps) {
-    return !shallowEqual(this.props, nextProps)
+    // eslint-disable-next-line max-len
+    return !shallowEqual(this.props, nextProps) || this.state.isElevenlabsTranscript !== nextProps.file.meta.isElevenlabsTranscript || this.state.speakers !== nextProps.file.meta.speakerCount
   }
 
   componentDidUpdate (prevProps) {
@@ -33,18 +34,18 @@ module.exports = class FileItem extends Component {
     }
 
     if (file?.meta?.speakerCount && file?.meta?.speakerCount !== prevProps.file.meta.speakerCount && file?.meta?.speakerCount !== this.state.speakers) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         speakers: file.meta.speakerCount,
       })
     }
 
     if (file?.meta?.isElevenlabsTranscript !== prevProps.file.meta.isElevenlabsTranscript && file?.meta?.isElevenlabsTranscript !== this.state.isElevenlabsTranscript) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         isElevenlabsTranscript: file.meta.isElevenlabsTranscript,
       })
     }
-
-    console.log(file?.meta, this.state)
   }
 
   componentWillUnmount () {
@@ -71,21 +72,33 @@ module.exports = class FileItem extends Component {
     if (file && file.id) {
       const forcedAlignmentFile = event.target.files[0]
 
-      console.log('forcedAlignmentFile', forcedAlignmentFile)
-
       if (forcedAlignmentFile && forcedAlignmentFile.name.endsWith('.txt')) {
         try {
           const text = await forcedAlignmentFile.text()
-          console.log('forcedAlignmentFile TEXT', text)
 
           this.props.uppy.setFileMeta(file.id, {
             forcedAlignment: text,
+            forcedAlignmentFileName: forcedAlignmentFile.name,
           })
         } catch (err) {
           console.error('Error reading .txt file:', err)
         }
       } else {
         console.warn('Selected file is not a .txt file')
+      }
+    }
+  }
+
+  removeElevenlabsForcedAlignmentFile = () => {
+    const { file } = this.props
+    if (file && file.id) {
+      this.props.uppy.setFileMeta(file.id, {
+        forcedAlignment: null,
+        forcedAlignmentFileName: null,
+      })
+      // Reset the file input
+      if (this.elevenlabsFileInput) {
+        this.elevenlabsFileInput.value = ''
       }
     }
   }
@@ -112,6 +125,7 @@ module.exports = class FileItem extends Component {
     }
 
     const speakerCountOptions = [
+      { value: 'auto', label: 'Auto' },
       { value: 1, label: '1' },
       { value: 2, label: '2' },
       { value: 3, label: '3' },
@@ -121,7 +135,6 @@ module.exports = class FileItem extends Component {
       { value: 7, label: '7' },
       { value: 8, label: '8' },
       { value: 9, label: '9' },
-      { value: 'auto', label: 'Auto' },
     ]
 
     const dashboardItemClass = classNames({
@@ -187,7 +200,7 @@ module.exports = class FileItem extends Component {
             uppy={this.props.uppy}
             i18n={this.props.i18n}
           />
-          {this.state.isElevenlabsTranscript && (
+          {this.state.isElevenlabsTranscript && !file.meta?.isSubtitleFile && (
           <div className="uppy-Dashboard-Item-ElevenLabsFileInputWrapper">
             <input
               className="uppy-Dashboard-Item-ElevenLabsFileInput"
@@ -197,13 +210,24 @@ module.exports = class FileItem extends Component {
               ref={(input) => { this.elevenlabsFileInput = input }}
               style={{ display: 'none' }}
             />
-            <button
-              className="uppy-Dashboard-Item-ElevenLabsFileBtn"
-              type="button"
-              onClick={() => this.elevenlabsFileInput?.click()}
-            >
-              Text File
-            </button>
+            {file.meta.forcedAlignmentFileName ? (
+              <div className="uppy-Dashboard-Item-ElevenLabsFileBtn">
+                <span className="uppy-Dashboard-Item-ElevenLabsFileName">
+                  {file.meta.forcedAlignmentFileName}
+                </span>
+                <div className="uppy-Dashboard-Item-ElevenLabsFileRemove" type="button" onClick={this.removeElevenlabsForcedAlignmentFile} title="Remove file">
+                  ×
+                </div>
+              </div>
+            ) : (
+              <button
+                className="uppy-Dashboard-Item-ElevenLabsFileBtn"
+                type="button"
+                onClick={() => this.elevenlabsFileInput?.click()}
+              >
+                Upload Text to Align (.txt)
+              </button>
+            )}
           </div>
           )}
           <div class="uppy-DropDown-SpeakerCount">
