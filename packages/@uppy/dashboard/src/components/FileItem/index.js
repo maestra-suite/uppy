@@ -11,6 +11,7 @@ module.exports = class FileItem extends Component {
     super(props)
     this.state = {
       speakers: props.file.meta.speakerCount || 1,
+      isElevenlabsTranscript: props.file.meta.isElevenlabsTranscript || false,
     }
   }
 
@@ -25,18 +26,25 @@ module.exports = class FileItem extends Component {
     return !shallowEqual(this.props, nextProps)
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps) {
     const { file } = this.props
     if (!file.preview) {
       this.props.handleRequestThumbnail(file)
     }
 
-    if (file?.meta?.speakerCount && file?.meta?.speakerCount !== this.state.speakers) {
-      // eslint-disable-next-line react/no-did-update-set-state
+    if (file?.meta?.speakerCount && file?.meta?.speakerCount !== prevProps.file.meta.speakerCount && file?.meta?.speakerCount !== this.state.speakers) {
       this.setState({
         speakers: file.meta.speakerCount,
       })
     }
+
+    if (file?.meta?.isElevenlabsTranscript !== prevProps.file.meta.isElevenlabsTranscript && file?.meta?.isElevenlabsTranscript !== this.state.isElevenlabsTranscript) {
+      this.setState({
+        isElevenlabsTranscript: file.meta.isElevenlabsTranscript,
+      })
+    }
+
+    console.log(file?.meta, this.state)
   }
 
   componentWillUnmount () {
@@ -58,20 +66,26 @@ module.exports = class FileItem extends Component {
     }
   }
 
-  setElevenlabsForcedAlignmentFile = (event) => {
+  setElevenlabsForcedAlignmentFile = async (event) => {
     const { file } = this.props
     if (file && file.id) {
-      let forcedAlignmentFile = event.target.files[0]
+      const forcedAlignmentFile = event.target.files[0]
 
       console.log('forcedAlignmentFile', forcedAlignmentFile)
 
-      if (forcedAlignmentFile) {
-        forcedAlignmentFile = forcedAlignmentFile.text()
-        console.log('forcedAlignmentFile TEXT', forcedAlignmentFile)
+      if (forcedAlignmentFile && forcedAlignmentFile.name.endsWith('.txt')) {
+        try {
+          const text = await forcedAlignmentFile.text()
+          console.log('forcedAlignmentFile TEXT', text)
 
-        this.props.uppy.setFileMeta(file.id, {
-          forcedAlignment: forcedAlignmentFile,
-        })
+          this.props.uppy.setFileMeta(file.id, {
+            forcedAlignment: text,
+          })
+        } catch (err) {
+          console.error('Error reading .txt file:', err)
+        }
+      } else {
+        console.warn('Selected file is not a .txt file')
       }
     }
   }
@@ -173,7 +187,7 @@ module.exports = class FileItem extends Component {
             uppy={this.props.uppy}
             i18n={this.props.i18n}
           />
-          {file?.meta?.isElevenlabsTranscript && (
+          {this.state.isElevenlabsTranscript && (
           <div className="uppy-Dashboard-Item-ElevenLabsFileInputWrapper">
             <input
               className="uppy-Dashboard-Item-ElevenLabsFileInput"
