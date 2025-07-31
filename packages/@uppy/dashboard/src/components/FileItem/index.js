@@ -89,8 +89,19 @@ module.exports = class FileItem extends Component {
     }
   }
 
+  uploadIcon = () => {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20">
+        <g fill="none" fill-rule="evenodd" stroke="current" stroke-linecap="round" stroke-linejoin="round"
+           stroke-width="1.5">
+          <path d="M0 8v8a2 2 0 002 2h12a2 2 0 002-2V8M12 4L8 0 4 4M8 0v12" transform="translate(1 1)"></path>
+        </g>
+      </svg>
+    )
+  }
+
   removeElevenlabsForcedAlignmentFile = () => {
-    const { file } = this.props
+    const {file} = this.props
     if (file && file.id) {
       this.props.uppy.setFileMeta(file.id, {
         forcedAlignment: null,
@@ -225,7 +236,7 @@ module.exports = class FileItem extends Component {
                 type="button"
                 onClick={() => this.elevenlabsFileInput?.click()}
               >
-                Upload (.txt)
+                Upload {this.uploadIcon()}
               </button>
             )}
           </div>

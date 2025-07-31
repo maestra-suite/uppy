@@ -94,7 +94,7 @@ function PanelTopBar(props) {
       )}
       <div className="uppy-topBarRightContainer">
         <div className="uppy-AlignText">
-          Align with Text <span className="uppy-AlignText-Optional">(optional)</span>
+          Align with Text <span className="uppy-AlignText-Optional">(optional, .txt)</span>
         </div>
         <div className="uppy-SpeakerCount">Speaker Count</div>
       </div>
