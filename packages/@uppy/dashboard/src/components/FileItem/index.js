@@ -225,7 +225,7 @@ module.exports = class FileItem extends Component {
                 type="button"
                 onClick={() => this.elevenlabsFileInput?.click()}
               >
-                Upload Text to Align (.txt)
+                Upload (.txt)
               </button>
             )}
           </div>

@@ -610,7 +610,6 @@
   font-weight: 500;
   border-radius: 3px;
   cursor: pointer;
-  margin-inline-end: -5px;
 
   .uppy-size--md & {
     width: auto;
@@ -912,4 +911,14 @@ a.uppy-Dashboard-poweredBy {
     font-size: 9px;
     line-height: 18px;
   }
+}
+
+
+.uppy-topBarRightContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-right: 0.25em;
+  margin-left: auto;
 }
