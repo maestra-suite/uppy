@@ -135,6 +135,10 @@ ja_JP.strings = {
   selectFileNamed: 'ファイルを選ぶ %{name}',
   unselectFileNamed: 'ファイルの選択を解除 %{name}',
   openFolderNamed: '開いたフォルダ %{name}',
+  speakerCount: 'スピーカー数',
+  alignWithText: 'テキストに合わせる',
+  optionalTXTFile: '任意, .txt',
+  elevenlabsForcedAlignment: '指定されたテキストファイルに合わせて、トランスクリプションを強制的に整列します。',
 }
 
 ja_JP.pluralize = function pluralize (n) {

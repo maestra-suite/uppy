@@ -135,6 +135,10 @@ tr_TR.strings = {
   selectFileNamed: 'Dosya Seç %{name}',
   unselectFileNamed: 'Dosya seçimini kaldır %{name}',
   openFolderNamed: 'Açık dosya %{name}',
+  speakerCount: 'Konuşmacı Sayısı',
+  alignWithText: 'Metne Uyumla',
+  optionalTXTFile: 'isteğe bağlı, .txt',
+  elevenlabsForcedAlignment: 'Transkripsiyonu verilen metin dosyasıyla eşleştirir.',
 }
 
 tr_TR.pluralize = function pluralize (n) {

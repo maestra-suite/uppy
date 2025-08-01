@@ -45,39 +45,15 @@ function getUploadingState (isAllErrored, isAllComplete, isAllPaused, files = {}
   return state
 }
 
-function UploadStatus (props) {
-  const uploadingState = getUploadingState(
-    props.isAllErrored,
-    props.isAllComplete,
-    props.isAllPaused,
-    props.files,
-  )
+function PanelTopBar (props) {
+  let { allowNewUpload } = props
 
-  switch (uploadingState) {
-    case 'uploading':
-      return props.i18n('uploadingXFiles', { smart_count: props.inProgressNotPausedFiles.length })
-    case 'preprocessing':
-    case 'postprocessing':
-      return props.i18n('processingXFiles', { smart_count: props.processingFiles.length })
-    case 'paused':
-      return props.i18n('uploadPaused')
-    case 'waiting':
-      return props.i18n('xFilesSelected', { smart_count: props.newFiles.length })
-    case 'complete':
-      return props.i18n('uploadComplete')
-  }
-}
-
-function PanelTopBar(props) {
-  let {allowNewUpload} = props
-  // TODO maybe this should be done in ../index.js, then just pass that down as `allowNewUpload`
   if (allowNewUpload && props.maxNumberOfFiles) {
     allowNewUpload = props.totalFileCount < props.maxNumberOfFiles
   }
 
   return (
     <div className="uppy-DashboardContent-bar">
-      <UploadStatus {...props} />
       {allowNewUpload && (
         <button
           class="uppy-DashboardContent-addMore"
@@ -94,7 +70,33 @@ function PanelTopBar(props) {
       )}
       <div className="uppy-topBarRightContainer">
         <div className="uppy-AlignText">
-          Align with Text <span className="uppy-AlignText-Optional">(optional, .txt)</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="infoIcon feather feather-info"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <span>
+            Align with Text <span className="uppy-AlignText-Optional">(optional, .txt)</span>
+          </span>
+          <div
+            id="uppy-AlignText-Tooltip"
+            className="uppy-AlignText-Tooltip"
+            role="tooltip"
+            aria-hidden="true"
+          >
+            Force-aligns the transcription with the given text file.
+          </div>
         </div>
         <div className="uppy-SpeakerCount">Speaker Count</div>
       </div>

@@ -913,7 +913,6 @@ a.uppy-Dashboard-poweredBy {
   }
 }
 
-
 .uppy-topBarRightContainer {
   display: flex;
   align-items: center;
@@ -921,4 +920,20 @@ a.uppy-Dashboard-poweredBy {
   gap: 0.5em;
   margin-right: 0.25em;
   margin-left: auto;
+}
+
+.uppy-AlignText-Tooltip {
+  display: none;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 3px;
+  padding: 6px 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.uppy-AlignText:hover .uppy-AlignText-Tooltip {
+  display: block;
 }

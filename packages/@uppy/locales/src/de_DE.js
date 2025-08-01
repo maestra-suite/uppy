@@ -176,6 +176,10 @@ de_DE.strings = {
   },
   zoomIn: 'Vergrößern',
   zoomOut: 'Verkleinern',
+  speakerCount: 'Sprecherzahl',
+  alignWithText: 'Mit Text ausrichten',
+  optionalTXTFile: 'optional, .txt',
+  elevenlabsForcedAlignment: 'Transkription mit gegebener Textdatei ausrichten.',
 }
 
 de_DE.pluralize = function pluralize (count) {

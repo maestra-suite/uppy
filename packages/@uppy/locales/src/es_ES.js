@@ -138,6 +138,10 @@ es_ES.strings = {
   selectFileNamed: 'Seleccione archivo %{name}',
   unselectFileNamed: 'Deseleccionar archivo %{name}',
   openFolderNamed: 'Carpeta abierta %{name}',
+  speakerCount: 'Número de hablantes',
+  alignWithText: 'Ajustar al texto',
+  optionalTXTFile: 'opcional, .txt',
+  elevenlabsForcedAlignment: 'Ajusta la transcripción con el archivo de texto proporcionado.',
 }
 
 es_ES.pluralize = function pluralize (n) {
