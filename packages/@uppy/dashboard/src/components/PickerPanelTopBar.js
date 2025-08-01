@@ -87,7 +87,7 @@ function PanelTopBar (props) {
             <line x1="12" y1="8" x2="12.01" y2="8" />
           </svg>
           <span>
-            Align with Text <span className="uppy-AlignText-Optional">(optional, .txt)</span>
+            {props.i18n('alignWithText')}<span className="uppy-AlignText-Optional">({props.i18n('optionalTXTFile')})</span>
           </span>
           <div
             id="uppy-AlignText-Tooltip"
@@ -95,10 +95,10 @@ function PanelTopBar (props) {
             role="tooltip"
             aria-hidden="true"
           >
-            Force-aligns the transcription with the given text file.
+            {props.i18n('elevenlabsForcedAlignment')}
           </div>
         </div>
-        <div className="uppy-SpeakerCount">Speaker Count</div>
+        <div className="uppy-SpeakerCount">{props.i18n('speakerCount')}</div>
       </div>
     </div>
   )
