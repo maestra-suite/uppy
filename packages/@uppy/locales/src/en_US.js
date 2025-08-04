@@ -195,7 +195,7 @@ en_US.strings = {
   speakerCount: 'Speaker Count',
   alignWithText: 'Align with Text',
   optionalTXTFile: 'optional, .txt',
-  elevenlabsForcedAlignment: 'Force-aligns the transcription with the given text file',
+  elevenlabsForcedAlignment: 'Use the forced alignment feature to sync an existing script with your audio or video, rather than transcribing from scratch.',
 }
 
 en_US.pluralize = function pluralize (count) {

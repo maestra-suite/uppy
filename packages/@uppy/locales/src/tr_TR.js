@@ -138,7 +138,7 @@ tr_TR.strings = {
   speakerCount: 'Konuşmacı Sayısı',
   alignWithText: 'Metne Uyumla',
   optionalTXTFile: 'isteğe bağlı, .txt',
-  elevenlabsForcedAlignment: 'Transkripsiyonu verilen metin dosyasıyla eşleştirir.',
+  elevenlabsForcedAlignment: 'Zaten mevcut olan bir metni ses veya videoyla senkronize etmek için zorunlu hizalama özelliğini kullanın; baştan transkripsiyon yapmanıza gerek yok.',
 }
 
 tr_TR.pluralize = function pluralize (n) {

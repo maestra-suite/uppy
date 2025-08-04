@@ -138,7 +138,7 @@ ja_JP.strings = {
   speakerCount: 'スピーカー数',
   alignWithText: 'テキストに合わせる',
   optionalTXTFile: '任意, .txt',
-  elevenlabsForcedAlignment: '指定されたテキストファイルに合わせて、トランスクリプションを強制的に整列します。',
+  elevenlabsForcedAlignment: '強制アラインメント機能を使用すると、既存のスクリプトを音声や動画と同期でき、最初から文字起こしする必要がありません。',
 }
 
 ja_JP.pluralize = function pluralize (n) {

@@ -141,7 +141,7 @@ es_ES.strings = {
   speakerCount: 'Número de hablantes',
   alignWithText: 'Ajustar al texto',
   optionalTXTFile: 'opcional, .txt',
-  elevenlabsForcedAlignment: 'Ajusta la transcripción con el archivo de texto proporcionado.',
+  elevenlabsForcedAlignment: 'Usa la función de alineación forzada para sincronizar un guion existente con tu audio o video, en lugar de transcribir desde cero.',
 }
 
 es_ES.pluralize = function pluralize (n) {
