@@ -144,6 +144,10 @@ zh_TW.strings = {
     '1': '您至少要選擇%{smart_count}個檔案',
     '2': '您至少要選擇%{smart_count}個檔案',
   },
+  speakerCount: '說話人數',
+  alignWithText: '對齊文本',
+  optionalTXTFile: '可選, .txt',
+  elevenlabsForcedAlignment: '使用強制對齊功能同步現有文本與您的音頻或視頻，而不是從頭開始轉錄。',
 }
 
 zh_TW.pluralize = function pluralize (n) {

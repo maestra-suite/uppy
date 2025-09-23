@@ -142,6 +142,10 @@ fi_FI.strings = {
   streamPassive: 'Jako passiivinen',
   micDisabled: 'Käyttäjä on estänyt mikrofonin',
   recording: 'Tallennetaan',
+  speakerCount: 'Puheenjäsenten määrä',
+  alignWithText: 'Teksin suhteen',
+  optionalTXTFile: 'valinnainen, .txt',
+  elevenlabsForcedAlignment: 'Käytä pakotettua suhteutumista, jotta voit suhteuttaa olemassa olevan tekstin ääneen tai videoon, eikä sinun tarvitse kirjoittaa tekstiä uudestaan.',
 }
 
 fi_FI.pluralize = function pluralize (n) {

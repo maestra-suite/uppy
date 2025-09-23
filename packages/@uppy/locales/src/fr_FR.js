@@ -156,6 +156,10 @@ fr_FR.strings = {
     '1': 'Vous devez sélectionner au moins %{smart_count} fichiers',
     '2': 'Vous devez sélectionner au moins %{smart_count} fichiers',
   },
+  speakerCount: 'Nombre de locuteurs',
+  alignWithText: 'Aligner avec le texte',
+  optionalTXTFile: 'facultatif, .txt',
+  elevenlabsForcedAlignment: 'Utilisez la fonction d\'alignement forcé pour synchroniser un texte existant avec votre audio ou vidéo, plutôt que de le transcrire.',
 }
 
 fr_FR.pluralize = function pluralize (n) {

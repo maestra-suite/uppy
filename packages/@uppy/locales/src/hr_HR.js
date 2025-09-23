@@ -135,6 +135,10 @@ hr_HR.strings = {
   selectFileNamed: 'Izaberite datoteku %{name}',
   unselectFileNamed: 'Isključite datoteku %{name}',
   openFolderNamed: 'Otvori mapu %{name}',
+  speakerCount: 'Broj govornika',
+  alignWithText: 'Poravnaj s tekstom',
+  optionalTXTFile: 'opcionalno, .txt',
+  elevenlabsForcedAlignment: 'Koristite funkciju zasnovanu na tekstu kako biste sinkronizirali postojeći tekst s vašim audio ili video zapisom, umjesto da ga prepisujete.',
 }
 
 hr_HR.pluralize = function pluralize (n) {

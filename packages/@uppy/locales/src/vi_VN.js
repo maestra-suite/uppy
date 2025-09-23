@@ -138,6 +138,10 @@ vi_VN.strings = {
     '1': 'Chọn ít nhất %{smart_count} tập tin',
     '2': 'Chọn ít nhất %{smart_count} tập tin',
   },
+  speakerCount: 'Số lượng người nói',
+  alignWithText: 'Căn chỉnh với văn bản',
+  optionalTXTFile: 'tùy chọn, .txt',
+  elevenlabsForcedAlignment: 'Sử dụng tính năng căn chỉnh bắt buộc để đồng bộ hóa văn bản hiện có với âm thanh hoặc video của bạn, thay vì gõ từ đầu.',
 }
 
 vi_VN.pluralize = function pluralize (n) {

@@ -135,6 +135,10 @@ sr_RS_Cyrillic.strings = {
   selectFileNamed: 'Изаберите фајл %{name}',
   unselectFileNamed: 'Искључите фајл %{name}',
   openFolderNamed: 'Отвори фолдер %{name}',
+  speakerCount: 'Број говорника',
+  alignWithText: 'Поравнај са текстом',
+  optionalTXTFile: 'опционално, .txt',
+  elevenlabsForcedAlignment: 'Користите функцију принудног поравнања да синхронизујете постојећи текст са вашим аудио или видео записом, уместо да га преписујете.',
 }
 
 sr_RS_Cyrillic.pluralize = function pluralize (n) {

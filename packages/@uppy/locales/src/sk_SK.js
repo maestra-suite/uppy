@@ -165,6 +165,10 @@ sk_SK.strings = {
   },
   zoomIn: 'Priblížiť',
   zoomOut: 'Oddialiť',
+  speakerCount: 'Počet hovorcov',
+  alignWithText: 'Zarovnať s textom',
+  optionalTXTFile: 'voliteľný, .txt',
+  elevenlabsForcedAlignment: 'Použite funkciu zasadnutia na text, aby ste zarovnali existujúci text s vaším audio alebo video, namiesto toho, aby ste ho prepísali.',
 }
 
 sk_SK.pluralize = function pluralize (count) {

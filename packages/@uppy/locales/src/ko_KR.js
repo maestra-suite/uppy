@@ -94,6 +94,10 @@ ko_KR.strings = {
   youCanOnlyUploadFileTypes: '업로드 가능 형식: %{types}',
   youCanOnlyUploadX: '%{smart_count}개의 파일만 업로드할 수 있습니다',
   youHaveToAtLeastSelectX: '최소 %{smart_count}개의 파일을 선택해야 합니다',
+  speakerCount: '발화자 수',
+  alignWithText: '텍스트와 맞춤',
+  optionalTXTFile: '선택적, .txt',
+  elevenlabsForcedAlignment: '강제 정렬 기능을 사용하여 기존 스크립트를 오디오 또는 비디오와 동기화하여 처음부터 작성하는 대신 작성합니다.',
 }
 
 ko_KR.pluralize = function pluralize () {

@@ -135,6 +135,10 @@ ar_SA.strings = {
   selectFileNamed: '%{name} اختر الملف',
   unselectFileNamed: '%{name} إلغاء تحديد الملف',
   openFolderNamed: '%{name} افتح المجلد',
+  speakerCount: 'عدد المتحدثين',
+  alignWithText: 'محاذاة بالنص',
+  optionalTXTFile: 'اختياري, .txt',
+  elevenlabsForcedAlignment: 'استخدم ميزة المحاذاة القوية لمزامنة النص الموجود مع الصوت أو الفيديو، بدلاً من الترجمة من البداية.',
 }
 
 ar_SA.pluralize = function pluralize (n) {

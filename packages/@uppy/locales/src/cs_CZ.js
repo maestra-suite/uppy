@@ -136,6 +136,10 @@ cs_CZ.strings = {
     '1': 'Je třeba vybrat alespoň %{smart_count} souborů',
     '2': 'Je třeba vybrat alespoň %{smart_count} souborů',
   },
+  speakerCount: 'Počet hlasů',
+  alignWithText: 'Zarovnat s textem',
+  optionalTXTFile: 'volitelný, .txt',
+  elevenlabsForcedAlignment: 'Použijte funkci vynuceného zarovnání pro synchronizaci existujícího textu s vaším audio nebo video, namísto psaní od nuly.',
 }
 
 cs_CZ.pluralize = function pluralize (n) {

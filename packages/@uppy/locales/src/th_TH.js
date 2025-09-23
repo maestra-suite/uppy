@@ -154,6 +154,10 @@ th_TH.strings = {
   },
   zoomIn: 'ซูมเข้า',
   zoomOut: 'ซูมออก',
+  speakerCount: 'จำนวนผู้พูด',
+  alignWithText: 'ปรับตามข้อความ',
+  optionalTXTFile: 'เลือกได้, .txt',
+  elevenlabsForcedAlignment: 'ใช้ฟังก์ชันปรับตามข้อความเพื่อปรับตามข้อความที่มีอยู่กับสื่อสังคมของคุณ,แทนที่จะพิมพ์ข้อความใหม่จากตัวอักษร',
 }
 
 th_TH.pluralize = function pluralize (n) {

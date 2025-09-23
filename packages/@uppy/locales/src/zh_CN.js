@@ -108,6 +108,10 @@ zh_CN.strings = {
   youCanOnlyUploadFileTypes: '您只能上传这些文件类型：%{types}',
   youCanOnlyUploadX: '您只能上传 %{smart_count} 个文件',
   youHaveToAtLeastSelectX: '您至少要选择 %{smart_count} 个文件',
+  speakerCount: '说话人数',
+  alignWithText: '对齐文本',
+  optionalTXTFile: '可选, .txt',
+  elevenlabsForcedAlignment: '使用强制对齐功能同步现有文本与您的音频或视频，而不是从头开始转录。',
 }
 
 // There is just one form.

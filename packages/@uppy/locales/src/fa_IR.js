@@ -168,6 +168,10 @@ fa_IR.strings = {
   },
   zoomIn: 'بزرگ‌نمایی',
   zoomOut: 'کوچک‌نمایی',
+  speakerCount: 'تعداد صحنه گری',
+  alignWithText: 'منطبق با متن',
+  optionalTXTFile: 'اختیاری, .txt',
+  elevenlabsForcedAlignment: 'استفاده از ویژگی منطبق سازی قوی برای منطبق کردن یک نوشتار موجود با صوت یا ویدیو، به جای ترجمه از صفر.',
 
 }
 

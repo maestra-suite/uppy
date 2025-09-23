@@ -135,6 +135,10 @@ da_DK.strings = {
     '1': 'Du skal vælge mindst %{smart_count} filer',
     '2': 'Du skal vælge mindst %{smart_count} filer',
   },
+  speakerCount: 'Antal talehave',
+  alignWithText: 'Align med tekst',
+  optionalTXTFile: 'valgfri, .txt',
+  elevenlabsForcedAlignment: 'Brug den valgte funktion til at synkronisere eksisterende tekst med dit audio eller video, i stedet for at skrive fra bunden.',
 }
 
 da_DK.pluralize = function pluralize (n) {
