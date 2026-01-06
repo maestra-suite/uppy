@@ -20,22 +20,14 @@ class UrlUI extends Component {
     this.stopProgress()
   }
 
-  startProgress () {
-    this.setState({ progress: 0 })
-    this.progressInterval = setInterval(() => {
-      this.setState((state) => {
-        const increment = (90 - state.progress) * 0.1;
-        const newProgress = Math.min(state.progress + Math.max(increment, 0.5), 90);
-        return { progress: newProgress };
-      })
-    }, 200)
+  handleKeyPress (ev) {
+    if (ev.keyCode === 13) {
+      this.handleAddFile()
+    }
   }
 
-  stopProgress () {
-    if (this.progressInterval) {
-      clearInterval(this.progressInterval)
-      this.progressInterval = null
-    }
+  handleClick () {
+    this.handleAddFile()
   }
 
   handleAddFile () {
@@ -61,14 +53,22 @@ class UrlUI extends Component {
     })
   }
 
-  handleKeyPress (ev) {
-    if (ev.keyCode === 13) {
-      this.handleAddFile()
-    }
+  startProgress () {
+    this.setState({ progress: 0 })
+    this.progressInterval = setInterval(() => {
+      this.setState((state) => {
+        const increment = (90 - state.progress) * 0.05
+        const newProgress = Math.min(state.progress + Math.max(increment, 0.25), 90)
+        return { progress: newProgress }
+      })
+    }, 350)
   }
 
-  handleClick () {
-    this.handleAddFile()
+  stopProgress () {
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval)
+      this.progressInterval = null
+    }
   }
 
   render () {
