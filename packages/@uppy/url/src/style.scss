@@ -15,24 +15,23 @@
   }
 }
 
-.uppy-Url-input {
+.uppy-Url-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
   width: 90%;
   max-width: 650px;
-  margin-bottom: 15px;
+}
 
-  .uppy-size--md & {
-    margin-bottom: 20px;
-  }
+.uppy-Url-input {
+  flex: 1;
+  min-width: 0;
 }
 
 .uppy-Url-importButton {
-  padding: 13px 25px;
-  width: 90%;
-  max-width: 650px;
-
-  .uppy-size--md & {
-    padding: 13px 30px;
-  }
+  flex-shrink: 0;
+  white-space: nowrap;
 
   &:disabled {
     opacity: 0.7;
@@ -40,19 +39,24 @@
   }
 }
 
-
 .uppy-Url-progress {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 90%;
   max-width: 650px;
-  height: 3px;
-  margin-top: 20px;
+}
+
+.uppy-Url-progress-track {
+  position: relative;
+  flex: 1;
+  height: 4px;
   overflow: hidden;
-  background-color: $gray-200;
-  border-radius: 2px;
+  background-color: rgba($gray-200, 0.5);
+  border-radius: 4px;
 
   [data-uppy-theme="dark"] & {
-    background-color: $gray-600;
+    background-color: rgba($gray-600, 0.4);
   }
 }
 
@@ -60,19 +64,21 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 30%;
   height: 100%;
-  background-color: $blue;
-  border-radius: 2px;
-  animation: uppy-Url-progress-animation 1.2s ease-in-out infinite;
+  background: linear-gradient(90deg, $blue, lighten($blue, 10%));
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba($blue, 0.5);
+  transition: width 0.2s ease-out;
 }
 
-@keyframes uppy-Url-progress-animation {
-  0% {
-    left: -30%;
-  }
+.uppy-Url-progress-percent {
+  font-size: 12px;
+  font-weight: 500;
+  color: $gray-500;
+  min-width: 36px;
+  text-align: right;
 
-  100% {
-    left: 100%;
+  [data-uppy-theme="dark"] & {
+    color: $gray-400;
   }
 }
