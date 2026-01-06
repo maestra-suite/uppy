@@ -11,7 +11,7 @@ const tls = require('tls')
 const fs = require('fs')
 const path = require('path')
 const caBundlePath = path.join(__dirname, '..', '..', '..', '..', '..', '..', '__spotlightr_com.ca-bundle');
-const ca = fs.readFileSync(caBundlePath);
+const ca = fs.readFileSync(caBundlePath, 'utf8');
 const trustedCAs = [
   ...tls.rootCertificates,
   ca

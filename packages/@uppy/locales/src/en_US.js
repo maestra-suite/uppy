@@ -60,7 +60,7 @@ en_US.strings = {
   enterTextToSearch: 'Enter text to search for images',
   enterUrlToImport: 'Enter URL to import a file',
   exceedsSize: '%{file} exceeds maximum allowed size of %{size}',
-  failedToFetch: 'Companion failed to fetch this URL, please make sure it’s correct',
+  failedToFetch: "Companion failed to fetch this URL, please make sure it's correct",
   failedToUpload: 'Failed to upload %{file}',
   filesUploadedOfTotal: {
     '0': '%{complete} of %{smart_count} file uploaded',
@@ -78,6 +78,7 @@ en_US.strings = {
   import: 'Import',
   importFiles: 'Import files from:',
   importFrom: 'Import from %{name}',
+  importing: 'Importing...',
   inferiorSize: 'This file is smaller than the allowed size of %{size}',
   loading: 'Loading...',
   logOut: 'Log out',
@@ -111,10 +112,6 @@ en_US.strings = {
   pluginNameOneDrive: 'OneDrive',
   pluginNameZoom: 'Zoom',
   poweredBy: 'Powered by %{uppy}',
-  processingXFiles: {
-    '0': 'Processing %{smart_count} file',
-    '1': 'Processing %{smart_count} files',
-  },
   recording: 'Recording',
   recordingLength: 'Recording length %{recording_length}',
   recordingStoppedMaxSize: 'Recording stopped because the file size is about to exceed the limit',
@@ -159,11 +156,6 @@ en_US.strings = {
   uploadComplete: 'Upload complete',
   uploadFailed: 'Upload failed',
   uploading: 'Uploading',
-  uploadingXFiles: {
-    '0': 'Uploading %{smart_count} file',
-    '1': 'Uploading %{smart_count} files',
-  },
-  uploadPaused: 'Upload paused',
   uploadXFiles: {
     '0': 'Upload %{smart_count} file',
     '1': 'Upload %{smart_count} files',
@@ -171,10 +163,6 @@ en_US.strings = {
   uploadXNewFiles: {
     '0': 'Upload +%{smart_count} file',
     '1': 'Upload +%{smart_count} files',
-  },
-  xFilesSelected: {
-    '0': '%{smart_count} file selected',
-    '1': '%{smart_count} files selected',
   },
   xMoreFilesAdded: {
     '0': '%{smart_count} more file added',
@@ -192,10 +180,6 @@ en_US.strings = {
   },
   zoomIn: 'Zoom in',
   zoomOut: 'Zoom out',
-  speakerCount: 'Speaker Count',
-  alignWithText: 'Align with Text',
-  optionalTXTFile: 'optional, .txt',
-  elevenlabsForcedAlignment: 'Use the forced alignment feature to sync an existing script with your audio or video, rather than transcribing from scratch.',
 }
 
 en_US.pluralize = function pluralize (count) {

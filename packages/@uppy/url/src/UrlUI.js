@@ -42,6 +42,8 @@ class UrlUI extends Component {
   }
 
   render () {
+    const { isFetching } = this.state
+
     return (
       <div className="uppy-Url">
         <input
@@ -52,14 +54,21 @@ class UrlUI extends Component {
           onKeyUp={this.handleKeyPress}
           ref={(input) => { this.input = input }}
           data-uppy-super-focusable
+          disabled={isFetching}
         />
         <button
           className="uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Url-importButton"
           type="button"
           onClick={this.handleClick}
+          disabled={isFetching}
         >
-          {this.state.isFetching ? 'Importing' : this.props.i18n('import')}
+          {isFetching ? this.props.i18n('importing') : this.props.i18n('import')}
         </button>
+        {isFetching && (
+          <div className="uppy-Url-progress">
+            <div className="uppy-Url-progress-bar" />
+          </div>
+        )}
       </div>
     )
   }

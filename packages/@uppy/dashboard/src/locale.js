@@ -35,7 +35,6 @@ module.exports = {
     // Used as the hover text and screen reader label for file progress indicators when
     // they have been fully uploaded.
     uploadComplete: 'Upload complete',
-    uploadPaused: 'Upload paused',
     // Used as the hover text and screen reader label for the buttons to resume paused uploads.
     resumeUpload: 'Resume upload',
     // Used as the hover text and screen reader label for the buttons to pause uploads.
@@ -44,19 +43,6 @@ module.exports = {
     retryUpload: 'Retry upload',
     // Used as the hover text and screen reader label for the buttons to cancel uploads.
     cancelUpload: 'Cancel upload',
-    // Used in a title, how many files are currently selected
-    xFilesSelected: {
-      0: '%{smart_count} file selected',
-      1: '%{smart_count} files selected',
-    },
-    uploadingXFiles: {
-      0: 'Uploading %{smart_count} file',
-      1: 'Uploading %{smart_count} files',
-    },
-    processingXFiles: {
-      0: 'Processing %{smart_count} file',
-      1: 'Processing %{smart_count} files',
-    },
     // The "powered by Uppy" link at the bottom of the Dashboard.
     poweredBy: 'Powered by %{uppy}',
     addMore: 'Add more',
