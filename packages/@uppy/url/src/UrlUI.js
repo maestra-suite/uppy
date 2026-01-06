@@ -4,8 +4,10 @@ class UrlUI extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      isFetching: false, // Add state to track the fetch status
+      isFetching: false,
+      progress: 0,
     }
+    this.progressInterval = null
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.handleClick = this.handleClick.bind(this)
   }
@@ -14,21 +16,8 @@ class UrlUI extends Component {
     this.input.value = ''
   }
 
-  handleAddFile () {
-    const url = this.input.value
-    if (!url) return
-
-    if (this.state.isFetching) {
-      return
-    }
-
-    this.setState({ isFetching: true }) // Set state to fetching
-
-    this.props.addFile(url).then(() => {
-      this.setState({ isFetching: false }) // Reset state when done
-    }).catch(() => {
-      this.setState({ isFetching: false }) // Reset state on error
-    })
+  componentWillUnmount () {
+    this.stopProgress()
   }
 
   handleKeyPress (ev) {
@@ -41,25 +30,83 @@ class UrlUI extends Component {
     this.handleAddFile()
   }
 
+  handleAddFile () {
+    const url = this.input.value
+    if (!url) return
+
+    if (this.state.isFetching) {
+      return
+    }
+
+    this.setState({ isFetching: true })
+    this.startProgress()
+
+    this.props.addFile(url).then(() => {
+      this.stopProgress()
+      this.setState({ progress: 100 })
+      setTimeout(() => {
+        this.setState({ isFetching: false, progress: 0 })
+      }, 300)
+    }).catch(() => {
+      this.stopProgress()
+      this.setState({ isFetching: false, progress: 0 })
+    })
+  }
+
+  startProgress () {
+    this.setState({ progress: 0 })
+    this.progressInterval = setInterval(() => {
+      this.setState((state) => {
+        const increment = (90 - state.progress) * 0.05
+        const newProgress = Math.min(state.progress + Math.max(increment, 0.25), 90)
+        return { progress: newProgress }
+      })
+    }, 350)
+  }
+
+  stopProgress () {
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval)
+      this.progressInterval = null
+    }
+  }
+
   render () {
+    const { isFetching, progress } = this.state
+
     return (
       <div className="uppy-Url">
-        <input
-          className="uppy-u-reset uppy-c-textInput uppy-Url-input"
-          type="text"
-          aria-label={this.props.i18n('enterUrlToImport')}
-          placeholder={this.props.i18n('enterUrlToImport')}
-          onKeyUp={this.handleKeyPress}
-          ref={(input) => { this.input = input }}
-          data-uppy-super-focusable
-        />
-        <button
-          className="uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Url-importButton"
-          type="button"
-          onClick={this.handleClick}
-        >
-          {this.state.isFetching ? 'Importing' : this.props.i18n('import')}
-        </button>
+        <div className="uppy-Url-form">
+          <input
+            className="uppy-u-reset uppy-c-textInput uppy-Url-input"
+            type="text"
+            aria-label={this.props.i18n('enterUrlToImport')}
+            placeholder={this.props.i18n('enterUrlToImport')}
+            onKeyUp={this.handleKeyPress}
+            ref={(input) => { this.input = input }}
+            data-uppy-super-focusable
+            disabled={isFetching}
+          />
+          <button
+            className="uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Url-importButton"
+            type="button"
+            onClick={this.handleClick}
+            disabled={isFetching}
+          >
+            {isFetching ? this.props.i18n('importing') : this.props.i18n('import')}
+          </button>
+        </div>
+        {isFetching && (
+          <div className="uppy-Url-progress">
+            <div className="uppy-Url-progress-track">
+              <div
+                className="uppy-Url-progress-bar"
+                style={{ width: `${progress}%`, left: 0 }}
+              />
+            </div>
+            <span className="uppy-Url-progress-percent">{Math.round(progress)}%</span>
+          </div>
+        )}
       </div>
     )
   }

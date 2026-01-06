@@ -66,6 +66,7 @@ is_IS.strings = {
   generatingThumbnails: 'Bý til smámynd ...',
   import: 'Flytja inn',
   importFrom: 'Flytja inn frá %{name}',
+  importing: 'Flytur inn...',
   loading: 'Hleð...',
   logOut: 'Skrá út',
   myDevice: 'Mitt tæki',
@@ -142,6 +143,10 @@ is_IS.strings = {
     '1': 'Þú verður að velja lágmark %{smart_count} skrár',
     '2': 'Þú verður að velja lágmark %{smart_count} skrár',
   },
+  speakerCount: 'Fjöldi talaðara',
+  alignWithText: 'Meny á texta',
+  optionalTXTFile: 'valfrjálst, .txt',
+  elevenlabsForcedAlignment: 'Nota aðgerðina með styrktir fyrir mismunandi talaðara, þegar þú vilt uppfletta fyrir ásetningu eða ásetningu sem tengist viðkomandi myndbandi.',
 }
 
 is_IS.pluralize = function pluralize (n) {

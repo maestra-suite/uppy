@@ -71,6 +71,7 @@ sk_SK.strings = {
   generatingThumbnails: 'Vytváram miniatury...',
   import: 'Importovať',
   importFrom: 'Import z %{name}',
+  importing: 'Importovanie...',
   inferiorSize: 'Tento súbor je menší ako povolená veľkosť súboru %{size}',
   loading: 'Nahrávanie...',
   logOut: 'Odhlásiť',
@@ -165,6 +166,10 @@ sk_SK.strings = {
   },
   zoomIn: 'Priblížiť',
   zoomOut: 'Oddialiť',
+  speakerCount: 'Počet hovorcov',
+  alignWithText: 'Zarovnať s textom',
+  optionalTXTFile: 'voliteľný, .txt',
+  elevenlabsForcedAlignment: 'Použite funkciu zasadnutia na text, aby ste zarovnali existujúci text s vaším audio alebo video, namiesto toho, aby ste ho prepísali.',
 }
 
 sk_SK.pluralize = function pluralize (count) {

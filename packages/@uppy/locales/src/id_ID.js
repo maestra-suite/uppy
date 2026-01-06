@@ -59,6 +59,7 @@ id_ID.strings = {
   },
   import: 'Impor',
   importFrom: 'Impor dari %{name}',
+  importing: 'Mengimpor...',
   loading: 'Memuat...',
   logOut: 'Keluar',
   myDevice: 'Perangkat Saya',
@@ -135,6 +136,10 @@ id_ID.strings = {
     '1': 'Anda harus memilih minimal %{smart_count} berkas',
     '2': 'Anda harus memilih minimal %{smart_count} berkas',
   },
+  speakerCount: 'Jumlah Pembicara',
+  alignWithText: 'Menyelaraskan dengan Teks',
+  optionalTXTFile: 'opsional, .txt',
+  elevenlabsForcedAlignment: 'Gunakan fitur penyelarasan paksa untuk menyinkronkan teks yang ada dengan audio atau video Anda, bukan dari awal.',
 }
 
 id_ID.pluralize = function pluralize (n) {

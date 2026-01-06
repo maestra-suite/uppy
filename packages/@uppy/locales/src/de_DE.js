@@ -74,6 +74,7 @@ de_DE.strings = {
   import: 'Importieren',
   importFiles: 'Importiere Dateien von:',
   importFrom: 'Importieren von %{name}',
+  importing: 'Importiere...',
   inferiorSize: 'Diese Datei ist kleiner als die minimal erlaubte Dateigröße von %{size}',
   loading: 'Laden...',
   logOut: 'Abmelden',
@@ -176,6 +177,10 @@ de_DE.strings = {
   },
   zoomIn: 'Vergrößern',
   zoomOut: 'Verkleinern',
+  speakerCount: 'Sprecherzahl',
+  alignWithText: 'Mit Text ausrichten',
+  optionalTXTFile: 'optional, .txt',
+  elevenlabsForcedAlignment: 'Transkription mit gegebener Textdatei ausrichten.',
 }
 
 de_DE.pluralize = function pluralize (count) {

@@ -10,7 +10,7 @@ const uploadStates = {
   STATE_PAUSED: 'paused',
 }
 
-function getUploadingState(isAllErrored, isAllComplete, isAllPaused, files = {}) {
+function getUploadingState (isAllErrored, isAllComplete, isAllPaused, files = {}) {
   if (isAllErrored) {
     return uploadStates.STATE_ERROR
   }
@@ -45,71 +45,60 @@ function getUploadingState(isAllErrored, isAllComplete, isAllPaused, files = {})
   return state
 }
 
-function UploadStatus(props) {
-  const uploadingState = getUploadingState(
-    props.isAllErrored,
-    props.isAllComplete,
-    props.isAllPaused,
-    props.files,
-  )
-
-  switch (uploadingState) {
-    case 'uploading':
-      return props.i18n('uploadingXFiles', { smart_count: props.inProgressNotPausedFiles.length })
-    case 'preprocessing':
-    case 'postprocessing':
-      return props.i18n('processingXFiles', { smart_count: props.processingFiles.length })
-    case 'paused':
-      return props.i18n('uploadPaused')
-    case 'waiting':
-      return props.i18n('xFilesSelected', { smart_count: props.newFiles.length })
-    case 'complete':
-      return props.i18n('uploadComplete')
-  }
-}
-
 function PanelTopBar (props) {
   let { allowNewUpload } = props
-  // TODO maybe this should be done in ../index.js, then just pass that down as `allowNewUpload`
+
   if (allowNewUpload && props.maxNumberOfFiles) {
     allowNewUpload = props.totalFileCount < props.maxNumberOfFiles
   }
 
   return (
     <div className="uppy-DashboardContent-bar">
-      {!props.isAllComplete && !props.hideCancelButton ? (
+      {allowNewUpload && (
         <button
-          className="uppy-DashboardContent-back"
+          class="uppy-DashboardContent-addMore"
           type="button"
-          onClick={() => props.uppy.cancelAll()}
+          aria-label={props.i18n('addMoreFiles')}
+          title={props.i18n('addMoreFiles')}
+          onClick={() => props.toggleAddFilesPanel(true)}
         >
-          {props.i18n('cancel')}
+          <svg aria-hidden="true" focusable="false" class="uppy-c-icon" width="15" height="15" viewBox="0 0 15 15">
+            <path d="M8 6.5h6a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H8v6a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V8h-6a.5.5 0 0 1-.5-.5V7a.5.5 0 0 1 .5-.5h6v-6A.5.5 0 0 1 7 0h.5a.5.5 0 0 1 .5.5v6z" />
+          </svg>
+          <span class="uppy-DashboardContent-addMoreCaption">{props.i18n('addMore')}</span>
         </button>
-      ) : (
-          <div />
-        )}
-
-      <div className="uppy-DashboardContent-title" role="heading" aria-level="1">
-        <UploadStatus {...props} />
-      </div>
+      )}
       <div className="uppy-topBarRightContainer">
-        <div className="uppy-SpeakerCount">Speaker Count</div>
-        {allowNewUpload ? (
-          <button
-            class="uppy-DashboardContent-addMore"
-            type="button"
-            aria-label={props.i18n('addMoreFiles')}
-            title={props.i18n('addMoreFiles')}
-            onclick={() => props.toggleAddFilesPanel(true)}
+        <div className="uppy-AlignText">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="infoIcon feather feather-info"
           >
-            <svg aria-hidden="true" focusable="false" class="uppy-c-icon" width="15" height="15" viewBox="0 0 15 15">
-              <path d="M8 6.5h6a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H8v6a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V8h-6a.5.5 0 0 1-.5-.5V7a.5.5 0 0 1 .5-.5h6v-6A.5.5 0 0 1 7 0h.5a.5.5 0 0 1 .5.5v6z" />
-            </svg>
-            <span class="uppy-DashboardContent-addMoreCaption">{props.i18n('addMore')}</span>
-          </button>
-        ) : (
-            <div />
-          )}
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <span>
+            {props.i18n('alignWithText')}<span className="uppy-AlignText-Optional">({props.i18n('optionalTXTFile')})</span>
+          </span>
+          <div
+            id="uppy-AlignText-Tooltip"
+            className="uppy-AlignText-Tooltip"
+            role="tooltip"
+            aria-hidden="true"
+          >
+            {props.i18n('elevenlabsForcedAlignment')}
+          </div>
+        </div>
+        <div className="uppy-SpeakerCount">{props.i18n('speakerCount')}</div>
       </div>
     </div>
   )

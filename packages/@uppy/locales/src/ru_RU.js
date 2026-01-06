@@ -61,6 +61,7 @@ ru_RU.strings = {
   },
   import: 'Импортировать',
   importFrom: 'Импортировать из %{name}',
+  importing: 'Импортирование...',
   loading: 'Загрузка...',
   logOut: 'Выйти',
   myDevice: 'Мое устройство',
@@ -138,6 +139,10 @@ ru_RU.strings = {
   selectFileNamed: 'Выбрать файл %{name}',
   unselectFileNamed: 'Отменить выбор файла %{name}',
   openFolderNamed: 'Открыть папку %{name}',
+  speakerCount: 'Количество говорящих',
+  alignWithText: 'Выровнять с текстом',
+  optionalTXTFile: 'опционально, .txt',
+  elevenlabsForcedAlignment: 'Используйте функцию принудительного выравнивания для синхронизации существующего текста с вашим аудио или видео, вместо того, чтобы писать его с нуля.',
 }
 
 ru_RU.pluralize = function pluralize (n) {

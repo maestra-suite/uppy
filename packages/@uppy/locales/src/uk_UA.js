@@ -59,6 +59,7 @@ uk_UA.strings = {
   },
   import: 'Імпортувати',
   importFrom: 'Імпортувати з %{name}',
+  importing: 'Імпортування...',
   loading: 'Завантаження...',
   logOut: 'Вийти',
   myDevice: 'Мій пристрій',
@@ -135,6 +136,10 @@ uk_UA.strings = {
   selectFileNamed: 'Обрати файл %{name}',
   unselectFileNamed: 'Скасувати вибір файлу %{name}',
   openFolderNamed: 'Відкрити теку %{name}',
+  speakerCount: 'Кількість говорячих',
+  alignWithText: 'Вирівняти з текстом',
+  optionalTXTFile: 'опціонально, .txt',
+  elevenlabsForcedAlignment: 'Використовуйте функцію вирівнювання для синхронізації існуючого тексту з вашим аудіо або відео, замість того, щоб переписувати його.',
 }
 
 uk_UA.pluralize = function pluralize (n) {

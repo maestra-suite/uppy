@@ -62,6 +62,7 @@ pt_PT.strings = {
   },
   import: 'Importar',
   importFrom: 'Importar de %{name}',
+  importing: 'A importar...',
   loading: 'A carregar...',
   logOut: 'Sair',
   myDevice: 'O meu dispositivo',
@@ -129,6 +130,10 @@ pt_PT.strings = {
   selectFileNamed: 'Selecione o ficheiro %{name}',
   unselectFileNamed: 'Deselecionar ficheiro %{name}',
   openFolderNamed: 'Pasta aberta %{name}',
+  speakerCount: 'Número de falantes',
+  alignWithText: 'Alinhar com texto',
+  optionalTXTFile: 'opcional, .txt',
+  elevenlabsForcedAlignment: 'Use a função de alinhamento forçado para sincronizar um texto existente com seu áudio ou vídeo, em vez de transcrição do zero.',
 }
 
 pt_PT.pluralize = function pluralize (n) {

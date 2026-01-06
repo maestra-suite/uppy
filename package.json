@@ -89,6 +89,8 @@
     "events.once": "^2.0.2",
     "exorcist": "^2.0.0",
     "fakefile": "^1.0.0",
+    "firebase": "^12.3.0",
+    "get-youtube-id": "^1.0.1",
     "github-contributors-list": "^1.2.4",
     "glob": "^7.2.0",
     "isomorphic-fetch": "^3.0.0",

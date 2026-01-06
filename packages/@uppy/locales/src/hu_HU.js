@@ -61,6 +61,7 @@ hu_HU.strings = {
   },
   import: 'Importálás',
   importFrom: 'Importálás innen: %{name}',
+  importing: 'Importálás...',
   loading: 'Töltés...',
   logOut: 'Kijelentkezés',
   myDevice: 'Eszközöm',
@@ -137,6 +138,10 @@ hu_HU.strings = {
   selectFileNamed: 'Válaszd ki a fájlt %{name}',
   unselectFileNamed: 'A fájl törlése %{name}',
   openFolderNamed: 'Nyitott mappa %{name}',
+  speakerCount: 'A hanglelkűségek száma',
+  alignWithText: 'Szöveggel együttműködés',
+  optionalTXTFile: 'opcionális, .txt',
+  elevenlabsForcedAlignment: 'A kényszerített együttműködés funkció használatával egy már létező szöveget a hang- vagy videófelvételével együttműködhet, a felesleges szöveges beírás helyett.',
 }
 
 hu_HU.pluralize = function pluralize () {

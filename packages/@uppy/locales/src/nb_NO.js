@@ -71,6 +71,7 @@ nb_NO.strings = {
   generatingThumbnails: 'Genererer miniatyrbilde...',
   import: 'Importer',
   importFrom: 'Importer fra %{name}',
+  importing: 'Importerer...',
   inferiorSize: 'Fila er mindre enn tillatt størrelse på %{size}',
   loading: 'Laster...',
   logOut: 'Logg ut',
@@ -158,6 +159,10 @@ nb_NO.strings = {
   },
   zoomIn: 'Zoom inn',
   zoomOut: 'Zoom ut',
+  speakerCount: 'Antall tale',
+  alignWithText: 'Meny med tekst',
+  optionalTXTFile: 'valgfritt, .txt',
+  elevenlabsForcedAlignment: 'Bruk den tilgjengelige tekstfilen for å synkronisere en eksisterende tekst med din audio eller video, i stedet for å skrive den fra bunnen av.',
 }
 
 nb_NO.pluralize = function pluralize (count) {

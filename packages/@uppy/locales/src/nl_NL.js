@@ -61,6 +61,7 @@ nl_NL.strings = {
   },
   import: 'Importeer',
   importFrom: 'Importeer vanuit %{name}',
+  importing: 'Importeren...',
   loading: 'Bezig met laden...',
   logOut: 'Uitloggen',
   myDevice: 'Mijn apparaat',
@@ -131,6 +132,10 @@ nl_NL.strings = {
   selectFileNamed: 'Selecteer bestand %{name}',
   unselectFileNamed: 'Deselecteer bestand %{name}',
   openFolderNamed: 'Open map %{name}',
+  speakerCount: 'Aantal sprekers',
+  alignWithText: 'Tekst uitlijnen',
+  optionalTXTFile: 'optioneel, .txt',
+  elevenlabsForcedAlignment: 'Gebruik de beschikbare tekstbestand om een bestaand tekstfragment met je audio of video te synchroniseren, in plaats van het vanaf nul te transcriberen.',
 }
 
 nl_NL.pluralize = function pluralize (n) {

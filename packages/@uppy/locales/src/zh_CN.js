@@ -54,6 +54,7 @@ zh_CN.strings = {
   generatingThumbnails: '正在生成缩略图…',
   import: '导入',
   importFrom: '从 %{name} 导入',
+  importing: '导入中...',
   inferiorSize: '文件大小必须超过 %{size}',
   loading: '正在载入…',
   logOut: '登出',
@@ -108,6 +109,10 @@ zh_CN.strings = {
   youCanOnlyUploadFileTypes: '您只能上传这些文件类型：%{types}',
   youCanOnlyUploadX: '您只能上传 %{smart_count} 个文件',
   youHaveToAtLeastSelectX: '您至少要选择 %{smart_count} 个文件',
+  speakerCount: '说话人数',
+  alignWithText: '对齐文本',
+  optionalTXTFile: '可选, .txt',
+  elevenlabsForcedAlignment: '使用强制对齐功能同步现有文本与您的音频或视频，而不是从头开始转录。',
 }
 
 // There is just one form.

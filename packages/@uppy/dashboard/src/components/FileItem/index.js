@@ -7,13 +7,14 @@ const FileInfo = require('./FileInfo')
 const Buttons = require('./Buttons')
 
 module.exports = class FileItem extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
-      speakers: 1
+      speakers: props.file.meta.speakerCount || 1,
+      isElevenlabsTranscript: props.file.meta.isElevenlabsTranscript || false,
     }
   }
-  
+
   componentDidMount () {
     const { file } = this.props
     if (!file.preview) {
@@ -22,15 +23,28 @@ module.exports = class FileItem extends Component {
   }
 
   shouldComponentUpdate (nextProps) {
-    return !shallowEqual(this.props, nextProps)
+    // eslint-disable-next-line max-len
+    return !shallowEqual(this.props, nextProps) || this.state.isElevenlabsTranscript !== nextProps.file.meta.isElevenlabsTranscript || this.state.speakers !== nextProps.file.meta.speakerCount
   }
 
-  // VirtualList mounts FileItems again and they emit `thumbnail:request`
-  // Otherwise thumbnails are broken or missing after Golden Retriever restores files
-  componentDidUpdate () {
+  componentDidUpdate (prevProps) {
     const { file } = this.props
     if (!file.preview) {
       this.props.handleRequestThumbnail(file)
+    }
+
+    if (file?.meta?.speakerCount && file?.meta?.speakerCount !== prevProps.file.meta.speakerCount && file?.meta?.speakerCount !== this.state.speakers) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        speakers: file.meta.speakerCount,
+      })
+    }
+
+    if (file?.meta?.isElevenlabsTranscript !== prevProps.file.meta.isElevenlabsTranscript && file?.meta?.isElevenlabsTranscript !== this.state.isElevenlabsTranscript) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        isElevenlabsTranscript: file.meta.isElevenlabsTranscript,
+      })
     }
   }
 
@@ -43,13 +57,60 @@ module.exports = class FileItem extends Component {
 
   setSpeakers = (event) => {
     this.setState({
-      speakers: event.target.value
-    });
-    var file = this.props.file;
+      speakers: event.target.value,
+    })
+    const { file } = this.props
     if (file && file.id) {
       this.props.uppy.setFileMeta(file.id, {
-        speakerCount: event.target.value
-      });
+        speakerCount: event.target.value,
+      })
+    }
+  }
+
+  setElevenlabsForcedAlignmentFile = async (event) => {
+    const { file } = this.props
+    if (file && file.id) {
+      const forcedAlignmentFile = event.target.files[0]
+
+      if (forcedAlignmentFile && forcedAlignmentFile.name.endsWith('.txt')) {
+        try {
+          const text = await forcedAlignmentFile.text()
+
+          this.props.uppy.setFileMeta(file.id, {
+            forcedAlignment: text,
+            forcedAlignmentFileName: forcedAlignmentFile.name,
+          })
+        } catch (err) {
+          console.error('Error reading .txt file:', err)
+        }
+      } else {
+        console.warn('Selected file is not a .txt file')
+      }
+    }
+  }
+
+  uploadIcon = () => {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20">
+        <g fill="none" fill-rule="evenodd" stroke="current" stroke-linecap="round" stroke-linejoin="round"
+           stroke-width="1.5">
+          <path d="M0 8v8a2 2 0 002 2h12a2 2 0 002-2V8M12 4L8 0 4 4M8 0v12" transform="translate(1 1)"></path>
+        </g>
+      </svg>
+    )
+  }
+
+  removeElevenlabsForcedAlignmentFile = () => {
+    const {file} = this.props
+    if (file && file.id) {
+      this.props.uppy.setFileMeta(file.id, {
+        forcedAlignment: null,
+        forcedAlignmentFileName: null,
+      })
+      // Reset the file input
+      if (this.elevenlabsFileInput) {
+        this.elevenlabsFileInput.value = ''
+      }
     }
   }
 
@@ -73,6 +134,19 @@ module.exports = class FileItem extends Component {
     if (isUploaded && this.props.showRemoveButtonAfterComplete) {
       showRemoveButton = true
     }
+
+    const speakerCountOptions = [
+      { value: 'auto', label: 'Auto' },
+      { value: 1, label: '1' },
+      { value: 2, label: '2' },
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
+      { value: 7, label: '7' },
+      { value: 8, label: '8' },
+      { value: 9, label: '9' },
+    ]
 
     const dashboardItemClass = classNames({
       'uppy-Dashboard-Item': true,
@@ -114,7 +188,6 @@ module.exports = class FileItem extends Component {
             i18n={this.props.i18n}
           />
         </div>
-
         <div className="uppy-Dashboard-Item-fileInfoAndButtons">
           <FileInfo
             file={file}
@@ -138,17 +211,47 @@ module.exports = class FileItem extends Component {
             uppy={this.props.uppy}
             i18n={this.props.i18n}
           />
+          {this.state.isElevenlabsTranscript && !file.meta?.isSubtitleFile && (
+          <div className="uppy-Dashboard-Item-ElevenLabsFileInputWrapper">
+            <input
+              className="uppy-Dashboard-Item-ElevenLabsFileInput"
+              type="file"
+              accept=".txt"
+              onChange={this.setElevenlabsForcedAlignmentFile}
+              ref={(input) => { this.elevenlabsFileInput = input }}
+              style={{ display: 'none' }}
+            />
+            {file.meta.forcedAlignmentFileName ? (
+              <div className="uppy-Dashboard-Item-ElevenLabsFileBtn">
+                <span className="uppy-Dashboard-Item-ElevenLabsFileName">
+                  {file.meta.forcedAlignmentFileName}
+                </span>
+                <div className="uppy-Dashboard-Item-ElevenLabsFileRemove" type="button" onClick={this.removeElevenlabsForcedAlignmentFile} title="Remove file">
+                  ×
+                </div>
+              </div>
+            ) : (
+              <button
+                className="uppy-Dashboard-Item-ElevenLabsFileBtn"
+                type="button"
+                onClick={() => this.elevenlabsFileInput?.click()}
+              >
+                Upload {this.uploadIcon()}
+              </button>
+            )}
+          </div>
+          )}
           <div class="uppy-DropDown-SpeakerCount">
             <select class="uppy-Dropdown-SpeakerCount-Select" value={this.state.speakers} onChange={this.setSpeakers}>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
+              {
+                speakerCountOptions.map((option) => {
+                  return (
+                    <option value={option.value} key={option.value} id={`uppy_speakerCount_${option.value}`}>
+                      {option.label}
+                    </option>
+                  )
+                })
+              }
             </select>
           </div>
         </div>

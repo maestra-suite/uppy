@@ -65,6 +65,7 @@ pl_PL.strings = {
   generatingThumbnails: 'Generowanie miniaturek...',
   import: 'Importuj',
   importFrom: 'Importuj z %{name}',
+  importing: 'Importowanie...',
   loading: 'Ładowanie...',
   logOut: 'Wyloguj',
   myDevice: 'Moje urządzenie',
@@ -144,6 +145,10 @@ pl_PL.strings = {
     '1': 'Musisz wybrać przynajmniej %{smart_count} pliki',
     '2': 'Musisz wybrać przynajmniej %{smart_count} pliki',
   },
+  speakerCount: 'Liczba mówiących',
+  alignWithText: 'Dopasuj do tekstu',
+  optionalTXTFile: 'opcjonalny, .txt',
+  elevenlabsForcedAlignment: 'Użyj funkcji dopasowania do tekstu, aby dopasować istniejący tekst do swojego audio lub wideo, zamiast pisać go od nowa.',
 }
 
 pl_PL.pluralize = function pluralize (n) {

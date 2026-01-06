@@ -59,6 +59,7 @@ tr_TR.strings = {
   },
   import: 'Ekle',
   importFrom: '%{name} Ekle',
+  importing: 'İçe aktarılıyor...',
   loading: 'Yükleniyor...',
   logOut: 'Çıkış',
   myDevice: 'Dosyalarım',
@@ -135,6 +136,10 @@ tr_TR.strings = {
   selectFileNamed: 'Dosya Seç %{name}',
   unselectFileNamed: 'Dosya seçimini kaldır %{name}',
   openFolderNamed: 'Açık dosya %{name}',
+  speakerCount: 'Konuşmacı Sayısı',
+  alignWithText: 'Metne Uyumla',
+  optionalTXTFile: 'isteğe bağlı, .txt',
+  elevenlabsForcedAlignment: 'Zaten mevcut olan bir metni ses veya videoyla senkronize etmek için zorunlu hizalama özelliğini kullanın; baştan transkripsiyon yapmanıza gerek yok.',
 }
 
 tr_TR.pluralize = function pluralize (n) {

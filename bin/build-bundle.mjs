@@ -10,7 +10,7 @@ import babel from 'esbuild-plugin-babel'
 const UPPY_ROOT = new URL('../', import.meta.url)
 const PACKAGES_ROOT = new URL('./packages/', UPPY_ROOT)
 
-function buildBundle (srcFile, bundleFile, { minify = true, standalone = '', plugins, target } = {}) {
+function buildBundle (srcFile, bundleFile, { minify = true, standalone = '', plugins, target, external = [] } = {}) {
   return esbuild.build({
     bundle: true,
     sourcemap: true,
@@ -22,6 +22,7 @@ function buildBundle (srcFile, bundleFile, { minify = true, standalone = '', plu
     minify,
     plugins,
     target,
+    external,
   }).then(() => {
     if (minify) {
       console.info(chalk.green(`✓ Built Minified Bundle [${standalone}]:`), chalk.magenta(bundleFile))
@@ -39,7 +40,7 @@ const methods = [
   buildBundle(
     './packages/uppy/bundle.js',
     './packages/uppy/dist/uppy.min.js',
-    { standalone: 'Uppy' },
+    { standalone: 'Uppy', external: ['firebase/compat/app', 'firebase'] },
   ),
   buildBundle(
     './packages/uppy/bundle-legacy.js',
@@ -47,6 +48,7 @@ const methods = [
     {
       standalone: 'Uppy (with polyfills)',
       target: 'es5',
+      external: ['firebase/compat/app', 'firebase'],
       plugins:[babel({
         config:{
           compact: false,
@@ -67,7 +69,7 @@ const methods = [
   buildBundle(
     './packages/@uppy/robodog/bundle.js',
     './packages/@uppy/robodog/dist/robodog.min.js',
-    { standalone: 'Robodog' },
+    { standalone: 'Robodog', external: ['firebase/compat/app', 'firebase'] },
   ),
 ]
 

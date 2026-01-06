@@ -61,6 +61,7 @@ he_IL.strings = {
   generatingThumbnails: 'יוצר תמונות ממוזערות...',
   import: 'ייבוא',
   importFrom: 'ייבוא מ %{name}',
+  importing: 'מייבא...',
   loading: 'טוען...',
   logOut: 'התנתק',
   myDevice: 'המכשיר שלי',
@@ -137,6 +138,10 @@ he_IL.strings = {
     '1': 'עליך לבחור לפחות ב %{smart_count} קבצים',
     '2': 'עליך לבחור לפחות ב %{smart_count} קבצים',
   },
+  speakerCount: 'מספר דיורי השיחה',
+  alignWithText: 'מזהה עם טקסט',
+  optionalTXTFile: 'אופציונלי, .txt',
+  elevenlabsForcedAlignment: 'השתמש בתכונת המזהה החזקה כדי לסנכרן טקסט קיים עם האודיו או הווידאו שלך, במקום לכתוב מחדש.',
 }
 
 he_IL.pluralize = function pluralize (n) {

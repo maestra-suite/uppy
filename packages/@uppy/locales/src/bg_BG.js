@@ -63,6 +63,7 @@ bg_BG.strings = {
   generatingThumbnails: 'Генериране на миниатюри...',
   import: 'Импортиране',
   importFrom: 'Импортиране от %{name}',
+  importing: 'Импортиране...',
   loading: 'Зареждане...',
   logOut: 'Изход',
   micDisabled: 'Достъп до микрофонът е отказан от потребителя',
@@ -141,6 +142,10 @@ bg_BG.strings = {
     '0': 'Трябва да изберете поне %{smart_count} файл',
     '1': 'Трябва да изберете поне %{smart_count} файла',
   },
+  speakerCount: 'Брой говорители',
+  alignWithText: 'Изравняване с текст',
+  optionalTXTFile: 'опционално, .txt',
+  elevenlabsForcedAlignment: 'Използвайте функцията за принудително изравняване, за да синхронизирате съществуващ текст с вашия аудио или видео, вместо да пишете от нулата.',
 }
 
 bg_BG.pluralize = function pluralize (count) {

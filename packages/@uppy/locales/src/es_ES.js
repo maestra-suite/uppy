@@ -59,6 +59,7 @@ es_ES.strings = {
   },
   import: 'Importar',
   importFrom: 'Importar desde %{name}',
+  importing: 'Importando...',
   loading: 'Cargando...',
   logOut: 'Cerrar sesión',
   missingRequiredMetaField: 'Faltan metacampos obligatorios',
@@ -138,6 +139,10 @@ es_ES.strings = {
   selectFileNamed: 'Seleccione archivo %{name}',
   unselectFileNamed: 'Deseleccionar archivo %{name}',
   openFolderNamed: 'Carpeta abierta %{name}',
+  speakerCount: 'Número de hablantes',
+  alignWithText: 'Ajustar al texto',
+  optionalTXTFile: 'opcional, .txt',
+  elevenlabsForcedAlignment: 'Usa la función de alineación forzada para sincronizar un guion existente con tu audio o video, en lugar de transcribir desde cero.',
 }
 
 es_ES.pluralize = function pluralize (n) {

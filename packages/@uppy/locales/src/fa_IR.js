@@ -72,6 +72,7 @@ fa_IR.strings = {
   import: 'واردکردن',
   importFiles: 'وارد کردن فایل‌ها از:',
   importFrom: 'واردکردن از %{name}',
+  importing: 'در حال وارد کردن...',
   inferiorSize: 'این فایل کوچک‌تر از اندازه مجاز %{size} است',
   loading: 'درحال بارگذاری',
   logOut: 'خروج',
@@ -168,6 +169,10 @@ fa_IR.strings = {
   },
   zoomIn: 'بزرگ‌نمایی',
   zoomOut: 'کوچک‌نمایی',
+  speakerCount: 'تعداد صحنه گری',
+  alignWithText: 'منطبق با متن',
+  optionalTXTFile: 'اختیاری, .txt',
+  elevenlabsForcedAlignment: 'استفاده از ویژگی منطبق سازی قوی برای منطبق کردن یک نوشتار موجود با صوت یا ویدیو، به جای ترجمه از صفر.',
 
 }
 

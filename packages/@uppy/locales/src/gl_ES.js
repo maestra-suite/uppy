@@ -59,6 +59,7 @@ gl_ES.strings = {
   },
   import: 'Importar',
   importFrom: 'Importar dende %{name}',
+  importing: 'Importando...',
   loading: 'Cargando...',
   logOut: 'Pechar sesión',
   myDevice: 'O meu Dispositivo',
@@ -135,6 +136,10 @@ gl_ES.strings = {
   selectFileNamed: 'Seleccione arquivo %{name}',
   unselectFileNamed: 'Deseleccionar arquivo %{name}',
   openFolderNamed: 'Cartafol aberto %{name}',
+  speakerCount: 'Número de locutores',
+  alignWithText: 'Alinear con texto',
+  optionalTXTFile: 'opcional, .txt',
+  elevenlabsForcedAlignment: 'Utiliza la función de alineación forzada para sincronizar un texto existente con tu audio o video, en lugar de transcribir desde cero.',
 }
 
 gl_ES.pluralize = function pluralize (n) {

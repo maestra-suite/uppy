@@ -63,6 +63,7 @@ ro_RO.strings = {
   generatingThumbnails: 'Se generează pictogramele...',
   import: 'Importă',
   importFrom: 'Importă din %{name}',
+  importing: 'Se importă...',
   loading: 'Încărcare...',
   logOut: 'Delogare',
   myDevice: 'Dispozitivul meu',
@@ -134,6 +135,10 @@ ro_RO.strings = {
     '0': 'Selectează cel puțin %{smart_count} fișier',
     '1': 'Selectează cel puțin %{smart_count} fișiere',
   },
+  speakerCount: 'Număr de vorbitori',
+  alignWithText: 'Aliniere cu textul',
+  optionalTXTFile: 'opțional, .txt',
+  elevenlabsForcedAlignment: 'Utilizați funcția de aliniere forțată pentru a sincroniza un text existent cu audio sau video, în loc de a transcrie de la zero.',
 }
 
 ro_RO.pluralize = function pluralize (count) {

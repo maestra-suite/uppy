@@ -59,6 +59,7 @@ ja_JP.strings = {
   },
   import: 'インポート',
   importFrom: '%{name}からインポート',
+  importing: 'インポート中...',
   loading: 'ロード中...',
   logOut: 'ログアウト',
   myDevice: 'マイデバイス',
@@ -135,6 +136,10 @@ ja_JP.strings = {
   selectFileNamed: 'ファイルを選ぶ %{name}',
   unselectFileNamed: 'ファイルの選択を解除 %{name}',
   openFolderNamed: '開いたフォルダ %{name}',
+  speakerCount: 'スピーカー数',
+  alignWithText: 'テキストに合わせる',
+  optionalTXTFile: '任意, .txt',
+  elevenlabsForcedAlignment: '強制アラインメント機能を使用すると、既存のスクリプトを音声や動画と同期でき、最初から文字起こしする必要がありません。',
 }
 
 ja_JP.pluralize = function pluralize (n) {

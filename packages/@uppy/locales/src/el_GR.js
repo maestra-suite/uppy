@@ -59,6 +59,7 @@ el_GR.strings = {
   },
   import: 'Εισαγωγή',
   importFrom: 'Εισαγωγή από %{name}',
+  importing: 'Εισαγωγή...',
   loading: 'Φορτώνει...',
   logOut: 'Αποσύνδεση',
   myDevice: 'Η συσκευή μου',
@@ -135,6 +136,10 @@ el_GR.strings = {
     '1': 'Πρέπει να επιλέξετε τουλάχιστον %{smart_count} αρχείο',
     '2': 'Πρέπει να επιλέξετε τουλάχιστον %{smart_count} αρχεία',
   },
+  speakerCount: 'Αριθμός Ομιλητών',
+  alignWithText: 'Συγχρονισμός με Κείμενο',
+  optionalTXTFile: 'προαιρετικό, .txt',
+  elevenlabsForcedAlignment: 'Χρησιμοποιήστε την λειτουργία συγχρονισμού ώστε να συγχρονίσετε ένα υπάρχον κείμενο με το ήχο ή το βίντεο σας, αντί για να γράψετε από την αρχή.',
 }
 
 el_GR.pluralize = function pluralize (n) {

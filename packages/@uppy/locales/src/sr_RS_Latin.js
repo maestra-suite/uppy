@@ -59,6 +59,7 @@ sr_RS_Latin.strings = {
   },
   import: 'Preuzmi',
   importFrom: 'Preuzmi sa %{name}',
+  importing: 'Preuzimanje...',
   loading: 'Učitavam...',
   logOut: 'Odjava',
   myDevice: 'Moj računar ili mobilni uređaj',
@@ -135,6 +136,10 @@ sr_RS_Latin.strings = {
   selectFileNamed: 'Izaberite fajl %{name}',
   unselectFileNamed: 'Isključite fajl %{name}',
   openFolderNamed: 'Otvori folder %{name}',
+  speakerCount: 'Broj govornika',
+  alignWithText: 'Poravnaj sa tekstom',
+  optionalTXTFile: 'opcionalno, .txt',
+  elevenlabsForcedAlignment: 'Koristite funkciju zasadnutja na tekst kako biste poravnali postojeći tekst sa vašim audio ili video zapisom, umesto da ga prepisujete.',
 }
 
 sr_RS_Latin.pluralize = function pluralize (n) {

@@ -59,6 +59,7 @@ sv_SE.strings = {
   },
   import: 'Importera',
   importFrom: 'Importera från %{name}',
+  importing: 'Importerar...',
   loading: 'Laddar...',
   logOut: 'Logga ut',
   myDevice: 'Min enhet',
@@ -135,6 +136,10 @@ sv_SE.strings = {
     '1': 'Du måste välja minst %{smart_count} filer',
     '2': 'Du måste välja minst %{smart_count} filer',
   },
+  speakerCount: 'Antal talare',
+  alignWithText: 'Justera med text',
+  optionalTXTFile: 'valfritt, .txt',
+  elevenlabsForcedAlignment: 'Använd funktionen Justera med text för att justera befintlig text med ditt ljud eller video, istället för att skriva om det.',
 }
 
 sv_SE.pluralize = function pluralize (n) {
