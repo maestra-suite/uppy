@@ -59,6 +59,7 @@ uk_UA.strings = {
   },
   import: 'Імпортувати',
   importFrom: 'Імпортувати з %{name}',
+  importing: 'Імпортування...',
   loading: 'Завантаження...',
   logOut: 'Вийти',
   myDevice: 'Мій пристрій',

@@ -59,6 +59,7 @@ tr_TR.strings = {
   },
   import: 'Ekle',
   importFrom: '%{name} Ekle',
+  importing: 'İçe aktarılıyor...',
   loading: 'Yükleniyor...',
   logOut: 'Çıkış',
   myDevice: 'Dosyalarım',

@@ -59,6 +59,7 @@ es_ES.strings = {
   },
   import: 'Importar',
   importFrom: 'Importar desde %{name}',
+  importing: 'Importando...',
   loading: 'Cargando...',
   logOut: 'Cerrar sesión',
   missingRequiredMetaField: 'Faltan metacampos obligatorios',

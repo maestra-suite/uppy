@@ -59,6 +59,7 @@ gl_ES.strings = {
   },
   import: 'Importar',
   importFrom: 'Importar dende %{name}',
+  importing: 'Importando...',
   loading: 'Cargando...',
   logOut: 'Pechar sesión',
   myDevice: 'O meu Dispositivo',

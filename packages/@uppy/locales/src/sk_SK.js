@@ -71,6 +71,7 @@ sk_SK.strings = {
   generatingThumbnails: 'Vytváram miniatury...',
   import: 'Importovať',
   importFrom: 'Import z %{name}',
+  importing: 'Importovanie...',
   inferiorSize: 'Tento súbor je menší ako povolená veľkosť súboru %{size}',
   loading: 'Nahrávanie...',
   logOut: 'Odhlásiť',

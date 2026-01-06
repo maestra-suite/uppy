@@ -63,6 +63,7 @@ ro_RO.strings = {
   generatingThumbnails: 'Se generează pictogramele...',
   import: 'Importă',
   importFrom: 'Importă din %{name}',
+  importing: 'Se importă...',
   loading: 'Încărcare...',
   logOut: 'Delogare',
   myDevice: 'Dispozitivul meu',

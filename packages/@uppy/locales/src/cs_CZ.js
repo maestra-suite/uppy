@@ -60,6 +60,7 @@ cs_CZ.strings = {
   generatingThumbnails: 'Vytvářím miniatury...',
   import: 'Importovat',
   importFrom: 'Importovat z %{name}',
+  importing: 'Importování...',
   loading: 'Nahrávání...',
   logOut: 'Odhlásit',
   myDevice: 'Moje zařízení',

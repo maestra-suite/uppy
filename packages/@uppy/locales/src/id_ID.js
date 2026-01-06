@@ -59,6 +59,7 @@ id_ID.strings = {
   },
   import: 'Impor',
   importFrom: 'Impor dari %{name}',
+  importing: 'Mengimpor...',
   loading: 'Memuat...',
   logOut: 'Keluar',
   myDevice: 'Perangkat Saya',

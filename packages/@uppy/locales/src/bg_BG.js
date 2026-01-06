@@ -63,6 +63,7 @@ bg_BG.strings = {
   generatingThumbnails: 'Генериране на миниатюри...',
   import: 'Импортиране',
   importFrom: 'Импортиране от %{name}',
+  importing: 'Импортиране...',
   loading: 'Зареждане...',
   logOut: 'Изход',
   micDisabled: 'Достъп до микрофонът е отказан от потребителя',

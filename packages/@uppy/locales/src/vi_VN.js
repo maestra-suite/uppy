@@ -61,6 +61,7 @@ vi_VN.strings = {
   generatingThumbnails: 'Đang tạo ảnh thu nhỏ...',
   import: 'Nhập',
   importFrom: 'Nhập từ %{name}',
+  importing: 'Đang nhập...',
   loading: 'Đang tải...',
   logOut: 'Đăng xuất',
   myDevice: 'Thiết bị của tôi',

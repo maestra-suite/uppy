@@ -59,6 +59,7 @@ sr_RS_Latin.strings = {
   },
   import: 'Preuzmi',
   importFrom: 'Preuzmi sa %{name}',
+  importing: 'Preuzimanje...',
   loading: 'Učitavam...',
   logOut: 'Odjava',
   myDevice: 'Moj računar ili mobilni uređaj',

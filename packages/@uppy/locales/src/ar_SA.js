@@ -59,6 +59,7 @@ ar_SA.strings = {
   },
   import: 'استيراد',
   importFrom: 'استيراد من %{name}',
+  importing: 'جاري الاستيراد...',
   loading: 'جاري التحميل...',
   logOut: 'تسجيل الخروج',
   myDevice: 'جهازي',

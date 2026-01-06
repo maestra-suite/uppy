@@ -59,6 +59,7 @@ da_DK.strings = {
   },
   import: 'Importer',
   importFrom: 'Importer fra %{name}',
+  importing: 'Importerer...',
   loading: 'Loading...',
   logOut: 'Log ud',
   myDevice: 'Min enhed',

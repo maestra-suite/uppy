@@ -72,6 +72,7 @@ fa_IR.strings = {
   import: 'واردکردن',
   importFiles: 'وارد کردن فایل‌ها از:',
   importFrom: 'واردکردن از %{name}',
+  importing: 'در حال وارد کردن...',
   inferiorSize: 'این فایل کوچک‌تر از اندازه مجاز %{size} است',
   loading: 'درحال بارگذاری',
   logOut: 'خروج',

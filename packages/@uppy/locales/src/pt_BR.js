@@ -62,6 +62,7 @@ pt_BR.strings = {
   },
   import: 'Importar',
   importFrom: 'Importar de %{name}',
+  importing: 'Importando...',
   loading: 'Carregando...',
   logOut: 'Deslogar',
   myDevice: 'Meu dispositivo',

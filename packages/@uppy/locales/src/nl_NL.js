@@ -61,6 +61,7 @@ nl_NL.strings = {
   },
   import: 'Importeer',
   importFrom: 'Importeer vanuit %{name}',
+  importing: 'Importeren...',
   loading: 'Bezig met laden...',
   logOut: 'Uitloggen',
   myDevice: 'Mijn apparaat',

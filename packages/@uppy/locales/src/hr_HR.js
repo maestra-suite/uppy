@@ -59,6 +59,7 @@ hr_HR.strings = {
   },
   import: 'Preuzmi',
   importFrom: 'Preuzmi s %{name}',
+  importing: 'Preuzimanje...',
   loading: 'Učitavam...',
   logOut: 'Odjava',
   myDevice: 'Moj uređaj',

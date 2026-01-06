@@ -74,6 +74,7 @@ de_DE.strings = {
   import: 'Importieren',
   importFiles: 'Importiere Dateien von:',
   importFrom: 'Importieren von %{name}',
+  importing: 'Importiere...',
   inferiorSize: 'Diese Datei ist kleiner als die minimal erlaubte Dateigröße von %{size}',
   loading: 'Laden...',
   logOut: 'Abmelden',

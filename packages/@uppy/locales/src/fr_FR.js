@@ -70,6 +70,7 @@ fr_FR.strings = {
   generatingThumbnails: 'Generating thumbnails...',
   import: 'Importer',
   importFrom: 'Importer de %{name}',
+  importing: 'Importation...',
   loading: 'Chargement...',
   logOut: 'Déconnexion',
   micDisabled: 'Accès au micro refusé par l\'utilisateur',

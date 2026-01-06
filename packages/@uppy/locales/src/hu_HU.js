@@ -61,6 +61,7 @@ hu_HU.strings = {
   },
   import: 'Importálás',
   importFrom: 'Importálás innen: %{name}',
+  importing: 'Importálás...',
   loading: 'Töltés...',
   logOut: 'Kijelentkezés',
   myDevice: 'Eszközöm',

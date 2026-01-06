@@ -59,6 +59,7 @@ fi_FI.strings = {
   },
   import: 'Tuo',
   importFrom: 'Tuo %{name}',
+  importing: 'Tuodaan...',
   loading: 'Ladataan...',
   logOut: 'Kirjaudu ulos',
   myDevice: 'Laitteeltani',

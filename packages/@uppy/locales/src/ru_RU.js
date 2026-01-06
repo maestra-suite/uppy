@@ -61,6 +61,7 @@ ru_RU.strings = {
   },
   import: 'Импортировать',
   importFrom: 'Импортировать из %{name}',
+  importing: 'Импортирование...',
   loading: 'Загрузка...',
   logOut: 'Выйти',
   myDevice: 'Мое устройство',

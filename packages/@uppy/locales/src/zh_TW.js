@@ -65,6 +65,7 @@ zh_TW.strings = {
   generatingThumbnails: '產生縮圖中...',
   import: '匯入',
   importFrom: '從%{name}匯入',
+  importing: '匯入中...',
   loading: '載入中...',
   logOut: '登出',
   myDevice: '我的裝置',

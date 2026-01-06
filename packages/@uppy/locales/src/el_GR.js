@@ -59,6 +59,7 @@ el_GR.strings = {
   },
   import: 'Εισαγωγή',
   importFrom: 'Εισαγωγή από %{name}',
+  importing: 'Εισαγωγή...',
   loading: 'Φορτώνει...',
   logOut: 'Αποσύνδεση',
   myDevice: 'Η συσκευή μου',

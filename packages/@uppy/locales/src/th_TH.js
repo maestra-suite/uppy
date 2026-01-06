@@ -68,6 +68,7 @@ th_TH.strings = {
   generatingThumbnails: 'กำลังสร้างภาพขนาดย่อ...',
   import: 'นำเข้า',
   importFrom: 'นำเข้าจาก %{name}',
+  importing: 'กำลังนำเข้า...',
   inferiorSize: 'ไฟล์นี้มีขนาดเล็กกว่าขนาดไฟล์ที่กำหนด %{size}',
   loading: 'กำลังโหลด...',
   logOut: 'ออกจากระบบ',

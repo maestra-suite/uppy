@@ -65,6 +65,7 @@ pl_PL.strings = {
   generatingThumbnails: 'Generowanie miniaturek...',
   import: 'Importuj',
   importFrom: 'Importuj z %{name}',
+  importing: 'Importowanie...',
   loading: 'Ładowanie...',
   logOut: 'Wyloguj',
   myDevice: 'Moje urządzenie',

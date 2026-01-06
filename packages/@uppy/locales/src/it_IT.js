@@ -59,6 +59,7 @@ it_IT.strings = {
   },
   import: 'Importa',
   importFrom: 'Importa da %{name}',
+  importing: 'Importazione...',
   loading: 'Caricamento...',
   logOut: 'Logout',
   myDevice: 'Il mio computer',

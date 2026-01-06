@@ -59,6 +59,7 @@ sr_RS_Cyrillic.strings = {
   },
   import: 'Преузми',
   importFrom: 'Преузми са %{name}',
+  importing: 'Преузимање...',
   loading: 'Учитавам...',
   logOut: 'Одјава',
   myDevice: 'Мој рачунар или мобилни уређај',

@@ -59,6 +59,7 @@ ja_JP.strings = {
   },
   import: 'インポート',
   importFrom: '%{name}からインポート',
+  importing: 'インポート中...',
   loading: 'ロード中...',
   logOut: 'ログアウト',
   myDevice: 'マイデバイス',

@@ -54,6 +54,7 @@ ko_KR.strings = {
   generatingThumbnails: '썸네일 생성 중...',
   import: '가져오기',
   importFrom: '%{name}에서 가져오기',
+  importing: '가져오는 중...',
   loading: '불러오는 중...',
   logOut: '로그아웃',
   myDevice: '내 기기',

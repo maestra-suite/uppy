@@ -66,6 +66,7 @@ is_IS.strings = {
   generatingThumbnails: 'Bý til smámynd ...',
   import: 'Flytja inn',
   importFrom: 'Flytja inn frá %{name}',
+  importing: 'Flytur inn...',
   loading: 'Hleð...',
   logOut: 'Skrá út',
   myDevice: 'Mitt tæki',

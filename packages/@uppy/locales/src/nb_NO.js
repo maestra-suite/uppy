@@ -71,6 +71,7 @@ nb_NO.strings = {
   generatingThumbnails: 'Genererer miniatyrbilde...',
   import: 'Importer',
   importFrom: 'Importer fra %{name}',
+  importing: 'Importerer...',
   inferiorSize: 'Fila er mindre enn tillatt størrelse på %{size}',
   loading: 'Laster...',
   logOut: 'Logg ut',

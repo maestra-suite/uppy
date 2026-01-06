@@ -59,6 +59,7 @@ sv_SE.strings = {
   },
   import: 'Importera',
   importFrom: 'Importera från %{name}',
+  importing: 'Importerar...',
   loading: 'Laddar...',
   logOut: 'Logga ut',
   myDevice: 'Min enhet',

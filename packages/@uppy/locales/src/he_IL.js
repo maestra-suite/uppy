@@ -61,6 +61,7 @@ he_IL.strings = {
   generatingThumbnails: 'יוצר תמונות ממוזערות...',
   import: 'ייבוא',
   importFrom: 'ייבוא מ %{name}',
+  importing: 'מייבא...',
   loading: 'טוען...',
   logOut: 'התנתק',
   myDevice: 'המכשיר שלי',
