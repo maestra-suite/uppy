@@ -1,2 +1,6 @@
 **/.yarn
 **/node_modules
+**/packages
+**/e2e
+**/examples
+**/website
